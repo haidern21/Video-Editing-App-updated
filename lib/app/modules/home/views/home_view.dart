@@ -11,7 +11,7 @@ import 'app_bar.dart';
 import 'catergories_widget.dart';
 import 'custom_quote.dart';
 
-GetQuoteFiveController fiveController = Get.put(GetQuoteFiveController());
+// GetQuoteFiveController fiveController = Get.put(GetQuoteFiveController());
 
 class HomeView extends GetView<HomeController> {
   @override

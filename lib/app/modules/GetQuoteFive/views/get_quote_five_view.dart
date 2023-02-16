@@ -62,7 +62,7 @@ class GetQuoteFiveView extends GetView<GetQuoteFiveController> {
                   builder: (controller) => Column(
                     children: [
                       ...List.generate(
-                        controller.totalVideos,
+                        controller.totalVideos.value,
                         (index) => GestureDetector(
                           onTap: () async {
                             controller.changeColor(index);
@@ -135,7 +135,7 @@ class GetQuoteFiveView extends GetView<GetQuoteFiveController> {
                     onPress: () async {
                       try {
                         if (controller.selectedVideos.length <
-                            controller.totalVideos) {
+                            controller.totalVideos.value) {
                           return toast('Please Select All Videos');
                         } else {
                           /// Implement your logic here

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:video_editing_app/app/modules/GetQuote/controllers/get_quote_controller.dart';
 import 'package:video_editing_app/app/modules/home/controllers/home_controller.dart';
 
 import '../../../../constants/colors.dart';
@@ -9,11 +10,12 @@ import '../../../routes/app_pages.dart';
 import 'home_view.dart';
 
 HomeController controller = Get.put(HomeController());
+GetQuoteController getQuoteController= Get.put(GetQuoteController());
 CustomQuote(double width) {
   return GestureDetector(
     onTap: () {
       Get.toNamed(Routes.GET_QUOTE_THREE);
-      fiveController.selectedIndex = -1;
+      // fiveController.selectedIndex = -1;
     },
     child: Container(
       margin: EdgeInsets.symmetric(horizontal: width * 0.043),

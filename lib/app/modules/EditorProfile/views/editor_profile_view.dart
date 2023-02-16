@@ -125,33 +125,33 @@ class EditorProfileView extends GetView<EditorProfileController> {
                     (index) => buildPlayVideo(sp, height, width,
                         images: images[index])),
                 SizedBox(height: height * 0.03),
-                Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: height * 0.07,
-                        child: MyButton(
-                          color: kwhite,
-                          text: 'Deny',
-                          textColor: kprimaryColor,
-                          onPress: () {},
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width / 65,
-                    ),
-                    Expanded(
-                      child: SizedBox(
-                        height: height * 0.07,
-                        child: MyButton(
-                          text: 'Get started',
-                          onPress: () {},
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     Expanded(
+                //       child: SizedBox(
+                //         height: height * 0.07,
+                //         child: MyButton(
+                //           color: kwhite,
+                //           text: 'Deny',
+                //           textColor: kprimaryColor,
+                //           onPress: () {},
+                //         ),
+                //       ),
+                //     ),
+                //     SizedBox(
+                //       width: width / 65,
+                //     ),
+                //     Expanded(
+                //       child: SizedBox(
+                //         height: height * 0.07,
+                //         child: MyButton(
+                //           text: 'Get started',
+                //           onPress: () {},
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: height * 0.044),
               ],
             ),

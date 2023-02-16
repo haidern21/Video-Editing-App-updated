@@ -30,7 +30,7 @@ import '../controllers/get_quote_eight_controller.dart';
 GetQuoteFiveController controller = Get.put(GetQuoteFiveController());
 GetQuoteEightController getQuoteEightController =
     Get.put(GetQuoteEightController());
-GetQuoteController getQuoteController = Get.find();
+GetQuoteController getQuoteController = Get.put(GetQuoteController());
 GetQuoteThreeController getQuoteThreeController = Get.find();
 GetQuoteFourController getQuoteFourController = Get.find();
 GetQuoteSixController getQuoteSixController = Get.find();
@@ -331,7 +331,7 @@ class _GetQuoteEightViewState extends State<GetQuoteEightView> {
                               },
                               biuldAuthHeader: true);
                       if (response.statusCode == 400) {
-                        Get.snackbar('Error', 'Please recheck all values.');
+                        Get.snackbar('Error', response.body);
                         return;
                       }
                       getQuoteSixController.urlController.clear();
