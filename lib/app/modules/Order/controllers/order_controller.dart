@@ -24,6 +24,11 @@ class OrderController extends GetxController {
   }
 
   Future<List<OrderModel>> fetchAllOrders() async {
+    pendingOrders.clear();
+    inProgressOrders.clear();
+    orders.clear();
+    completedOrders.clear();
+    quotedGivenOrders.clear();
     List<OrderModel> ordrs = [];
     http.Response response = await buildHttpResponse(
       getAllOrdersEndpoints,

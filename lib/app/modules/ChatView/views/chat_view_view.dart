@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:video_editing_app/app/modules/ChatView/controllers/chat_view_controller.dart';
 import 'admin_tab_bar.dart';
 import 'chat_view_app_bar.dart';
 import 'editor_tab_bar.dart';

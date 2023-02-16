@@ -7,7 +7,7 @@ import 'package:video_editing_app/Utils/debug_utils.dart';
 import '../../../data/models/quote_model.dart';
 
 class GetQuoteFiveController extends GetxController {
-  int totalVideos = 1.obs.value;
+  RxInt totalVideos = 1.obs;
 
   int selectedIndex = -1;
   List<int> selectedVideos = [];
@@ -34,7 +34,7 @@ class GetQuoteFiveController extends GetxController {
         // totolVideosController.text = getQuoteFourData['video_count'];
         // }
 
-        totalVideos = int.parse(getQuoteDate['video_count']);
+        totalVideos.value = int.parse(getQuoteDate['video_count']);
       }
     } catch (e) {
       debug('Error $e');

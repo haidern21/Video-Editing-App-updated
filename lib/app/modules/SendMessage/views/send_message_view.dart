@@ -310,10 +310,10 @@ class SendMessageView extends GetView<SendMessageController> {
                       SizedBox(width: width * 0.022),
                       InkWell(
                           onTap: () {
-                            if (controller.msgController.text.isNotEmpty) {
-                              webSocketController.sendMessageInThread(
-                                  controller.msgController.text);
-                            }
+                            // if (controller.msgController.text.isNotEmpty) {
+                            //   webSocketController.sendMessageInThread(
+                            //       controller.msgController.text);
+                            // }
                           },
                           child: SvgPicture.asset('assets/icons/frwrd.svg'))
                     ],

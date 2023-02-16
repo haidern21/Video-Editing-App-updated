@@ -23,7 +23,7 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-    log('buyer id is: ${editorOrdersController.selectedOrder.value!.editorAssigned?.toJson()}');
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -570,7 +570,7 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                                                 .editorMessages[
                                                                     index]
                                                                 .message ??
-                                                            'Hello, What’s up?',
+                                                            '',
                                                         size: 14 * sp,
                                                         color: kgrey8,
                                                         weight: kfour,
