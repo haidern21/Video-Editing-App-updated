@@ -140,6 +140,7 @@ import 'package:video_editing_app/Utils/jwt_utils.dart';
 import 'package:video_editing_app/app/modules/BottomProfile/controllers/bottom_profile_controller.dart';
 import 'package:video_editing_app/app/modules/InProgress/controllers/in_progress_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import '../../../data/models/quote_communication_model.dart';
 
 class WebSocketController extends GetxController {
 
@@ -152,6 +153,21 @@ class WebSocketController extends GetxController {
       "message": message,
       // "user": 13,
       "communication_type": "MESSAGE",
+      "quote": quoteId,
+      "attachments": ["https://google.com"],
+    };
+    try {
+      channel.sink.add(jsonEncode(map));
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
+  sendRevisionMessage(String message,int quoteId) {
+    var map = {
+      "message": message,
+      // "user": 13,
+      "communication_type": "REVISION",
       "quote": quoteId,
       "attachments": ["https://google.com"],
     };
@@ -180,25 +196,25 @@ class WebSocketController extends GetxController {
 
     String baseurl =
         "wss://video-editing-app.herokuapp.com/quote-communication/";
-    Uri webSocketUrl= Uri.parse(baseurl).replace(queryParameters: {"token": token});
+    var webSocketUrl= Uri.parse('wss://video-editing-app.herokuapp.com/quote-communication/').replace(queryParameters: {"token": token});
     log('The url is : $webSocketUrl');
     channel = WebSocketChannel.connect(webSocketUrl);
 
     channel.ready.then((value) => print('Connection success'));
 
     channel.stream.listen((event) {
-      // try {
-      //   var message = QuoteCommunicationModel.fromJson(jsonDecode(event));
-      //   if (message.user?.id ==
-      //       bottomProfileController.userModelFromApi.value?.id) {
-      //     inProgressController.buyerMessages.add(message);
-      //   } else {
-      //     inProgressController.editorMessages.add(message);
-      //   }
+      try {
+        var message = QuoteCommunicationModel.fromJson(jsonDecode(event));
+        if (message.user?.id ==
+            bottomProfileController.userModelFromApi.value?.id) {
+          inProgressController.buyerMessages.add(message);
+        } else {
+          inProgressController.editorMessages.add(message);
+        }
         log('message sent : $event');
-      // } catch (e) {
-      //   log('MESSAGE NOT SENT. problem is: $e');
-      // }
+      } catch (e) {
+        log('MESSAGE NOT SENT. problem is: $e');
+      }
     },);}
         catch(e){
       print('Couldnt fetch token');

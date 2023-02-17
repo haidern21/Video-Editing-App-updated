@@ -586,108 +586,358 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                               ),
                             ],
                           ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Deliver order ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
+                          // ExpansionTile(
+                          //   childrenPadding: EdgeInsets.zero,
+                          //   title: RichText(
+                          //     text: TextSpan(
+                          //       children: [
+                          //         TextSpan(
+                          //           text: 'Deliver order ',
+                          //           style: TextStyle(
+                          //             fontSize: 14 * sp,
+                          //             fontWeight: kfour,
+                          //             color: const Color(0xff000000),
+                          //             fontFamily: 'WorkSans',
+                          //           ),
+                          //         ),
+                          //         TextSpan(
+                          //           text: 'Sep 19, 1:43 PM',
+                          //           style: TextStyle(
+                          //             fontSize: 12 * sp,
+                          //             fontWeight: kfour,
+                          //             color: kgrey5,
+                          //             fontFamily: 'WorkSans',
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          //   leading: SvgPicture.asset(
+                          //     'assets/icons/deliverOrder.svg',
+                          //   ),
+                          //   children: [
+                          //     Align(
+                          //       alignment: Alignment.centerLeft,
+                          //       child: Container(
+                          //         margin: EdgeInsets.only(
+                          //             left: width / 5.5, right: width * 0.045),
+                          //         child: Column(
+                          //           crossAxisAlignment:
+                          //               CrossAxisAlignment.start,
+                          //           children: [
+                          //             MyText(
+                          //               text:
+                          //                   'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
+                          //               size: 14 * sp,
+                          //               color: kgrey8,
+                          //               weight: kfour,
+                          //             ),
+                          //             SizedBox(height: height * 0.025),
+                          //             Row(
+                          //               children: [
+                          //                 ...List.generate(
+                          //                     3,
+                          //                     (index) => Container(
+                          //                           margin: EdgeInsets.only(
+                          //                             right: width * 0.01,
+                          //                           ),
+                          //                           height: height * 0.09,
+                          //                           width: width / 6,
+                          //                           decoration:
+                          //                               const BoxDecoration(
+                          //                             image: DecorationImage(
+                          //                               image: AssetImage(
+                          //                                 'assets/icons/playVideo.png',
+                          //                               ),
+                          //                             ),
+                          //                           ),
+                          //                         ))
+                          //               ],
+                          //             ),
+                          //             // SizedBox(height: height * 0.025),
+                          //             // Row(
+                          //             //   children: [
+                          //             //     Expanded(
+                          //             //       child: SizedBox(
+                          //             //         height: height * 0.06,
+                          //             //         child: MyButton(
+                          //             //           borderColor: kgrey3,
+                          //             //           color: const Color(0xffF9F9FB),
+                          //             //           textColor: kgre7,
+                          //             //           text: 'Request revision',
+                          //             //           onPress: () {},
+                          //             //         ),
+                          //             //       ),
+                          //             //     ),
+                          //             //     SizedBox(
+                          //             //       width: width * 0.01,
+                          //             //     ),
+                          //             //     Expanded(
+                          //             //       child: SizedBox(
+                          //             //         height: height * 0.06,
+                          //             //         child: MyButton(
+                          //             //           text: 'Accept',
+                          //             //           onPress: () {},
+                          //             //         ),
+                          //             //       ),
+                          //             //     )
+                          //             //   ],
+                          //             // ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+                          Obx(
+                            () => controller.deliverMessages.isNotEmpty
+                                ? ExpansionTile(
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Deliver order ',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'Sep 19, 1:43 PM',
+                                            style: TextStyle(
+                                              fontSize: 12 * sp,
+                                              fontWeight: kfour,
+                                              color: kgrey5,
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/deliverOrder.svg',
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              'assets/icons/deliverOrder.svg',
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      MyText(
-                                        text:
-                                            'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          ...List.generate(
-                                              3,
-                                              (index) => Container(
-                                                    margin: EdgeInsets.only(
-                                                      right: width * 0.01,
-                                                    ),
-                                                    height: height * 0.09,
-                                                    width: width / 6,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                          'assets/icons/playVideo.png',
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ))
-                                        ],
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: SizedBox(
-                                              height: height * 0.06,
-                                              child: MyButton(
-                                                borderColor: kgrey3,
-                                                color: const Color(0xffF9F9FB),
-                                                textColor: kgre7,
-                                                text: 'Request revision',
-                                                onPress: () {},
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.01,
-                                          ),
-                                          Expanded(
-                                            child: SizedBox(
-                                              height: height * 0.06,
-                                              child: MyButton(
-                                                text: 'Accept',
-                                                onPress: () {},
-                                              ),
-                                            ),
-                                          )
-                                        ],
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .deliverMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .deliverMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ],
+                                                ),
+                                              )
+                                            : const CircularProgressIndicator(),
                                       ),
                                     ],
-                                  ),
+                                  )
+                                : const SizedBox(),
+                          ),
+                          SizedBox(height: height * 0.013),
+                          Obx(
+                                () => controller.revisionMessages.isNotEmpty
+                                ? ExpansionTile(
+                              childrenPadding: EdgeInsets.zero,
+                              title: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Revisions Requested',
+                                      style: TextStyle(
+                                        fontSize: 14 * sp,
+                                        fontWeight: kfour,
+                                        color: const Color(0xff000000),
+                                        fontFamily: 'WorkSans',
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Sep 19, 1:43 PM',
+                                      style: TextStyle(
+                                        fontSize: 12 * sp,
+                                        fontWeight: kfour,
+                                        color: kgrey5,
+                                        fontFamily: 'WorkSans',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                              leading: SvgPicture.asset(
+                                'assets/icons/revision.svg',
+                              ),
+                              children: [
+                                // Align(
+                                //   alignment: Alignment.centerLeft,
+                                //   child: Container(
+                                //     margin: EdgeInsets.only(
+                                //         left: width / 5.5, right: width * 0.045),
+                                //     child: Column(
+                                //       crossAxisAlignment:
+                                //           CrossAxisAlignment.start,
+                                //       children: [
+                                //         MyText(
+                                //           text:
+                                //               'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
+                                //           size: 14 * sp,
+                                //           color: kgrey8,
+                                //           weight: kfour,
+                                //         ),
+                                //         SizedBox(height: height * 0.025),
+                                //         Row(
+                                //           children: [
+                                //             ...List.generate(
+                                //                 3,
+                                //                 (index) => Container(
+                                //                       margin: EdgeInsets.only(
+                                //                         right: width * 0.01,
+                                //                       ),
+                                //                       height: height * 0.09,
+                                //                       width: width / 6,
+                                //                       decoration:
+                                //                           const BoxDecoration(
+                                //                         image: DecorationImage(
+                                //                           image: AssetImage(
+                                //                               'assets/icons/playVideo.png'),
+                                //                         ),
+                                //                       ),
+                                //                     ))
+                                //           ],
+                                //         ),
+                                //         SizedBox(height: height * 0.025),
+                                //         Row(
+                                //           children: [
+                                //             Expanded(
+                                //               child: SizedBox(
+                                //                 height: height * 0.06,
+                                //                 child: MyButton(
+                                //                   borderColor: kgrey3,
+                                //                   color: const Color(0xffF9F9FB),
+                                //                   textColor: kgre7,
+                                //                   text: 'Request revision',
+                                //                   onPress: () {},
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //             SizedBox(
+                                //               width: width * 0.01,
+                                //             ),
+                                //             Expanded(
+                                //               child: SizedBox(
+                                //                 height: height * 0.06,
+                                //                 child: MyButton(
+                                //                   text: 'Accept',
+                                //                   onPress: () {
+                                //                     Get.toNamed(Routes.COMPLETED);
+                                //                   },
+                                //                 ),
+                                //               ),
+                                //             )
+                                //           ],
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
+                                Obx(
+                                      () => controller.showLoader.value ==
+                                      false
+                                      ? Container(
+                                    margin: EdgeInsets.only(
+                                        left: width / 5.5,
+                                        right: width * 0.045),
+                                    child: Column(
+                                      children: [
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: controller
+                                                .revisionMessages
+                                                .length,
+                                            itemBuilder:
+                                                (context, index) {
+                                              return Align(
+                                                alignment: Alignment
+                                                    .centerLeft,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        MyText(
+                                                          text: controller
+                                                              .revisionMessages[index]
+                                                              .message ??
+                                                              '',
+                                                          size: 14 *
+                                                              sp,
+                                                          color:
+                                                          kgrey8,
+                                                          weight:
+                                                          kfour,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+
+                                      ],
+                                    ),
+                                  )
+                                      : const CircularProgressIndicator(),
+                                ),
+                              ],
+                            )
+                                : const SizedBox(),
                           ),
                         ],
                       ),
@@ -775,10 +1025,9 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                           if (controller.messageController.text.isNotEmpty) {
                             webSocketController.sendMessage(
                                 controller.messageController.text,
-                                editorOrdersController.selectedOrder.value?.id ?? 0);
-                            // webSocketController.sendMessageIo(
-                            //     controller.messageController.text,
-                            //     editorOrdersController.selectedOrder.value?.id ?? 0);
+                                editorOrdersController
+                                        .selectedOrder.value?.id ??
+                                    0);
                           }
                           controller.messageController.clear();
                           controller.messageFocusNode.unfocus();

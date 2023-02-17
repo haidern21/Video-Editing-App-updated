@@ -1,9 +1,9 @@
-import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-
 import 'package:get/get.dart';
-import 'package:video_editing_app/app/routes/app_pages.dart';
+import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_in_progress_controller.dart';
+import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_web_socket_controller.dart';
+import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
+import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/back_button.dart';
@@ -21,6 +21,11 @@ class EditorDeliverView extends StatefulWidget {
 }
 
 class _EditorDeliverViewState extends State<EditorDeliverView> {
+  EditorWebSocketController editorWebSocketController = Get.find();
+  EditorOrdersController editorOrdersController = Get.find();
+  TextEditingController deliveryMessageController = TextEditingController();
+  FocusNode deliveryFocusNode = FocusNode();
+  EditorInProgressController editorInProgressController = Get.find();
   List<String> carImages = [
     'assets/icons/carImage1.png',
     'assets/icons/carImage2.png',
@@ -35,15 +40,12 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-    var size = MediaQuery.of(context).size;
-    final double itemHeight = (size.height * 0.2) / 2;
-    final double itemWidth = size.width / 4;
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
             elevation: 0,
-            backgroundColor: Color(0xffF9F9FB),
+            backgroundColor: const Color(0xffF9F9FB),
             leading: backButton()),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / 20),
@@ -69,6 +71,7 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
                   ),
                 ),
                 child: TextField(
+                  controller: deliveryMessageController,
                   style: TextStyle(
                     fontSize: 12 * sp,
                     fontWeight: kfour,
@@ -90,83 +93,109 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
               ),
               SizedBox(height: height * 0.04),
               MyText(
-                text: "Video",
+                text: "Instruction",
                 size: 14 * sp,
                 weight: ksix,
                 color: kgrey8,
               ),
               SizedBox(height: height * 0.01),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(height: height * 0.013),
-                  SizedBox(
-                    height: height * 0.4,
-                    child: GridView(
-                      shrinkWrap: true,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: width * 0.01,
-                        mainAxisSpacing: height * 0.01,
-                        childAspectRatio: (itemWidth / itemHeight),
-                      ),
-                      children: [
-                        ...List.generate(
-                          carImages.length,
-                          (index) => Stack(
-                            children: [
-                              Badge(
-                                padding: EdgeInsets.zero,
-                                elevation: 0,
-                                badgeColor: Colors.transparent,
-                                badgeContent: GestureDetector(
-                                  onTap: index != carImages.length - 1
-                                      ? () {
-                                          setState(() {
-                                            carImages.remove(carImages[index]);
-                                            // carImages.removeAt(index);
-                                          });
-                                        }
-                                      : null,
-                                  child: index != carImages.length - 1
-                                      ? Icon(Icons.cancel,
-                                          size: 20, color: kcancel)
-                                      : Icon(Icons.circle,
-                                          color: Colors.transparent),
-                                ),
-                                child: Image.asset(
-                                  '${carImages[index]}',
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
-                  )
-                ],
+              MyText(
+                text: "1) You can add message in the text-field",
+                size: 14 * sp,
+                weight: kfour,
+                color: kgrey8,
               ),
-              Spacer(),
+              SizedBox(height: height * 0.01),
+              MyText(
+                text:
+                    "1) You have to add the links oif delivery videos in the message text-field",
+                size: 14 * sp,
+                weight: kfour,
+                color: kgrey8,
+              ),
+              // Column(
+              //   crossAxisAlignment: CrossAxisAlignment.center,
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     SizedBox(height: height * 0.013),
+              //     SizedBox(
+              //       height: height * 0.4,
+              //       child: GridView(
+              //         shrinkWrap: true,
+              //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              //           crossAxisCount: 3,
+              //           crossAxisSpacing: width * 0.01,
+              //           mainAxisSpacing: height * 0.01,
+              //           childAspectRatio: (itemWidth / itemHeight),
+              //         ),
+              //         children: [
+              //           ...List.generate(
+              //             carImages.length,
+              //             (index) => Stack(
+              //               children: [
+              //                 Badge(
+              //                   padding: EdgeInsets.zero,
+              //                   elevation: 0,
+              //                   badgeColor: Colors.transparent,
+              //                   badgeContent: GestureDetector(
+              //                     onTap: index != carImages.length - 1
+              //                         ? () {
+              //                             setState(() {
+              //                               carImages.remove(carImages[index]);
+              //                               // carImages.removeAt(index);
+              //                             });
+              //                           }
+              //                         : null,
+              //                     child: index != carImages.length - 1
+              //                         ? Icon(Icons.cancel,
+              //                             size: 20, color: kcancel)
+              //                         : Icon(Icons.circle,
+              //                             color: Colors.transparent),
+              //                   ),
+              //                   child: Image.asset(
+              //                     '${carImages[index]}',
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           )
+              //         ],
+              //       ),
+              //     )
+              //   ],
+              // ),
+              const Spacer(),
               GetBuilder<EditorDeliverController>(builder: (controller) {
                 return SizedBox(
                   width: width,
                   child: ElevatedButton(
-                    onPressed: carImages.length > 1
-                        ? () {
-                            Get.toNamed(Routes.EDITOR_BOTTOM_BAR);
-                            // print(carImages.length);
-                          }
-                        : null,
-                    child: Text('Deliver now'),
+                    // onPressed: carImages.length > 1
+                    //     ? () {
+                    //         Get.toNamed(Routes.EDITOR_BOTTOM_BAR);
+                    //         // print(carImages.length);
+                    //       }
+                    //     : null,
+                    onPressed: () {
+                      if (deliveryMessageController.text.isNotEmpty) {
+                        editorWebSocketController.sendDeliveryMessage(
+                            deliveryMessageController.text,
+                            editorOrdersController.selectedOrder.value?.id ??
+                                0);
+                      }
+                      deliveryMessageController.clear();
+                      deliveryFocusNode.unfocus();
+                      editorInProgressController.fetchQuoteCommunicationsList(
+                          orderController.selectedOrder.value?.id ?? 0);
+                    },
                     style: ElevatedButton.styleFrom(
-                      shape: StadiumBorder(),
+                      shape: const StadiumBorder(),
                       disabledForegroundColor:
-                          Color(0xff9EA3AE).withOpacity(0.38),
+                          const Color(0xff9EA3AE).withOpacity(0.38),
                       disabledBackgroundColor:
-                          Color(0xff9EA3AE).withOpacity(0.12),
+                          const Color(0xff9EA3AE).withOpacity(0.12),
                       backgroundColor: kprimaryColor,
                     ),
+                    child: const Text('Deliver now'),
                   ),
                 );
               }),

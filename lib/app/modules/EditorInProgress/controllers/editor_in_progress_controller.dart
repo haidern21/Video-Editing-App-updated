@@ -15,6 +15,8 @@ class EditorInProgressController extends GetxController {
   RxList<QuoteCommunicationModel> quoteCommunications = <QuoteCommunicationModel>[].obs;
   RxList<QuoteCommunicationModel> editorMessages = <QuoteCommunicationModel>[].obs;
   RxList<QuoteCommunicationModel> buyerMessages = <QuoteCommunicationModel>[].obs;
+  RxList<QuoteCommunicationModel> deliverMessages = <QuoteCommunicationModel>[].obs;
+  RxList<QuoteCommunicationModel> revisionMessages = <QuoteCommunicationModel>[].obs;
   EditorProfileController editorProfileController= Get.find();
 
 
@@ -42,6 +44,8 @@ class EditorInProgressController extends GetxController {
       quoteCommunications.clear();
       buyerMessages.clear();
       editorMessages.clear();
+      revisionMessages.clear();
+      deliverMessages.clear();
       showLoader.value = true;
       quoteCommunications.value = await fetchAllQuoteCommunications(quoteId);
       sortCommunications();
@@ -58,13 +62,26 @@ class EditorInProgressController extends GetxController {
   sortCommunications(){
 
     for (var com in quoteCommunications){
-      if(com.user?.id==editorProfileController.userModelFromApi.value?.user?.id){
-        editorMessages.add(com);
+      if(com.user?.id==editorProfileController.userModelFromApi.value!.user!.id){
+        if(com.communicationType=="MESSAGE") {
+          editorMessages.add(com);
+        }
       }
       else{
-        buyerMessages.add(com);
+        if(com.communicationType=="MESSAGE") {
+          buyerMessages.add(com);
+        }
+
       }
     }
+    for (var element in quoteCommunications) {
+      if(element.communicationType=="SUBMISSION"){
+        deliverMessages.add(element);
+      }else if (element.communicationType=="REVISION"){
+        revisionMessages.add(element);
+      }
+    }
+
   }
   final count = 0.obs;
 
