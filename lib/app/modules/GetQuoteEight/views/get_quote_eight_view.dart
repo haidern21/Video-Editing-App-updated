@@ -301,7 +301,7 @@ class _GetQuoteEightViewState extends State<GetQuoteEightView> {
                     QuoteModel quoteModel = QuoteModel();
                     quoteModel.quoteVideos = getQuoteFiveController.quoteVideos;
                     quoteModel.packageId =
-                        getQuoteController.selectedPackageModel.id ?? 0;
+                    Get.isRegistered<GetQuoteController>()?  getQuoteController.selectedPackageModel.id : 0;
                     quoteModel.name = getQuoteThreeController.userName.value;
                     quoteModel.email = getQuoteThreeController.userEmail.value;
                     quoteModel.phoneNumber =
@@ -320,7 +320,7 @@ class _GetQuoteEightViewState extends State<GetQuoteEightView> {
                           await buildHttpResponse(createQuoteEndPoints,
                               method: HttpMethod.POST,
                               request: {
-                                "package": quoteModel.packageId,
+                                "package": Get.isRegistered<GetQuoteController>()? quoteModel.packageId:null,
                                 "name": quoteModel.name,
                                 "email": quoteModel.email,
                                 "phone_number": quoteModel.phoneNumber,
@@ -338,6 +338,7 @@ class _GetQuoteEightViewState extends State<GetQuoteEightView> {
                       Get.offAndToNamed(Routes.GET_QUOTE_ON_THE_WAY);
                       if (response.statusCode == 201) {
                         orderController.fetchOrdersList();
+                        getQuoteFiveController.quoteVideos.clear();
                       }
                     } catch (e) {
                       Get.snackbar('Something went wrong',

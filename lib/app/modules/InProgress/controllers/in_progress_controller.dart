@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:video_editing_app/app/modules/BottomProfile/controllers/bottom_profile_controller.dart';
-
+import '../../../../Utils/debug_utils.dart';
 import '../../../../Utils/network_utils.dart';
 import '../../../data/models/quote_communication_model.dart';
 
@@ -18,6 +18,8 @@ class InProgressController extends GetxController {
       <QuoteCommunicationModel>[].obs;
   RxList<QuoteCommunicationModel> buyerMessages =
       <QuoteCommunicationModel>[].obs;
+  RxList<QuoteCommunicationModel> deliverMessages = <QuoteCommunicationModel>[].obs;
+  RxList<QuoteCommunicationModel> revisionMessages = <QuoteCommunicationModel>[].obs;
   BottomProfileController bottomProfileController = Get.find();
 
   Future<List<QuoteCommunicationModel>> fetchAllQuoteCommunications(
@@ -44,6 +46,8 @@ class InProgressController extends GetxController {
       quoteCommunications.clear();
       buyerMessages.clear();
       editorMessages.clear();
+      revisionMessages.clear();
+      deliverMessages.clear();
       showLoader.value = true;
       quoteCommunications.value = await fetchAllQuoteCommunications(quoteId);
       sortCommunications();
@@ -57,11 +61,45 @@ class InProgressController extends GetxController {
 
   sortCommunications() {
     for (var com in quoteCommunications) {
-      if (com.user?.id == bottomProfileController.userModelFromApi.value?.id) {
-        buyerMessages.add(com);
+      if (com.user?.id == bottomProfileController.userModelFromApi.value?.id &&com.communicationType=="MESSAGE") {
+        if(com.communicationType=="MESSAGE") {
+          buyerMessages.add(com);
+        }
+
       } else {
-        editorMessages.add(com);
+        if(com.communicationType=="MESSAGE") {
+          editorMessages.add(com);
+        }
       }
+    }
+    for (var element in quoteCommunications) {
+      if(element.communicationType=="SUBMISSION"){
+        deliverMessages.add(element);
+      }else if (element.communicationType=="REVISION"){
+        revisionMessages.add(element);
+      }
+    }
+  }
+
+  completeOrder(int quoteId)async{
+    try {
+      http.Response response = await buildHttpResponse(
+          'https://video-editing-app.herokuapp.com/api/projects/quotes/$quoteId/mark-as-completed/',
+          method: HttpMethod.PUT,biuldAuthHeader: true);
+
+      if (response.statusCode == 200) {
+        Get.snackbar('Order Accepted','You have accepted the order');
+
+        toast(
+          jsonDecode(response.body),
+        );
+      }
+    } on Exception catch (e, stack) {
+      debug(
+        'Caught Error $e',
+        stackTrace: stack,
+      );
+      toast('Error $e');
     }
   }
 

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:video_editing_app/app/data/models/quote_communication_model.dart';
 import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_in_progress_controller.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../../../../Utils/jwt_utils.dart';
 import '../../EditorProfile/controllers/editor_profile_controller.dart';
@@ -12,12 +13,13 @@ class EditorWebSocketController extends GetxController {
   // static const String webSocketUrl =
   //     'wss://video-editing-app.herokuapp.com/quote-communication/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjc4MjU1OTk0LCJqdGkiOiIzNmJmN2ViMjkwZGQ0MDVlOTUyZjZhZmU1ZjFmNWUwMiIsInVzZXJfaWQiOjE3fQ.00xPMVqPYXAzircVkXPzLJ7JTqttQ1vkoqHD3wdEkdI';
   late WebSocketChannel channel;
+
   // late IO.Socket socket;
   EditorInProgressController editorInProgressController =
       Get.put(EditorInProgressController());
   EditorProfileController editorProfileController = Get.find();
 
-  sendMessage(String message,int quoteId) {
+  sendMessage(String message, int quoteId) {
     var map = {
       "message": message,
       // "user": 17,
@@ -32,21 +34,36 @@ class EditorWebSocketController extends GetxController {
     }
   }
 
-
-  sendMessageIo(String message,int quoteId) {
+  sendDeliveryMessage(String message, int quoteId) {
     var map = {
       "message": message,
       // "user": 17,
-      "communication_type": "MESSAGE",
+      "communication_type": "SUBMISSION",
       "quote": quoteId,
       "attachments": ["https://google.com"],
     };
     try {
-      // socket.emit('sendNewMessage', map);
+      channel.sink.add(jsonEncode(map));
     } catch (e) {
-      log(e.toString());
+      log('Problem in send message : ${e.toString()}');
     }
   }
+
+
+  // sendMessageIo(String message, int quoteId) {
+  //   var map = {
+  //     "message": message,
+  //     // "user": 17,
+  //     "communication_type": "MESSAGE",
+  //     "quote": quoteId,
+  //     "attachments": ["https://google.com"],
+  //   };
+  //   try {
+  //     // socket.emit('sendNewMessage', map);
+  //   } catch (e) {
+  //     log(e.toString());
+  //   }
+  // }
 
   @override
   void onInit() {
@@ -94,28 +111,28 @@ class EditorWebSocketController extends GetxController {
   initWebSocket() async {
     String token = await JwtUtils.getJwtToken() ?? '';
     String baseurl =
-        "wss://video-editing-app.herokuapp.com/quote-communication/";
-    Uri webSocketUrl= Uri.parse(baseurl).replace(queryParameters: {"token": token},);
+        "ws://video-editing-app.herokuapp.com/quote-communication/";
+    Uri webSocketUrl = Uri.parse('wss://video-editing-app.herokuapp.com/quote-communication/').replace(
+      queryParameters: {"token": token},
+    );
     channel = WebSocketChannel.connect(webSocketUrl);
     log('The url is : $webSocketUrl');
     // channel = IOWebSocketChannel.connect(webSocketUrl);
     channel.stream.listen((event) {
       log('event is : $event');
-      // try {
+      try {
         var message = QuoteCommunicationModel.fromJson(jsonDecode(event));
         if (message.user?.id ==
             editorProfileController.userModelFromApi.value?.user?.id) {
-          editorInProgressController.buyerMessages.add(message);
-        } else {
           editorInProgressController.editorMessages.add(message);
+        } else {
+          editorInProgressController.buyerMessages.add(message);
         }
         log('message sent : $event');
-      // } catch (e) {
-      //   log('MESSAGE NOT SENT. problem is: $e');
-      // }
+      } catch (e) {
+        log('MESSAGE NOT SENT. problem is: $e');
+      }
     });
-
-
   }
 }
 // import 'dart:convert';

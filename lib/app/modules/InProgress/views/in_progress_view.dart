@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/InProgress/controllers/web_socket_controller.dart';
+import 'package:video_editing_app/app/modules/InProgress/views/request_revision.dart';
 import 'package:video_editing_app/app/modules/Order/controllers/order_controller.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import 'package:video_editing_app/widgets/elevated_button_widget.dart';
@@ -51,19 +52,22 @@ class InProgressView extends GetView<InProgressController> {
                           // Get.toNamed(Routes.CHECK_OUT);
                         },
                         child: Obx(
-                          ()=> buildProjectTitleContainer(
+                          () => buildProjectTitleContainer(
                             height,
                             width,
                             sp,
-                            title:
-                                orderController.selectedOrder.value!.projectTitle ?? '',
-                            totalVideos: orderController
-                                    .selectedOrder.value!.quoteVideos!.isNotEmpty
+                            title: orderController
+                                    .selectedOrder.value!.projectTitle ??
+                                '',
+                            totalVideos: orderController.selectedOrder.value!
+                                    .quoteVideos!.isNotEmpty
                                 ? orderController
                                     .selectedOrder.value!.quoteVideos!.length
                                     .toString()
                                 : '0',
-                            status: orderController.selectedOrder.value!.status ?? '',
+                            status:
+                                orderController.selectedOrder.value!.status ??
+                                    '',
                           ),
                         )),
                     SizedBox(height: height * 0.001),
@@ -144,10 +148,10 @@ class InProgressView extends GetView<InProgressController> {
                             ),
                             children: [
                               ...List.generate(
-                                  orderController
-                                          .selectedOrder.value!.quoteVideos!.isNotEmpty
-                                      ? orderController
-                                          .selectedOrder.value!.quoteVideos!.length
+                                  orderController.selectedOrder.value!
+                                          .quoteVideos!.isNotEmpty
+                                      ? orderController.selectedOrder.value!
+                                          .quoteVideos!.length
                                       : 0,
                                   (index) => Column(
                                         crossAxisAlignment:
@@ -159,17 +163,20 @@ class InProgressView extends GetView<InProgressController> {
                                             sp,
                                             projectNumber: '${index + 1}',
                                             driveLink: orderController
-                                                    .selectedOrder.value!
+                                                    .selectedOrder
+                                                    .value!
                                                     .quoteVideos![index]
                                                     .googleDriveLink ??
                                                 '',
                                             duration: orderController
-                                                .selectedOrder.value!
+                                                .selectedOrder
+                                                .value!
                                                 .quoteVideos![index]
                                                 .numberOfMinutes
                                                 .toString(),
                                             description: orderController
-                                                    .selectedOrder.value!
+                                                    .selectedOrder
+                                                    .value!
                                                     .quoteVideos![index]
                                                     .details ??
                                                 '',
@@ -195,7 +202,8 @@ class InProgressView extends GetView<InProgressController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .verticalSize ==
                                                         true
@@ -205,7 +213,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .horizontalSize ==
                                                         true
@@ -215,7 +224,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .squareSize ==
                                                         true
@@ -225,7 +235,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .allSizes ==
                                                         true
@@ -259,7 +270,8 @@ class InProgressView extends GetView<InProgressController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .colorGrading ==
                                                         true
@@ -269,7 +281,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .animation ==
                                                         true
@@ -279,7 +292,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .customSubtitle ==
                                                         true
@@ -290,7 +304,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .specialEffectOrVfx ==
                                                         true
@@ -301,7 +316,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .copyrightFreeMusic ==
                                                         true
@@ -312,7 +328,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .transitions ==
                                                         true
@@ -322,7 +339,8 @@ class InProgressView extends GetView<InProgressController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .motionGraphics ==
                                                         true
@@ -344,8 +362,8 @@ class InProgressView extends GetView<InProgressController> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: orderController
-                                            .selectedOrder.value!.userModel?.name ??
+                                    text: orderController.selectedOrder.value!
+                                            .userModel?.name ??
                                         '',
                                     // text: 'Raju Mullah ',
                                     style: TextStyle(
@@ -490,109 +508,421 @@ class InProgressView extends GetView<InProgressController> {
                               ),
                             ],
                           ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Deliver order ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
+                          Obx(
+                            () => controller.deliverMessages.isNotEmpty
+                                ? ExpansionTile(
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Deliver order ',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'Sep 19, 1:43 PM',
+                                            style: TextStyle(
+                                              fontSize: 12 * sp,
+                                              fontWeight: kfour,
+                                              color: kgrey5,
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/deliverOrder.svg',
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              'assets/icons/deliverOrder.svg',
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
                                     children: [
-                                      MyText(
-                                        text:
-                                            'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          ...List.generate(
-                                              3,
-                                              (index) => Container(
-                                                    margin: EdgeInsets.only(
-                                                      right: width * 0.01,
+                                      // Align(
+                                      //   alignment: Alignment.centerLeft,
+                                      //   child: Container(
+                                      //     margin: EdgeInsets.only(
+                                      //         left: width / 5.5, right: width * 0.045),
+                                      //     child: Column(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.start,
+                                      //       children: [
+                                      //         MyText(
+                                      //           text:
+                                      //               'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
+                                      //           size: 14 * sp,
+                                      //           color: kgrey8,
+                                      //           weight: kfour,
+                                      //         ),
+                                      //         SizedBox(height: height * 0.025),
+                                      //         Row(
+                                      //           children: [
+                                      //             ...List.generate(
+                                      //                 3,
+                                      //                 (index) => Container(
+                                      //                       margin: EdgeInsets.only(
+                                      //                         right: width * 0.01,
+                                      //                       ),
+                                      //                       height: height * 0.09,
+                                      //                       width: width / 6,
+                                      //                       decoration:
+                                      //                           const BoxDecoration(
+                                      //                         image: DecorationImage(
+                                      //                           image: AssetImage(
+                                      //                               'assets/icons/playVideo.png'),
+                                      //                         ),
+                                      //                       ),
+                                      //                     ))
+                                      //           ],
+                                      //         ),
+                                      //         SizedBox(height: height * 0.025),
+                                      //         Row(
+                                      //           children: [
+                                      //             Expanded(
+                                      //               child: SizedBox(
+                                      //                 height: height * 0.06,
+                                      //                 child: MyButton(
+                                      //                   borderColor: kgrey3,
+                                      //                   color: const Color(0xffF9F9FB),
+                                      //                   textColor: kgre7,
+                                      //                   text: 'Request revision',
+                                      //                   onPress: () {},
+                                      //                 ),
+                                      //               ),
+                                      //             ),
+                                      //             SizedBox(
+                                      //               width: width * 0.01,
+                                      //             ),
+                                      //             Expanded(
+                                      //               child: SizedBox(
+                                      //                 height: height * 0.06,
+                                      //                 child: MyButton(
+                                      //                   text: 'Accept',
+                                      //                   onPress: () {
+                                      //                     Get.toNamed(Routes.COMPLETED);
+                                      //                   },
+                                      //                 ),
+                                      //               ),
+                                      //             )
+                                      //           ],
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .deliverMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .deliverMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                    SizedBox(
+                                                        height: height * 0.025),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: SizedBox(
+                                                            height:
+                                                                height * 0.06,
+                                                            child: MyButton(
+                                                              borderColor:
+                                                                  kgrey3,
+                                                              color: const Color(
+                                                                  0xffF9F9FB),
+                                                              textColor: kgre7,
+                                                              text:
+                                                                  'Request revision',
+                                                              onPress: () {
+                                                                Get.to(() =>
+                                                                    const RequestRevision());
+                                                              },
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width * 0.01,
+                                                        ),
+                                                        Expanded(
+                                                          child: SizedBox(
+                                                            height:
+                                                                height * 0.06,
+                                                            child: MyButton(
+                                                              text: 'Accept',
+                                                              onPress:
+                                                                  () async {
+                                                                await controller.completeOrder(
+                                                                    orderController
+                                                                            .selectedOrder
+                                                                            .value
+                                                                            ?.id ??
+                                                                        0);
+                                                                await orderController.getOrderModel(
+                                                                    orderController
+                                                                            .selectedOrder
+                                                                            .value
+                                                                            ?.id ??
+                                                                        0);
+                                                                await orderController
+                                                                    .fetchOrdersList();
+                                                              },
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                    height: height * 0.09,
-                                                    width: width / 6,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                            'assets/icons/playVideo.png'),
-                                                      ),
-                                                    ),
-                                                  ))
-                                        ],
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: SizedBox(
-                                              height: height * 0.06,
-                                              child: MyButton(
-                                                borderColor: kgrey3,
-                                                color: const Color(0xffF9F9FB),
-                                                textColor: kgre7,
-                                                text: 'Request revision',
-                                                onPress: () {},
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: width * 0.01,
-                                          ),
-                                          Expanded(
-                                            child: SizedBox(
-                                              height: height * 0.06,
-                                              child: MyButton(
-                                                text: 'Accept',
-                                                onPress: () {
-                                                  Get.toNamed(Routes.COMPLETED);
-                                                },
-                                              ),
-                                            ),
-                                          )
-                                        ],
+                                                  ],
+                                                ),
+                                              )
+                                            : const CircularProgressIndicator(),
                                       ),
                                     ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                                  )
+                                : const SizedBox(),
+                          ),
+                          SizedBox(height: height * 0.013),
+                          Obx(
+                            () => controller.revisionMessages.isNotEmpty
+                                ? ExpansionTile(
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Revisions Requested',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: 'Sep 19, 1:43 PM',
+                                            style: TextStyle(
+                                              fontSize: 12 * sp,
+                                              fontWeight: kfour,
+                                              color: kgrey5,
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/revision.svg',
+                                    ),
+                                    children: [
+                                      // Align(
+                                      //   alignment: Alignment.centerLeft,
+                                      //   child: Container(
+                                      //     margin: EdgeInsets.only(
+                                      //         left: width / 5.5, right: width * 0.045),
+                                      //     child: Column(
+                                      //       crossAxisAlignment:
+                                      //           CrossAxisAlignment.start,
+                                      //       children: [
+                                      //         MyText(
+                                      //           text:
+                                      //               'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
+                                      //           size: 14 * sp,
+                                      //           color: kgrey8,
+                                      //           weight: kfour,
+                                      //         ),
+                                      //         SizedBox(height: height * 0.025),
+                                      //         Row(
+                                      //           children: [
+                                      //             ...List.generate(
+                                      //                 3,
+                                      //                 (index) => Container(
+                                      //                       margin: EdgeInsets.only(
+                                      //                         right: width * 0.01,
+                                      //                       ),
+                                      //                       height: height * 0.09,
+                                      //                       width: width / 6,
+                                      //                       decoration:
+                                      //                           const BoxDecoration(
+                                      //                         image: DecorationImage(
+                                      //                           image: AssetImage(
+                                      //                               'assets/icons/playVideo.png'),
+                                      //                         ),
+                                      //                       ),
+                                      //                     ))
+                                      //           ],
+                                      //         ),
+                                      //         SizedBox(height: height * 0.025),
+                                      //         Row(
+                                      //           children: [
+                                      //             Expanded(
+                                      //               child: SizedBox(
+                                      //                 height: height * 0.06,
+                                      //                 child: MyButton(
+                                      //                   borderColor: kgrey3,
+                                      //                   color: const Color(0xffF9F9FB),
+                                      //                   textColor: kgre7,
+                                      //                   text: 'Request revision',
+                                      //                   onPress: () {},
+                                      //                 ),
+                                      //               ),
+                                      //             ),
+                                      //             SizedBox(
+                                      //               width: width * 0.01,
+                                      //             ),
+                                      //             Expanded(
+                                      //               child: SizedBox(
+                                      //                 height: height * 0.06,
+                                      //                 child: MyButton(
+                                      //                   text: 'Accept',
+                                      //                   onPress: () {
+                                      //                     Get.toNamed(Routes.COMPLETED);
+                                      //                   },
+                                      //                 ),
+                                      //               ),
+                                      //             )
+                                      //           ],
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .revisionMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .revisionMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                    SizedBox(
+                                                        height: height * 0.025),
+                                                    Row(
+                                                      children: [
+                                                        Expanded(
+                                                          child: SizedBox(
+                                                            height:
+                                                                height * 0.06,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width: width * 0.01,
+                                                        ),
+                                                        Expanded(
+                                                          child: SizedBox(
+                                                            height:
+                                                                height * 0.06,
+                                                            child: MyButton(
+                                                              text: 'Accept',
+                                                              onPress:
+                                                                  () async {
+                                                                await controller.completeOrder(
+                                                                    orderController
+                                                                            .selectedOrder
+                                                                            .value
+                                                                            ?.id ??
+                                                                        0);
+                                                                await orderController.getOrderModel(
+                                                                    orderController
+                                                                            .selectedOrder
+                                                                            .value
+                                                                            ?.id ??
+                                                                        0);
+                                                                await orderController
+                                                                    .fetchOrdersList();
+                                                              },
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
                           ),
                         ],
                       ),
@@ -680,9 +1010,6 @@ class InProgressView extends GetView<InProgressController> {
                             webSocketController.sendMessage(
                                 controller.messageController.text,
                                 orderController.selectedOrder.value!.id ?? 0);
-                            // webSocketController.sendMessageIo(
-                            //     controller.messageController.text,
-                            //     orderController.selectedOrder.value?.id ?? 0);
                           }
                           controller.messageController.clear();
                           controller.messageFocusNode.unfocus();

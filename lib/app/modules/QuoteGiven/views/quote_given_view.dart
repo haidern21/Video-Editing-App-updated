@@ -56,17 +56,22 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                           Get.toNamed(Routes.CHECK_OUT);
                         },
                         child: Obx(
-                            ()=> buildProjectTitleContainer(height, width, sp,
-                              totalVideos: orderController
-                                      .selectedOrder.value!.quoteVideos!.isNotEmpty
+                          () => buildProjectTitleContainer(height, width, sp,
+                              totalVideos: orderController.selectedOrder.value!
+                                      .quoteVideos!.isNotEmpty
                                   ? orderController
                                       .selectedOrder.value!.quoteVideos!.length
                                       .toString()
                                   : 0.toString(),
-                              title: orderController.selectedOrder.value!.projectTitle ??
+                              title: orderController
+                                      .selectedOrder.value?.projectTitle ??
                                   '',
                               status:
-                                  orderController.selectedOrder.value!.status ?? ''),
+                                  orderController.selectedOrder.value?.status ??
+                                      '',
+                              price: orderController
+                                      .selectedOrder.value?.quotePrice ??
+                                  ''),
                         )),
                     SizedBox(height: height * 0.001),
                     GetBuilder<QuoteGivenController>(builder: (controller) {
@@ -124,8 +129,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                       child: Column(
                         children: [
                           ...List.generate(
-                              orderController
-                                      .selectedOrder.value!.quoteVideos!.isNotEmpty
+                              orderController.selectedOrder.value!.quoteVideos!
+                                      .isNotEmpty
                                   ? orderController
                                       .selectedOrder.value!.quoteVideos!.length
                                   : 0,
@@ -137,18 +142,21 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                           height, width, sp,
                                           projectNumber: '${index + 1}',
                                           description: orderController
-                                                  .selectedOrder.value!
+                                                  .selectedOrder
+                                                  .value!
                                                   .quoteVideos?[index]
                                                   .details ??
                                               '',
                                           duration: orderController
-                                                  .selectedOrder.value!
+                                                  .selectedOrder
+                                                  .value!
                                                   .quoteVideos?[index]
                                                   .numberOfMinutes
                                                   .toString() ??
                                               '',
                                           driveLink: orderController
-                                                  .selectedOrder.value!
+                                                  .selectedOrder
+                                                  .value!
                                                   .quoteVideos?[index]
                                                   .googleDriveLink ??
                                               ''),
@@ -173,7 +181,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .verticalSize ==
                                                     true
@@ -183,7 +192,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .horizontalSize ==
                                                     true
@@ -193,7 +203,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .squareSize ==
                                                     true
@@ -202,7 +213,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .allSizes ==
                                                     true
@@ -235,7 +247,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .colorGrading ==
                                                     true
@@ -245,7 +258,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .animation ==
                                                     true
@@ -255,7 +269,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .customSubtitle ==
                                                     true
@@ -265,7 +280,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .specialEffectOrVfx ==
                                                     true
@@ -276,7 +292,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .copyrightFreeMusic ==
                                                     true
@@ -287,7 +304,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .transitions ==
                                                     true
@@ -297,7 +315,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                                     height: 0,
                                                   ),
                                             orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos![index]
                                                         .motionGraphics ==
                                                     true
@@ -391,10 +410,12 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                               borderRadius: BorderRadius.circular(30.0),
                             ),
                           ),
-                          onPressed: ()async {
-                           await controller.quoteRejected(orderController.selectedOrder.value!.id??0);
-                           await orderController.getOrderModel(orderController.selectedOrder.value?.id??0);
-                           await orderController.fetchOrdersList();
+                          onPressed: () async {
+                            await controller.quoteRejected(
+                                orderController.selectedOrder.value!.id ?? 0);
+                            await orderController.getOrderModel(
+                                orderController.selectedOrder.value?.id ?? 0);
+                            await orderController.fetchOrdersList();
                           },
                           child: MyText(
                             text: 'Reject',
@@ -411,10 +432,13 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                         height: height * 0.06,
                         child: MyButton(
                           text: 'Accept',
-                          onPress: ()async {
-                            await controller.quoteAccepted(orderController.selectedOrder.value!.id??0);
-                            await orderController.getOrderModel(orderController.selectedOrder.value?.id??0);
-                            await orderController.fetchOrdersList();                          },
+                          onPress: () async {
+                            await controller.quoteAccepted(
+                                orderController.selectedOrder.value!.id ?? 0);
+                            await orderController.getOrderModel(
+                                orderController.selectedOrder.value?.id ?? 0);
+                            await orderController.fetchOrdersList();
+                          },
                         ),
                       ),
                     )
@@ -526,7 +550,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
   Container buildProjectTitleContainer(double height, double width, double sp,
       {required String title,
       required String status,
-      required String totalVideos}) {
+      required String totalVideos,
+      required String price}) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -585,7 +610,7 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
           buildRow(
             sp,
             leftText: 'Project price',
-            rightText: r'$145.00',
+            rightText: '\$$price',
           ),
           SizedBox(height: height * 0.015),
           Row(
