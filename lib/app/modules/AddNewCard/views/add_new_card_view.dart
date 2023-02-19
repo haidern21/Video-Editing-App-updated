@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/Order/controllers/order_controller.dart';
+import 'package:video_editing_app/app/modules/QuoteGiven/controllers/quote_given_controller.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
 import '../../../../widgets/back_button.dart';
@@ -8,14 +10,19 @@ import '../../../../widgets/borders.dart';
 import '../../../../widgets/elevated_button_widget.dart';
 import '../../../../widgets/login_field.dart';
 import '../../../../widgets/my_text.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/add_new_card_controller.dart';
 
 class AddNewCardView extends GetView<AddNewCardController> {
+  const AddNewCardView({super.key});
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
+    OrderController orderController= Get.find();
+    QuoteGivenController quoteGivenController= Get.find();
 
     return SafeArea(
       child: Scaffold(
@@ -134,7 +141,6 @@ class AddNewCardView extends GetView<AddNewCardController> {
                                 } else {
                                   DoNothingAction();
                                 }
-                                ;
                               }),
                             ],
                           ),
@@ -190,20 +196,25 @@ class AddNewCardView extends GetView<AddNewCardController> {
                     SizedBox(height: height * 0.044),
                     Center(
                       child: MyText(
-                        text: r"Total: $145",
+                        text: 'Total :\$ ${orderController.selectedOrder.value?.quotePrice??''}',
                         size: 20 * sp,
                         weight: kfive,
                         color: const Color(0xff000000),
                       ),
                     ),
                     SizedBox(height: height * 0.036),
-                    Container(
+                    SizedBox(
                       height: height * 0.072,
                       width: width,
                       child: MyButton(
                         text: 'Payment',
-                        onPress: () {
-                          Get.back();
+                        onPress: () async{
+                          await quoteGivenController.quoteAccepted(
+                              orderController.selectedOrder.value!.id ?? 0);
+                          await orderController.getOrderModel(
+                              orderController.selectedOrder.value?.id ?? 0);
+                          await orderController.fetchOrdersList();
+                          Get.toNamed(Routes.FIND_AN_EDITOR);
                         },
                       ),
                     ),

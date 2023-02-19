@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_in_progress_controller.dart';
-import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import '../../Order/views/container_widget.dart';
 import '../controllers/editor_orders_controller.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
@@ -39,7 +38,10 @@ class EditorOrdersView extends GetView {
 
     return Scaffold(
       backgroundColor: const Color(0xffF9F9FB),
-      body: SingleChildScrollView(
+      body: RefreshIndicator(
+        onRefresh: ()async{
+          controller.fetchOrdersList();
+        },
         child: Column(
           children: [
             SizedBox(height: height * 0.02),
@@ -84,11 +86,11 @@ class EditorOrdersView extends GetView {
                                 EdgeInsets.symmetric(horizontal: width * 0.04),
                             height: height * 0.05,
                             decoration: BoxDecoration(
-                              color: controller.selectedIndex == index
+                              color: controller.selectedIndex.value == index
                                   ? kprimaryColor
                                   : Color(0xffF9F9FB),
                               border: Border.all(
-                                color: controller.selectedIndex == index
+                                color: controller.selectedIndex.value == index
                                     ? kprimaryColor
                                     : kgrey2,
                               ),
@@ -96,10 +98,10 @@ class EditorOrdersView extends GetView {
                             ),
                             child: Center(
                               child: MyText(
-                                text: '${_status[index]}',
+                                text: _status[index],
                                 size: 12 * sp,
                                 weight: kfour,
-                                color: controller.selectedIndex == index
+                                color: controller.selectedIndex.value == index
                                     ? kwhite
                                     : kgrey8,
                               ),
@@ -119,58 +121,6 @@ class EditorOrdersView extends GetView {
                 : controller.selectedIndex.value == 1
                     ? inProgressOrders()
                     : completedOrders()),
-            // ///INPROGRESS CONTAINER
-            // GestureDetector(
-            //     onTap: () {
-            //       Get.toNamed(Routes.EDITOR_IN_PROGRESS);
-            //     },
-            //     child: Column(
-            //       children: [
-            //         ...List.generate(
-            //           3,
-            //           (index) => buildProjectTitle(
-            //             width,
-            //             height,
-            //             sp,
-            //             richText: RichText(
-            //               text: TextSpan(
-            //                 children: [
-            //                   TextSpan(
-            //                       text: 'Project Timeline :   ',
-            //                       style: fourStyle),
-            //                   TextSpan(text: '10:44:20', style: sixStyle),
-            //                 ],
-            //               ),
-            //             ),
-            //             containerText: 'In Progress',
-            //             containerColor: kinfo.withOpacity(0.10),
-            //             containerTextColor: kinfo,
-            //           ),
-            //         )
-            //       ],
-            //     )),
-            // ...List.generate(
-            //   3,
-            //   (index) => GestureDetector(
-            //     onTap: () => Get.toNamed(Routes.COMPLETED),
-            //     child: buildProjectTitle(
-            //       width,
-            //       height,
-            //       sp,
-            //       richText: RichText(
-            //         text: TextSpan(
-            //           children: [
-            //             TextSpan(
-            //                 text: '20 Sept 2022, 06:23 PM', style: fourStyle),
-            //           ],
-            //         ),
-            //       ),
-            //       containerText: 'Completed',
-            //       containerColor: kcomplete.withOpacity(0.10),
-            //       containerTextColor: kcomplete,
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),
@@ -190,11 +140,9 @@ class EditorOrdersView extends GetView {
                       onTap: () async {
                         await controller
                             .getOrderModel(controller.orders[index].id ?? 0);
-                        if (controller.orders[index].getStatusDisplay == 'In Progress') {
-                          editorInProgressController
-                              .fetchQuoteCommunicationsList(
-                                  controller.orders[index].id ?? 0);
-                        }
+                        await editorInProgressController
+                            .fetchQuoteCommunicationsList(
+                            controller.orders[index].id ?? 0);
                         controller.orders[index].getStatusDisplay ==
                                 'Quote Pending'
                             ? Get.toNamed(Routes.EDITOR_PROJECT_DETAILS)
@@ -207,8 +155,7 @@ class EditorOrdersView extends GetView {
                         width,
                         height,
                         sp,
-                        richText: index != 1
-                            ? RichText(
+                        richText:  RichText(
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
@@ -222,16 +169,6 @@ class EditorOrdersView extends GetView {
                                         fontFamily: 'WorkSans',
                                       ),
                                     ),
-                                  ],
-                                ),
-                              )
-                            : RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: 'Project Timeline :   ',
-                                        style: fourStyle),
-                                    TextSpan(text: '10:44:20', style: sixStyle),
                                   ],
                                 ),
                               ),
@@ -292,8 +229,7 @@ class EditorOrdersView extends GetView {
                                 : Get.toNamed(Routes.ORDER_COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText:RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
@@ -307,17 +243,6 @@ class EditorOrdersView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),
@@ -378,8 +303,7 @@ class EditorOrdersView extends GetView {
                                 : Get.toNamed(Routes.ORDER_COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText: RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
@@ -393,17 +317,6 @@ class EditorOrdersView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),

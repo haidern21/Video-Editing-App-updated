@@ -8,8 +8,6 @@ class FindAnEditorController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await Future.delayed(Duration(seconds: 1));
-    Get.offAndToNamed(Routes.EDITOR_ALOTTED);
   }
 
   @override

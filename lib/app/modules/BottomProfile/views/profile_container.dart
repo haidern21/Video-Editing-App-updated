@@ -26,7 +26,7 @@ Widget buildProfileContainer(
         ),
         SizedBox(height: height * 0.016),
         MyText(
-          text: user?.id ?? 'Raju Mullah',
+          text: user?.name ?? '',
           size: 20 * sp,
           weight: ksix,
           color: kblack,
@@ -46,7 +46,7 @@ Widget buildProfileContainer(
               ),
               TextSpan(
                 text:
-                    "HAHAHAHAHA",
+                    user?.accountType??'',
                     // "${user?.accountType?.substring(0, 1).toUpperCase()}${user?.accountType?.substring(1)}",
                 style: TextStyle(
                   fontFamily: 'WorkSans',

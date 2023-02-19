@@ -37,10 +37,9 @@ class EditorBottomBarView extends GetView<EditorBottomBarController> {
   final TextStyle selectedLabelStyle = const TextStyle(
       color: kprimaryColor, fontWeight: FontWeight.w400, fontSize: 10);
 
+  EditorBottomBarView({super.key});
+
   buildBottomNavigationMenu(context, landingPageController) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    final sp = MediaQuery.of(context).textScaleFactor;
     return Obx(
       () => MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),

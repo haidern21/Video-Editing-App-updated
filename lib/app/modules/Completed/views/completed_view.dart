@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/Order/controllers/order_controller.dart';
-import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../Utils/utils.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
@@ -10,6 +9,8 @@ import '../../../../widgets/my_text.dart';
 import '../controllers/completed_controller.dart';
 
 class CompletedView extends GetView<CompletedController> {
+  const CompletedView({super.key});
+
   @override
   Widget build(BuildContext context) {
     OrderController orderController = Get.find();
@@ -50,23 +51,31 @@ class CompletedView extends GetView<CompletedController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.CHECK_OUT);
-                        },
-                        child: Obx(
-                            ()=> buildProjectTitleContainer(height, width, sp,
-                              totalVideos: orderController
-                                      .selectedOrder.value!.quoteVideos!.isNotEmpty
-                                  ? orderController
-                                      .selectedOrder.value!.quoteVideos!.length
-                                      .toString()
-                                  : 0.toString(),
-                              title: orderController.selectedOrder.value!.projectTitle ??
+                    Obx(
+                      () => buildProjectTitleContainer(height, width, sp,
+                          totalVideos: orderController
+                                  .selectedOrder.value!.quoteVideos!.isNotEmpty
+                              ? orderController
+                                  .selectedOrder.value!.quoteVideos!.length
+                                  .toString()
+                              : 0.toString(),
+                          title: orderController
+                                  .selectedOrder.value!.projectTitle ??
+                              '',
+                          status:
+                              orderController.selectedOrder.value!.status ?? '',
+                          price:
+                              orderController.selectedOrder.value?.quotePrice ??
                                   '',
-                              status:
-                                  orderController.selectedOrder.value!.status ?? ''),
-                        )),
+                          endDate: orderController
+                                  .selectedOrder.value?.completedAt
+                                  ?.substring(0, 10) ??
+                              '',
+                          startedDate: orderController
+                                  .selectedOrder.value?.startedAt
+                                  ?.substring(0, 10) ??
+                              ''),
+                    ),
                     SizedBox(height: height * 0.001),
                     Theme(
                       data: Theme.of(context).copyWith(
@@ -82,7 +91,7 @@ class CompletedView extends GetView<CompletedController> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: 'Start project ',
+                                text: 'Start project  ',
                                 style: TextStyle(
                                   fontSize: 14 * sp,
                                   fontWeight: kfour,
@@ -91,7 +100,10 @@ class CompletedView extends GetView<CompletedController> {
                                 ),
                               ),
                               TextSpan(
-                                text: 'Sep 19, 1:43 PM',
+                                text: orderController
+                                        .selectedOrder.value?.startedAt
+                                        ?.substring(0, 10) ??
+                                    '',
                                 style: TextStyle(
                                   fontSize: 12 * sp,
                                   fontWeight: kfour,
@@ -127,15 +139,6 @@ class CompletedView extends GetView<CompletedController> {
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -145,32 +148,35 @@ class CompletedView extends GetView<CompletedController> {
                             ),
                             children: [
                               ...List.generate(
-                                  orderController
-                                          .selectedOrder.value!.quoteVideos!.isNotEmpty
-                                      ? orderController
-                                          .selectedOrder.value!.quoteVideos!.length
+                                  orderController.selectedOrder.value!
+                                          .quoteVideos!.isNotEmpty
+                                      ? orderController.selectedOrder.value!
+                                          .quoteVideos!.length
                                       : 0,
                                   (index) => Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
                                           Obx(
-                                      ()=> buildDesciptionContainer(
+                                            () => buildDesciptionContainer(
                                                 height, width, sp,
                                                 projectNumber: '${index + 1}',
                                                 description: orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos?[index]
                                                         .details ??
                                                     '',
                                                 duration: orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos?[index]
                                                         .numberOfMinutes
                                                         .toString() ??
                                                     '',
                                                 driveLink: orderController
-                                                        .selectedOrder.value!
+                                                        .selectedOrder
+                                                        .value!
                                                         .quoteVideos?[index]
                                                         .googleDriveLink ??
                                                     ''),
@@ -196,7 +202,8 @@ class CompletedView extends GetView<CompletedController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .verticalSize ==
                                                         true
@@ -206,7 +213,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .horizontalSize ==
                                                         true
@@ -216,7 +224,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .squareSize ==
                                                         true
@@ -226,7 +235,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .allSizes ==
                                                         true
@@ -260,7 +270,8 @@ class CompletedView extends GetView<CompletedController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .colorGrading ==
                                                         true
@@ -270,7 +281,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .animation ==
                                                         true
@@ -280,7 +292,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .customSubtitle ==
                                                         true
@@ -291,7 +304,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .specialEffectOrVfx ==
                                                         true
@@ -302,7 +316,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .copyrightFreeMusic ==
                                                         true
@@ -313,7 +328,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .transitions ==
                                                         true
@@ -323,7 +339,8 @@ class CompletedView extends GetView<CompletedController> {
                                                         height: 0,
                                                       ),
                                                 orderController
-                                                            .selectedOrder.value!
+                                                            .selectedOrder
+                                                            .value!
                                                             .quoteVideos![index]
                                                             .motionGraphics ==
                                                         true
@@ -345,20 +362,11 @@ class CompletedView extends GetView<CompletedController> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Raju Mullah ',
+                                    text: orderController.selectedOrder.value?.userModel?.name??'',
                                     style: TextStyle(
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
                                       color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -370,29 +378,45 @@ class CompletedView extends GetView<CompletedController> {
                                 backgroundImage:
                                     AssetImage('assets/icons/imagePerson.png')),
                             children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
+                              Obx(
+                                    () => controller.showLoader.value == false
+                                    ? ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                    controller.buyerMessages.length,
+                                    itemBuilder: (context, index) {
+                                      return Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: width / 5.5),
+                                          child: Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: [
-                                          MyText(
-                                            text: 'Hello, What’s up?',
-                                            size: 14 * sp,
-                                            color: kgrey8,
-                                            weight: kfour,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  MyText(
+                                                    text: controller
+                                                        .buyerMessages[
+                                                    index]
+                                                        .message ??
+                                                        '',
+                                                    size: 14 * sp,
+                                                    color: kgrey8,
+                                                    weight: kfour,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                        ),
+                                      );
+                                    })
+                                    : const CircularProgressIndicator(),
                               ),
                             ],
                           ),
@@ -402,20 +426,11 @@ class CompletedView extends GetView<CompletedController> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Duseca Software ',
+                                    text: orderController.selectedOrder.value?.editorAssigned?.name??'',
                                     style: TextStyle(
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
                                       color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -427,216 +442,296 @@ class CompletedView extends GetView<CompletedController> {
                                 backgroundImage:
                                     AssetImage('assets/icons/duseca.png')),
                             children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                        text: 'Doing well.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.012),
-                                      MyText(
-                                        text: 'Do you complete your project?',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Deliver order ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              'assets/icons/deliverOrder.svg',
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                        text:
-                                            'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          ...List.generate(
-                                              3,
-                                              (index) => Container(
-                                                    margin: EdgeInsets.only(
-                                                      right: width * 0.01,
-                                                    ),
-                                                    height: height * 0.09,
-                                                    width: width / 6,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                            'assets/icons/playVideo.png'),
-                                                      ),
-                                                    ),
-                                                  ))
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Revision requested ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading:
-                                SvgPicture.asset('assets/icons/revision.svg'),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
+                              Obx(
+                                    () => controller.showLoader.value == false
+                                    ? ListView.builder(
+                                    shrinkWrap: true,
+                                    itemCount:
+                                    controller.editorMessages.length,
+                                    itemBuilder: (context, index) {
+                                      return Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Container(
+                                          margin: EdgeInsets.only(
+                                              left: width / 5.5),
+                                          child: Column(
+                                            crossAxisAlignment:
                                             CrossAxisAlignment.start,
-                                        children: [
-                                          MyText(
-                                            text: 'Need improvement',
-                                            size: 14 * sp,
-                                            color: kgrey8,
-                                            weight: kfour,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                CrossAxisAlignment
+                                                    .start,
+                                                children: [
+                                                  MyText(
+                                                    text: controller
+                                                        .editorMessages[
+                                                    index]
+                                                        .message ??
+                                                        '',
+                                                    size: 14 * sp,
+                                                    color: kgrey8,
+                                                    weight: kfour,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                        ),
+                                      );
+                                    })
+                                    : const CircularProgressIndicator(),
                               ),
                             ],
                           ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Order accepted ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading:
-                                SvgPicture.asset('assets/icons/accepted.svg'),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          MyText(
-                                            text: 'Order accepted',
-                                            size: 14 * sp,
-                                            color: kgrey8,
-                                            weight: kfour,
-                                          ),
-                                        ],
+                          Obx(
+                                () => controller.deliverMessages.isNotEmpty
+                                ? ExpansionTile(
+                              childrenPadding: EdgeInsets.zero,
+                              title: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Deliver order ',
+                                      style: TextStyle(
+                                        fontSize: 14 * sp,
+                                        fontWeight: kfour,
+                                        color: const Color(0xff000000),
+                                        fontFamily: 'WorkSans',
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Sep 19, 1:43 PM',
+                                      style: TextStyle(
+                                        fontSize: 12 * sp,
+                                        fontWeight: kfour,
+                                        color: kgrey5,
+                                        fontFamily: 'WorkSans',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
+                              leading: SvgPicture.asset(
+                                'assets/icons/deliverOrder.svg',
+                              ),
+                              children: [
+                                // Align(
+                                //   alignment: Alignment.centerLeft,
+                                //   child: Container(
+                                //     margin: EdgeInsets.only(
+                                //         left: width / 5.5, right: width * 0.045),
+                                //     child: Column(
+                                //       crossAxisAlignment:
+                                //           CrossAxisAlignment.start,
+                                //       children: [
+                                //         MyText(
+                                //           text:
+                                //               'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
+                                //           size: 14 * sp,
+                                //           color: kgrey8,
+                                //           weight: kfour,
+                                //         ),
+                                //         SizedBox(height: height * 0.025),
+                                //         Row(
+                                //           children: [
+                                //             ...List.generate(
+                                //                 3,
+                                //                 (index) => Container(
+                                //                       margin: EdgeInsets.only(
+                                //                         right: width * 0.01,
+                                //                       ),
+                                //                       height: height * 0.09,
+                                //                       width: width / 6,
+                                //                       decoration:
+                                //                           const BoxDecoration(
+                                //                         image: DecorationImage(
+                                //                           image: AssetImage(
+                                //                               'assets/icons/playVideo.png'),
+                                //                         ),
+                                //                       ),
+                                //                     ))
+                                //           ],
+                                //         ),
+                                //         SizedBox(height: height * 0.025),
+                                //         Row(
+                                //           children: [
+                                //             Expanded(
+                                //               child: SizedBox(
+                                //                 height: height * 0.06,
+                                //                 child: MyButton(
+                                //                   borderColor: kgrey3,
+                                //                   color: const Color(0xffF9F9FB),
+                                //                   textColor: kgre7,
+                                //                   text: 'Request revision',
+                                //                   onPress: () {},
+                                //                 ),
+                                //               ),
+                                //             ),
+                                //             SizedBox(
+                                //               width: width * 0.01,
+                                //             ),
+                                //             Expanded(
+                                //               child: SizedBox(
+                                //                 height: height * 0.06,
+                                //                 child: MyButton(
+                                //                   text: 'Accept',
+                                //                   onPress: () {
+                                //                     Get.toNamed(Routes.COMPLETED);
+                                //                   },
+                                //                 ),
+                                //               ),
+                                //             )
+                                //           ],
+                                //         ),
+                                //       ],
+                                //     ),
+                                //   ),
+                                // ),
+                                Obx(
+                                      () => controller.showLoader.value ==
+                                      false
+                                      ? Container(
+                                    margin: EdgeInsets.only(
+                                        left: width / 5.5,
+                                        right: width * 0.045),
+                                    child: Column(
+                                      children: [
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: controller
+                                                .deliverMessages
+                                                .length,
+                                            itemBuilder:
+                                                (context, index) {
+                                              return Align(
+                                                alignment: Alignment
+                                                    .centerLeft,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        MyText(
+                                                          text: controller
+                                                              .deliverMessages[index]
+                                                              .message ??
+                                                              '',
+                                                          size: 14 *
+                                                              sp,
+                                                          color:
+                                                          kgrey8,
+                                                          weight:
+                                                          kfour,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  )
+                                      : const CircularProgressIndicator(),
+                                ),
+                              ],
+                            )
+                                : const SizedBox(),
+                          ),
+                          SizedBox(height: height * 0.013),
+                          Obx(
+                                () => controller.revisionMessages.isNotEmpty
+                                ? ExpansionTile(
+                              childrenPadding: EdgeInsets.zero,
+                              title: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Revisions Requested',
+                                      style: TextStyle(
+                                        fontSize: 14 * sp,
+                                        fontWeight: kfour,
+                                        color: const Color(0xff000000),
+                                        fontFamily: 'WorkSans',
+                                      ),
+                                    ),
+                                    TextSpan(
+                                      text: 'Sep 19, 1:43 PM',
+                                      style: TextStyle(
+                                        fontSize: 12 * sp,
+                                        fontWeight: kfour,
+                                        color: kgrey5,
+                                        fontFamily: 'WorkSans',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              leading: SvgPicture.asset(
+                                'assets/icons/revision.svg',
+                              ),
+                              children: [
+                                Obx(
+                                      () => controller.showLoader.value ==
+                                      false
+                                      ? Container(
+                                    margin: EdgeInsets.only(
+                                        left: width / 5.5,
+                                        right: width * 0.045),
+                                    child: Column(
+                                      children: [
+                                        ListView.builder(
+                                            shrinkWrap: true,
+                                            itemCount: controller
+                                                .revisionMessages
+                                                .length,
+                                            itemBuilder:
+                                                (context, index) {
+                                              return Align(
+                                                alignment: Alignment
+                                                    .centerLeft,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                  CrossAxisAlignment
+                                                      .start,
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                      CrossAxisAlignment
+                                                          .start,
+                                                      children: [
+                                                        MyText(
+                                                          text: controller
+                                                              .revisionMessages[index]
+                                                              .message ??
+                                                              '',
+                                                          size: 14 *
+                                                              sp,
+                                                          color:
+                                                          kgrey8,
+                                                          weight:
+                                                          kfour,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }),
+                                      ],
+                                    ),
+                                  )
+                                      : const CircularProgressIndicator(),
+                                ),
+                              ],
+                            )
+                                : const SizedBox(),
                           ),
                         ],
                       ),
@@ -644,82 +739,6 @@ class CompletedView extends GetView<CompletedController> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: height * 0.025),
-                height: height * 0.1,
-                width: width,
-                color: kwhite,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: height * 0.06,
-                      width: width * 0.78,
-                      child: TextFormField(
-                        style: TextStyle(
-                          fontSize: 14 * sp,
-                          fontWeight: kfour,
-                          fontFamily: 'Poppins',
-                          color: kblack,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.zero,
-                          hintStyle: TextStyle(
-                            fontSize: 14 * sp,
-                            fontWeight: kfour,
-                            fontFamily: 'Poppins',
-                            color: const Color(0xff9EA3AE),
-                          ),
-                          hintText: 'Type your message',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide:
-                                const BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide:
-                                const BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide:
-                                const BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          suffixIcon: FittedBox(
-                            child: Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icons/upload.svg',
-                                  ),
-                                  const SizedBox(width: 3),
-                                  SvgPicture.asset(
-                                    'assets/icons/camera.svg',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              'assets/icons/smile.svg',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.019,
-                    ),
-                    SvgPicture.asset('assets/icons/frwrd.svg')
-                  ],
-                ),
-              )
             ],
           ),
         ),
@@ -825,7 +844,10 @@ class CompletedView extends GetView<CompletedController> {
   Container buildProjectTitleContainer(double height, double width, double sp,
       {required String title,
       required String status,
-      required String totalVideos}) {
+      required String totalVideos,
+      required String? startedDate,
+      required String? price,
+      required String? endDate}) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -840,7 +862,7 @@ class CompletedView extends GetView<CompletedController> {
         boxShadow: [
           BoxShadow(
               offset: const Offset(0, 4),
-              color: const Color(0xff0000000A).withOpacity(0.04),
+              color: const Color(0xff000000).withOpacity(0.04),
               blurRadius: 15.0,
               spreadRadius: 0.0),
         ],
@@ -871,20 +893,20 @@ class CompletedView extends GetView<CompletedController> {
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Assigned date',
-            rightText: '20 Sept 2022, 06:23 PM',
+            leftText: 'Started date',
+            rightText: startedDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Project timeline',
-            rightText: '10:23:54',
+            leftText: 'End date',
+            rightText: endDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
             leftText: 'Project price',
-            rightText: r'$145.00',
+            rightText: price ?? '',
           ),
           SizedBox(height: height * 0.015),
           Row(

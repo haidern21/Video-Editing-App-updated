@@ -54,7 +54,7 @@ class BottomProfileView extends GetView<BottomProfileController> {
                       ),
                     ),
                     SizedBox(height: height * 0.02),
-                    PointsContainer(height, width, sp),
+                    PointsContainer(height, width, sp,user: controller.userModelFromApi.value,),
                     SizedBox(height: height * 0.015),
                     ...RouteContainers(height, width, sp),
                     SizedBox(height: height * 0.015),

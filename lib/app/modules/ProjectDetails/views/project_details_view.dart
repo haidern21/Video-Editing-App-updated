@@ -11,6 +11,8 @@ import '../../../../widgets/my_text.dart';
 import 'list_tile.dart';
 
 class ProjectDetailsView extends GetView<ProjectDetailsController> {
+  const ProjectDetailsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     OrderController orderController = Get.find();
@@ -51,16 +53,21 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Obx(
-                    ()=> buildProjectTitleContainer(height, width, sp,
-                              title: orderController.selectedOrder.value!.projectTitle ??
+                          () => buildProjectTitleContainer(height, width, sp,
+                              title: orderController
+                                      .selectedOrder.value?.projectTitle ??
                                   '',
                               projectStatus:
-                                  orderController.selectedOrder.value!.status ?? '',
-                              totalVideos: orderController
-                                      .selectedOrder.value!.quoteVideos!.isNotEmpty
+                                  orderController.selectedOrder.value?.status ??
+                                      '',
+                              totalVideos: orderController.selectedOrder.value != null?
+                              orderController.selectedOrder.value! .quoteVideos!.isNotEmpty
                                   ? orderController
                                       .selectedOrder.value!.quoteVideos!.length
-                                  : 0),
+                                  : 0:0,
+                              createdDate: orderController.selectedOrder.value != null? orderController
+                                  .selectedOrder.value?.createdAt?.substring(0,10)??'':''
+                          ),
                         ),
                         SizedBox(height: height * 0.001),
                         GetBuilder<ProjectDetailsController>(
@@ -88,8 +95,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                         offset: const Offset(0, 4),
                                         blurRadius: 15.0,
                                         spreadRadius: 0,
-                                        color:
-                                            const Color(0xff000000).withOpacity(0.04))
+                                        color: const Color(0xff000000)
+                                            .withOpacity(0.04))
                                   ]),
                               child: Column(
                                 children: [
@@ -113,11 +120,11 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                         }),
                         SizedBox(height: height * 0.001),
                         ...List.generate(
-                            orderController
-                                    .selectedOrder.value!.quoteVideos!.isNotEmpty
+                           orderController.selectedOrder.value!=null? orderController.selectedOrder.value!.quoteVideos!
+                                    .isNotEmpty
                                 ? orderController
                                     .selectedOrder.value!.quoteVideos!.length
-                                : 0,
+                                : 0:0,
                             (index) => Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -126,19 +133,24 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                       width,
                                       sp,
                                       projectNumber: '${index + 1}',
-                                      description: orderController.selectedOrder.value!
-                                              .quoteVideos![index].details ??
+                                      description: orderController
+                                              .selectedOrder
+                                              .value!
+                                              .quoteVideos![index]
+                                              .details ??
                                           '',
                                       driveUrl: orderController
-                                              .selectedOrder.value!
+                                              .selectedOrder
+                                              .value!
                                               .quoteVideos![index]
                                               .googleDriveLink ??
                                           '',
                                       videoDuration: orderController
-                                              .selectedOrder.value!
-                                              .quoteVideos![index]
-                                              .numberOfMinutes
-                                              .toString(),
+                                          .selectedOrder
+                                          .value!
+                                          .quoteVideos![index]
+                                          .numberOfMinutes
+                                          .toString(),
                                     ),
                                     SizedBox(height: height * 0.013),
                                     Padding(
@@ -161,7 +173,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .verticalSize ==
                                                   true
@@ -170,7 +183,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .horizontalSize ==
                                                   true
@@ -180,7 +194,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .squareSize ==
                                                   true
@@ -189,7 +204,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .allSizes ==
                                                   true
@@ -222,7 +238,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .colorGrading ==
                                                   true
@@ -232,7 +249,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .animation ==
                                                   true
@@ -242,7 +260,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .customSubtitle ==
                                                   true
@@ -252,7 +271,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .specialEffectOrVfx ==
                                                   true
@@ -262,7 +282,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .copyrightFreeMusic ==
                                                   true
@@ -272,7 +293,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .transitions ==
                                                   true
@@ -282,7 +304,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
                                                   height: 0,
                                                 ),
                                           orderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos![index]
                                                       .motionGraphics ==
                                                   true
@@ -463,7 +486,8 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
   Container buildProjectTitleContainer(double height, double width, double sp,
       {required String title,
       required int totalVideos,
-      required String projectStatus}) {
+      required String projectStatus,
+      required String createdDate}) {
     return Container(
         padding: EdgeInsets.only(
           top: height * 0.024,
@@ -502,8 +526,7 @@ class ProjectDetailsView extends GetView<ProjectDetailsController> {
             SizedBox(height: height * 0.015),
             buildRow(sp, leftText: 'Type', rightText: 'Personal'),
             SizedBox(height: height * 0.015),
-            buildRow(sp,
-                leftText: 'Assigned date', rightText: '20 Sept 2022, 06:23 PM'),
+            buildRow(sp, leftText: 'Created date', rightText: createdDate),
             SizedBox(height: height * 0.015),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

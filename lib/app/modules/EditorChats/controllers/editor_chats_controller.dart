@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:get/get.dart';
-import 'package:http/http.dart'as http;
+import 'package:http/http.dart' as http;
+import 'package:nb_utils/nb_utils.dart';
 import 'package:video_editing_app/app/data/models/chat_thread_model.dart';
 
 import '../../../../Utils/network_utils.dart';
@@ -11,9 +12,10 @@ import '../../../data/models/messages_model.dart';
 
 class EditorChatsController extends GetxController {
   final count = 0.obs;
-  RxList<ChatThreadModel> chatThreads=<ChatThreadModel>[].obs;
+  RxList<ChatThreadModel> chatThreads = <ChatThreadModel>[].obs;
+  RxList<ChatThreadModel> adminChatThreads = <ChatThreadModel>[].obs;
   RxList<MessageModel> messages = <MessageModel>[].obs;
-  RxBool showLoader=false.obs;
+  RxBool showLoader = false.obs;
 
   Future<List<ChatThreadModel>> fetchAllChatThreads() async {
     List<ChatThreadModel> tempThreads = [];
@@ -67,9 +69,9 @@ class EditorChatsController extends GetxController {
 
   getMessagesList(int threadId) async {
     // try {
-      showLoader.value = true;
-      messages.value = await getTwoUsersChat(threadId);
-      showLoader.value = false;
+    showLoader.value = true;
+    messages.value = await getTwoUsersChat(threadId);
+    showLoader.value = false;
 
     // } catch (e) {
     //   Get.snackbar('Error Occurred',
@@ -78,9 +80,20 @@ class EditorChatsController extends GetxController {
     // }
   }
 
-
-
-
+  createChatThread(String email) async {
+    http.Response response = await buildHttpResponse(
+      'https://video-editing-app.herokuapp.com/api/chat/get-thread/$email/',
+      method: HttpMethod.GET,
+      biuldAuthHeader: true,
+    );
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: 'Thread created');
+    } else {
+      // var body = jsonDecode(response.body);
+      // Fluttertoast.showToast(msg: body['details']);
+    }
+    fetchChatThreadsList();
+  }
 
   @override
   void onInit() {
@@ -95,5 +108,6 @@ class EditorChatsController extends GetxController {
 
   @override
   void onClose() {}
+
   void increment() => count.value++;
 }

@@ -28,9 +28,6 @@ class BottomBarView extends GetView<BottomBarController> {
   Get.put(BottomBarController(), permanent: false);
 
   buildBottomNavigationMenu(context, landingPageController) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    final sp = MediaQuery.of(context).textScaleFactor;
     return Obx(
       () => MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
@@ -158,7 +155,7 @@ class BottomBarView extends GetView<BottomBarController> {
                     children: [
                       HomeView(),
                       const ChatViewView(),
-                      OrderView(),
+                      const OrderView(),
                        BottomProfileView()
                     ],
                   ),

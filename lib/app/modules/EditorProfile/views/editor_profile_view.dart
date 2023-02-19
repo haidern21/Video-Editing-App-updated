@@ -4,13 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../controllers/editor_profile_controller.dart';
-import 'package:video_editing_app/widgets/elevated_button_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
 import '../../../../widgets/back_button.dart';
 import '../../../../widgets/my_text.dart';
-
-// EditorProfileController controller = Get.put(EditorProfileController());
 
 class EditorProfileView extends GetView<EditorProfileController> {
   List<String> skills = ['Wedding videos', 'VFX'];
@@ -19,6 +16,8 @@ class EditorProfileView extends GetView<EditorProfileController> {
     'assets/icons/image2.png',
     'assets/icons/image3.png'
   ];
+
+  EditorProfileView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,10 +29,10 @@ class EditorProfileView extends GetView<EditorProfileController> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xffF9F9FB),
+          backgroundColor: const Color(0xffF9F9FB),
           elevation: 0,
           leading: Padding(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             child: backButton(),
           ),
           title: MyText(
@@ -79,7 +78,7 @@ class EditorProfileView extends GetView<EditorProfileController> {
                 ),
                 SizedBox(height: height * 0.015),
                 Obx(
-                  () => controller.userModelFromApi.value!= null
+                  () => controller.userModelFromApi.value != null
                       ? Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -94,7 +93,8 @@ class EditorProfileView extends GetView<EditorProfileController> {
                                     horizontal: width * 0.05),
                                 height: height * 0.05,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xff773CFF).withOpacity(0.08),
+                                  color:
+                                      const Color(0xff773CFF).withOpacity(0.08),
                                   borderRadius: BorderRadius.circular(38),
                                 ),
                                 child: Center(
@@ -178,7 +178,7 @@ class EditorProfileView extends GetView<EditorProfileController> {
         children: [
           Row(
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 15,
                 backgroundImage: AssetImage(
                   'assets/icons/circle2.png',
@@ -200,16 +200,18 @@ class EditorProfileView extends GetView<EditorProfileController> {
                   Row(
                     children: [
                       MyText(
-                        text: "Personal Balance: ",
+                        text: "Points:  ",
                         size: 14 * sp,
                         weight: kfour,
                         color: kgrey6,
                       ),
-                      MyText(
-                        text: r"$200",
-                        size: 14 * sp,
-                        weight: ksix,
-                        color: kgrey6,
+                      Obx(
+                        () => MyText(
+                          text: controller.userModelFromApi.value?.user?.points??'',
+                          size: 14 * sp,
+                          weight: ksix,
+                          color: kgrey6,
+                        ),
                       )
                     ],
                   )
@@ -223,7 +225,7 @@ class EditorProfileView extends GetView<EditorProfileController> {
                 controller.changeIcon.value = !controller.changeIcon.value;
               },
               child: Icon(
-                controller.changeIcon == false
+                controller.changeIcon.value == false
                     ? Icons.notifications_none_outlined
                     : Icons.notifications,
                 color: kblack,
@@ -309,7 +311,7 @@ class EditorProfileView extends GetView<EditorProfileController> {
                 ),
               ],
             ),
-            Icon(
+            const Icon(
               Icons.arrow_forward_ios_outlined,
               color: Color(0xff090A0A),
               size: 15,
@@ -337,11 +339,11 @@ class EditorProfileView extends GetView<EditorProfileController> {
           height: height / 3.1,
           width: width,
           decoration: BoxDecoration(
-            image: DecorationImage(
-                fit: BoxFit.cover, image: AssetImage('${images}')),
+            image:
+                DecorationImage(fit: BoxFit.cover, image: AssetImage(images)),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(
+          child: const Icon(
             Icons.play_circle_outline,
             size: 60,
             color: kwhite,
@@ -363,8 +365,8 @@ class EditorProfileView extends GetView<EditorProfileController> {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-                offset: Offset(0, 4),
-                color: Color(0xff0000000A).withOpacity(0.04),
+                offset: const Offset(0, 4),
+                color: const Color(0xff000000).withOpacity(0.04),
                 blurRadius: 15.0,
                 spreadRadius: 0.0),
           ],
@@ -425,13 +427,13 @@ class EditorProfileView extends GetView<EditorProfileController> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         MyText(
-          text: '$leftText',
+          text: leftText,
           size: 14 * sp,
           weight: kfour,
           color: kblack,
         ),
         MyText(
-          text: '$rightText',
+          text: rightText,
           size: 14 * sp,
           weight: ksix,
           color: kblack,

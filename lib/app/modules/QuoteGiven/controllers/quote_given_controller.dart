@@ -27,9 +27,6 @@ class QuoteGivenController extends GetxController {
           'https://video-editing-app.herokuapp.com/api/projects/quotes/$quoteId/accept/',
           method: HttpMethod.PUT,
           biuldAuthHeader: true);
-      Get.snackbar(
-          'Quote Accepted', 'Please pay for your quote to start your project');
-      Get.offAndToNamed(Routes.CHECK_OUT);
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }

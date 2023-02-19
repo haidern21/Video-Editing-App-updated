@@ -120,6 +120,7 @@ class _GetQuoteSixViewState extends State<GetQuoteSixView> {
                   TextFormField(
                     validator: durationValidator,
                     controller: controller.videoDurationController,
+                    keyboardType: TextInputType.number,
                     style: TextStyle(
                       fontSize: 14 * sp,
                       fontWeight: kfour,

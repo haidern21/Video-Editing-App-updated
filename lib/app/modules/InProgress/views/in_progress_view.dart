@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/InProgress/controllers/web_socket_controller.dart';
 import 'package:video_editing_app/app/modules/InProgress/views/request_revision.dart';
 import 'package:video_editing_app/app/modules/Order/controllers/order_controller.dart';
-import 'package:video_editing_app/app/routes/app_pages.dart';
 import 'package:video_editing_app/widgets/elevated_button_widget.dart';
 import '../../../../Utils/utils.dart';
 import '../../../../constants/colors.dart';
@@ -14,6 +13,8 @@ import '../../../../widgets/my_text.dart';
 import '../controllers/in_progress_controller.dart';
 
 class InProgressView extends GetView<InProgressController> {
+  const InProgressView({super.key});
+
   @override
   Widget build(BuildContext context) {
     OrderController orderController = Get.find();
@@ -21,6 +22,7 @@ class InProgressView extends GetView<InProgressController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
+
 
     return SafeArea(
       child: Scaffold(
@@ -48,16 +50,14 @@ class InProgressView extends GetView<InProgressController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     GestureDetector(
-                        onTap: () {
-                          // Get.toNamed(Routes.CHECK_OUT);
-                        },
+                        onTap: () {},
                         child: Obx(
                           () => buildProjectTitleContainer(
                             height,
                             width,
                             sp,
                             title: orderController
-                                    .selectedOrder.value!.projectTitle ??
+                                    .selectedOrder.value?.projectTitle ??
                                 '',
                             totalVideos: orderController.selectedOrder.value!
                                     .quoteVideos!.isNotEmpty
@@ -66,8 +66,17 @@ class InProgressView extends GetView<InProgressController> {
                                     .toString()
                                 : '0',
                             status:
-                                orderController.selectedOrder.value!.status ??
+                                orderController.selectedOrder.value?.status ??
                                     '',
+                            createdDate: orderController
+                                .selectedOrder.value?.createdAt
+                                ?.substring(0, 10),
+                            endDate: orderController
+                                .selectedOrder.value?.completedAt
+                                ?.substring(0, 10),
+                            price: orderController
+                                    .selectedOrder.value?.quotePrice ??
+                                '',
                           ),
                         )),
                     SizedBox(height: height * 0.001),
@@ -85,7 +94,7 @@ class InProgressView extends GetView<InProgressController> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: 'Start project ',
+                                text: 'Start project  ',
                                 style: TextStyle(
                                   fontSize: 14 * sp,
                                   fontWeight: kfour,
@@ -94,7 +103,10 @@ class InProgressView extends GetView<InProgressController> {
                                 ),
                               ),
                               TextSpan(
-                                text: 'Sep 19, 1:43 PM',
+                                text: orderController
+                                        .selectedOrder.value?.startedAt
+                                        ?.substring(0, 10) ??
+                                    '',
                                 style: TextStyle(
                                   fontSize: 12 * sp,
                                   fontWeight: kfour,
@@ -127,15 +139,6 @@ class InProgressView extends GetView<InProgressController> {
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
                                       color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -373,15 +376,6 @@ class InProgressView extends GetView<InProgressController> {
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: '  Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -446,15 +440,6 @@ class InProgressView extends GetView<InProgressController> {
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
                                       color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -1127,7 +1112,10 @@ class InProgressView extends GetView<InProgressController> {
   Container buildProjectTitleContainer(double height, double width, double sp,
       {required String title,
       required String status,
-      required String totalVideos}) {
+      required String totalVideos,
+      required String? createdDate,
+      required String? endDate,
+      required String price}) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -1173,20 +1161,20 @@ class InProgressView extends GetView<InProgressController> {
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Assigned date',
-            rightText: '20 Sept 2022, 06:23 PM',
+            leftText: 'Created date',
+            rightText: createdDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Project timeline',
-            rightText: '10:23:54',
+            leftText: 'End Date',
+            rightText: endDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
             leftText: 'Project price',
-            rightText: r'$145.00',
+            rightText: price,
           ),
           SizedBox(height: height * 0.015),
           Row(
