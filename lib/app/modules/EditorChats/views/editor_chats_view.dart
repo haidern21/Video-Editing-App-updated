@@ -81,174 +81,202 @@ class _EditorChatsViewState extends State<EditorChatsView>
         body: TabBarView(
           children: [adminChatView(), clientChatsView()],
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Admin'),
+          icon: const Icon(Icons.message),
+          onPressed: ()async{
+            editorChatsController.createChatThread('admin@vea.com');
+          },
+        ),
       ),
     );
   }
 
   Widget adminChatView() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width / 20),
-      child: Column(
-        children: [
-          SizedBox(height: height * 0.015),
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xffF2F2F3),
-              borderRadius: BorderRadius.circular(26),
-            ),
-            height: height * 0.07,
-            child: Center(
-              child: TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                style: TextStyle(
-                  fontSize: 14 * sp,
-                  fontWeight: kfour,
-                  fontFamily: 'Poppins',
-                  color: kblack,
-                ),
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.zero,
-                  hintStyle: TextStyle(
+    return RefreshIndicator(
+      onRefresh: ()async{
+        editorChatsController.fetchChatThreadsList();
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width / 20),
+        child: Column(
+          children: [
+            SizedBox(height: height * 0.015),
+            Container(
+              decoration: BoxDecoration(
+                color: const Color(0xffF2F2F3),
+                borderRadius: BorderRadius.circular(26),
+              ),
+              height: height * 0.07,
+              child: Center(
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  style: TextStyle(
                     fontSize: 14 * sp,
                     fontWeight: kfour,
                     fontFamily: 'Poppins',
-                    color: const Color(0xff9EA3AE),
+                    color: kblack,
                   ),
-                  hintText: 'Search name',
-                  enabledBorder: InputBorder.none,
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  suffixIcon: const Icon(
-                    Icons.mic_none_outlined,
-                    size: 20,
-                    color: kgrey8,
-                  ),
-                  prefixIcon: const Icon(
-                    Icons.search_outlined,
-                    size: 20,
-                    color: kgrey8,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.zero,
+                    hintStyle: TextStyle(
+                      fontSize: 14 * sp,
+                      fontWeight: kfour,
+                      fontFamily: 'Poppins',
+                      color: const Color(0xff9EA3AE),
+                    ),
+                    hintText: 'Search name',
+                    enabledBorder: InputBorder.none,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    suffixIcon: const Icon(
+                      Icons.mic_none_outlined,
+                      size: 20,
+                      color: kgrey8,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search_outlined,
+                      size: 20,
+                      color: kgrey8,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          SizedBox(height: height * 0.025),
-          Obx(
-                () => ListView.builder(
-                shrinkWrap: true,
-                itemCount: editorChatsController.chatThreads.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () async {
-                      await editorChatsController.getMessagesList(
-                          editorChatsController.chatThreads[index].id ?? 0);
-                      String? name = editorChatsController
-                          .chatThreads[index].firstPerson?.id ==
-                          editorProfileController
-                              .userModelFromApi.value?.id
-                          ? editorChatsController
-                          .chatThreads[index].secondPerson?.name ??
-                          ''
-                          : editorChatsController
-                          .chatThreads[index].firstPerson?.name;
-                      String? profileImage = editorChatsController
-                          .chatThreads[index].firstPerson?.id ==
-                          editorProfileController
-                              .userModelFromApi.value?.id
-                          ? editorChatsController.chatThreads[index].secondPerson
-                          ?.profilePicture ??
-                          ''
-                          : editorChatsController
-                          .chatThreads[index].firstPerson?.profilePicture;
-                      Get.toNamed(Routes.EDITOR_SEND_MESSAGE, arguments: {
-                        'name': name,
-                        'profile_image': profileImage
-                      });
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(bottom: height * 0.036),
-                      height: height * 0.07,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            child: Row(
-                              children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundImage: AssetImage(avatars[index]),
-                                ),
-                                SizedBox(
-                                  width: width / 40,
-                                ),
-                                Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
-                                  children: [
-                                    MyText(
-                                      text: editorChatsController
-                                          .chatThreads[index]
-                                          .firstPerson
-                                          ?.id ==
-                                          editorProfileController
-                                              .userModelFromApi.value?.id
-                                          ? editorChatsController
-                                          .chatThreads[index]
-                                          .secondPerson
-                                          ?.name ??
-                                          ''
-                                          : editorChatsController
-                                          .chatThreads[index]
-                                          .firstPerson
-                                          ?.name,
-                                      size: 14 * sp,
-                                      weight: kfour,
-                                      color: const Color(0xff31383C),
-                                    ),
-                                    SizedBox(
-                                      height: height * 0.003,
-                                    ),
-                                    MyText(
-                                      text: editorChatsController
-                                          .chatThreads[index]
-                                          .lastMessage ??
-                                          '',
-                                      size: 14 * sp,
-                                      weight: kfour,
-                                      // weight: index == 0 ? ksix : kfour,
-                                      color: const Color(0xff31383C),
-                                    ),
-                                  ],
-                                ),
-                              ],
+            SizedBox(height: height * 0.025),
+            Obx(
+                  () => ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: editorChatsController.chatThreads.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () async {
+                        await editorChatsController.getMessagesList(
+                            editorChatsController.chatThreads[index].id ?? 0);
+                        String? name = editorChatsController
+                            .chatThreads[index].firstPerson?.id ==
+                            editorProfileController
+                                .userModelFromApi.value?.user?.id
+                            ? editorChatsController
+                            .chatThreads[index].secondPerson?.name ??
+                            ''
+                            : editorChatsController
+                            .chatThreads[index].firstPerson?.name;
+                        String? profileImage = editorChatsController
+                            .chatThreads[index].firstPerson?.id ==
+                            editorProfileController
+                                .userModelFromApi.value?.user?.id
+                            ? editorChatsController.chatThreads[index].secondPerson
+                            ?.profilePicture ??
+                            ''
+                            : editorChatsController
+                            .chatThreads[index].firstPerson?.profilePicture;
+
+                        int receiverId=editorChatsController
+                            .chatThreads[index].firstPerson?.id ==
+                            editorProfileController
+                                .userModelFromApi.value?.user?.id
+                            ? editorChatsController.chatThreads[index].secondPerson
+                            ?.id ??
+                            0
+                            : editorChatsController
+                            .chatThreads[index].firstPerson?.id??0;
+                        int threadId= editorChatsController.chatThreads[index].id ?? 0;
+                        Get.toNamed(Routes.EDITOR_SEND_MESSAGE, arguments: {
+                          'name': name,
+                          'profile_image': profileImage,
+                          'receiverId': receiverId,
+                          'threadId': threadId
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(bottom: height * 0.036),
+                        height: height * 0.07,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FittedBox(
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20,
+                                    backgroundImage: AssetImage(avatars[index]),
+                                  ),
+                                  SizedBox(
+                                    width: width / 40,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                    children: [
+                                      MyText(
+                                        text: editorChatsController
+                                            .chatThreads[index]
+                                            .firstPerson
+                                            ?.id ==
+                                            editorProfileController
+                                                .userModelFromApi.value?.user?.id
+                                            ? editorChatsController
+                                            .chatThreads[index]
+                                            .secondPerson
+                                            ?.name ??
+                                            ''
+                                            : editorChatsController
+                                            .chatThreads[index]
+                                            .firstPerson
+                                            ?.name,
+                                        size: 14 * sp,
+                                        weight: kfour,
+                                        color: const Color(0xff31383C),
+                                      ),
+                                      SizedBox(
+                                        height: height * 0.003,
+                                      ),
+                                      MyText(
+                                        text: editorChatsController
+                                            .chatThreads[index]
+                                            .lastMessage ??
+                                            '',
+                                        size: 14 * sp,
+                                        weight: kfour,
+                                        // weight: index == 0 ? ksix : kfour,
+                                        color: const Color(0xff31383C),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          FittedBox(
-                            child: MyText(
-                              text: editorChatsController
-                                  .chatThreads[index].lastMessageTimestamp
-                                  ?.substring(0, 10),
-                              size: 12 * sp,
-                              weight: kfour,
-                              color: const Color(0xffA2A2A2),
+                            FittedBox(
+                              child: MyText(
+                                text: editorChatsController
+                                    .chatThreads[index].timestamp
+                                    ?.substring(0, 10),
+                                size: 12 * sp,
+                                weight: kfour,
+                                color: const Color(0xffA2A2A2),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
-          ),
-        ],
+                    );
+                  }),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget clientChatsView() {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: width / 20),
-      child: SingleChildScrollView(
+    return RefreshIndicator(
+      onRefresh: ()async{
+        editorChatsController.fetchChatThreadsList();
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: width / 20),
         child: Column(
           children: [
             SizedBox(height: height * 0.015),
@@ -306,7 +334,7 @@ class _EditorChatsViewState extends State<EditorChatsView>
                         String? name = editorChatsController
                                     .chatThreads[index].firstPerson?.id ==
                             editorProfileController
-                                    .userModelFromApi.value?.id
+                                    .userModelFromApi.value?.user?.id
                             ? editorChatsController
                                     .chatThreads[index].secondPerson?.name ??
                                 ''
@@ -315,15 +343,27 @@ class _EditorChatsViewState extends State<EditorChatsView>
                         String? profileImage = editorChatsController
                                     .chatThreads[index].firstPerson?.id ==
                             editorProfileController
-                                    .userModelFromApi.value?.id
+                                    .userModelFromApi.value?.user?.id
                             ? editorChatsController.chatThreads[index].secondPerson
                                     ?.profilePicture ??
                                 ''
                             : editorChatsController
                                 .chatThreads[index].firstPerson?.profilePicture;
+                        int receiverId=editorChatsController
+                            .chatThreads[index].firstPerson?.id ==
+                            editorProfileController
+                                .userModelFromApi.value?.user?.id
+                            ? editorChatsController.chatThreads[index].secondPerson
+                            ?.id ??
+                            0
+                            : editorChatsController
+                            .chatThreads[index].firstPerson?.id??0;
+                        int threadId= editorChatsController.chatThreads[index].id ?? 0;
                         Get.toNamed(Routes.EDITOR_SEND_MESSAGE, arguments: {
                           'name': name,
-                          'profile_image': profileImage
+                          'profile_image': profileImage,
+                          'receiverId': receiverId,
+                          'threadId': threadId
                         });
                       },
                       child: Container(
@@ -347,38 +387,42 @@ class _EditorChatsViewState extends State<EditorChatsView>
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      MyText(
-                                        text: editorChatsController
-                                                    .chatThreads[index]
-                                                    .firstPerson
-                                                    ?.id ==
-                                            editorProfileController
-                                                    .userModelFromApi.value?.id
-                                            ? editorChatsController
-                                                    .chatThreads[index]
-                                                    .secondPerson
-                                                    ?.name ??
-                                                ''
-                                            : editorChatsController
-                                                .chatThreads[index]
-                                                .firstPerson
-                                                ?.name,
-                                        size: 14 * sp,
-                                        weight: kfour,
-                                        color: const Color(0xff31383C),
+                                      Obx(
+                                      ()=> MyText(
+                                          text: editorChatsController
+                                                      .chatThreads[index]
+                                                      .firstPerson
+                                                      ?.id ==
+                                              editorProfileController
+                                                      .userModelFromApi.value?.user?.id
+                                              ? editorChatsController
+                                                      .chatThreads[index]
+                                                      .secondPerson
+                                                      ?.name ??
+                                                  ''
+                                              : editorChatsController
+                                                  .chatThreads[index]
+                                                  .firstPerson
+                                                  ?.name,
+                                          size: 14 * sp,
+                                          weight: kfour,
+                                          color: const Color(0xff31383C),
+                                        ),
                                       ),
                                       SizedBox(
                                         height: height * 0.003,
                                       ),
-                                      MyText(
-                                        text: editorChatsController
-                                                .chatThreads[index]
-                                                .lastMessage ??
-                                            '',
-                                        size: 14 * sp,
-                                        weight: kfour,
-                                        // weight: index == 0 ? ksix : kfour,
-                                        color: const Color(0xff31383C),
+                                      Obx(
+                                      ()=> MyText(
+                                          text: editorChatsController
+                                                  .chatThreads[index]
+                                                  .lastMessage ??
+                                              '',
+                                          size: 14 * sp,
+                                          weight: kfour,
+                                          // weight: index == 0 ? ksix : kfour,
+                                          color: const Color(0xff31383C),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -388,7 +432,7 @@ class _EditorChatsViewState extends State<EditorChatsView>
                             FittedBox(
                               child: MyText(
                                 text: editorChatsController
-                                    .chatThreads[index].lastMessageTimestamp
+                                    .chatThreads[index].timestamp
                                     ?.substring(0, 10),
                                 size: 12 * sp,
                                 weight: kfour,

@@ -111,8 +111,8 @@ class JwtUtils {
   /// Verify Jwt Token
   ///
   /// This function will verify the jwt token
-  static Future<bool> verifyToken({bool isDebug = false}) async {
-    String? jwtCode = await getJwtToken();
+  static Future<bool> verifyToken({bool isDebug = false, String? jwtToken}) async {
+    String? jwtCode = await getJwtToken()??jwtToken;
     // if (isDebug) {
     debug('Jwt Code $jwtCode');
 

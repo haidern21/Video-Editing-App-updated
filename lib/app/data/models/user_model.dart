@@ -13,6 +13,7 @@ class UserModel {
     this.dateJoined,
     this.lastLogin,
     this.isSuperuser,
+    this.points,
   });
 
    int? id;
@@ -26,6 +27,7 @@ class UserModel {
    DateTime? dateJoined;
    DateTime? lastLogin;
    bool? isSuperuser;
+   int? points;
 
   factory UserModel.fromJson(String str) => UserModel.fromMap(json.decode(str));
 
@@ -47,6 +49,7 @@ class UserModel {
             ? null
             : DateTime.parse(json["last_login"]),
         isSuperuser: json["is_superuser"],
+    points: json["points"]??0
       );
 
   Map<String, dynamic> toMap() => {

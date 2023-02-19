@@ -5,8 +5,9 @@ import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
 import '../../../../widgets/my_text.dart';
+import '../../../data/models/user_model.dart';
 
-PointsContainer(double height, double width, double sp) {
+PointsContainer(double height, double width, double sp, {required UserModel? user}) {
   return GestureDetector(
     onTap: () {
       Get.toNamed(Routes.REWARDS);
@@ -29,7 +30,7 @@ PointsContainer(double height, double width, double sp) {
           ),
           SizedBox(height: height * 0.009),
           MyText(
-            text: '500',
+            text: user?.points.toString()??'',
             size: 32 * sp,
             weight: kseven,
             color: kprimaryColor,
@@ -51,7 +52,7 @@ PointsContainer(double height, double width, double sp) {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: r'1550$',
+                        text: user?.points.toString()??'',
                         style: TextStyle(
                           color: kprimaryColor,
                           fontWeight: ksix,
@@ -60,7 +61,7 @@ PointsContainer(double height, double width, double sp) {
                         ),
                       ),
                       TextSpan(
-                        text: r'/250$',
+                        text: ' / 500',
                         style: TextStyle(
                           fontFamily: 'WorkSans',
                           color: kgrey8,

@@ -1,12 +1,13 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/EditorBottomBar/controllers/editor_bottom_bar_controller.dart';
+import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
 import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
+import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../Utils/utils.dart';
 import '../controllers/editor_in_progress_controller.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:video_editing_app/widgets/elevated_button_widget.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
 import '../../../../widgets/back_button.dart';
@@ -20,6 +21,7 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
   Widget build(BuildContext context) {
     EditorWebSocketController webSocketController = Get.find();
     EditorOrdersController editorOrdersController = Get.find();
+    EditorChatsController editorChatsController = Get.find();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
@@ -87,7 +89,9 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                     ),
                                   ),
                                   TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
+                                    text: editorOrdersController
+                                        .selectedOrder.value?.createdAt
+                                        ?.substring(0, 10),
                                     style: TextStyle(
                                       fontSize: 12 * sp,
                                       fontWeight: kfour,
@@ -103,30 +107,31 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                               height: height * 0.06,
                             ),
                             children: [
-                              GestureDetector(
-                                  onTap: () {
-                                    // Get.toNamed(Routes.CHECK_OUT);
-                                  },
-                                  child: buildProjectTitleContainer(
-                                    height,
-                                    width,
-                                    sp,
-                                    title: editorOrdersController.selectedOrder
-                                            .value?.projectTitle ??
-                                        '',
-                                    totalVideos: editorOrdersController
-                                            .selectedOrder
-                                            .value!
-                                            .quoteVideos!
-                                            .isNotEmpty
-                                        ? editorOrdersController.selectedOrder
-                                            .value!.quoteVideos!.length
-                                            .toString()
-                                        : '0',
-                                    status: editorOrdersController
-                                            .selectedOrder.value?.status ??
-                                        '',
-                                  )),
+                              buildProjectTitleContainer(height, width, sp,
+                                  title: editorOrdersController
+                                          .selectedOrder.value?.projectTitle ??
+                                      '',
+                                  totalVideos: editorOrdersController
+                                          .selectedOrder
+                                          .value!
+                                          .quoteVideos!
+                                          .isNotEmpty
+                                      ? editorOrdersController.selectedOrder
+                                          .value!.quoteVideos!.length
+                                          .toString()
+                                      : '0',
+                                  status:
+                                      editorOrdersController.selectedOrder.value?.status ??
+                                          '',
+                                  startedDate: editorOrdersController
+                                          .selectedOrder.value?.startedAt
+                                          ?.substring(0, 10) ??
+                                      '',
+                                  endDate: editorOrdersController
+                                          .selectedOrder.value?.completedAt
+                                          ?.substring(0, 10) ??
+                                      '',
+                                  price: '\$ ${editorOrdersController.selectedOrder.value?.quotePrice}' ?? ''),
                             ],
                           ),
                           Theme(
@@ -151,15 +156,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                         fontFamily: 'WorkSans',
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: 'Sep 19, 1:43 PM',
-                                      style: TextStyle(
-                                        fontSize: 12 * sp,
-                                        fontWeight: kfour,
-                                        color: kgrey5,
-                                        fontFamily: 'WorkSans',
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -179,15 +175,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
                                       color: const Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -424,15 +411,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
-                                  TextSpan(
-                                    text: '  Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -500,15 +478,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                         fontFamily: 'WorkSans',
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: '  Sep 19, 1:43 PM',
-                                      style: TextStyle(
-                                        fontSize: 12 * sp,
-                                        fontWeight: kfour,
-                                        color: kgrey5,
-                                        fontFamily: 'WorkSans',
-                                      ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -518,32 +487,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                 backgroundImage:
                                     AssetImage('assets/icons/duseca.png')),
                             children: [
-                              // Align(
-                              //   alignment: Alignment.centerLeft,
-                              //   child: Container(
-                              //     margin: EdgeInsets.only(
-                              //         left: width / 5.5, right: width * 0.045),
-                              //     child: Column(
-                              //       crossAxisAlignment:
-                              //           CrossAxisAlignment.start,
-                              //       children: [
-                              //         MyText(
-                              //           text: 'Doing well.',
-                              //           size: 14 * sp,
-                              //           color: kgrey8,
-                              //           weight: kfour,
-                              //         ),
-                              //         SizedBox(height: height * 0.012),
-                              //         MyText(
-                              //           text: 'Do you complete your project?',
-                              //           size: 14 * sp,
-                              //           color: kgrey8,
-                              //           weight: kfour,
-                              //         ),
-                              //       ],
-                              //     ),
-                              //   ),
-                              // ),
                               Obx(
                                 () => controller.showLoader.value == false
                                     ? ListView.builder(
@@ -586,109 +529,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                               ),
                             ],
                           ),
-                          // ExpansionTile(
-                          //   childrenPadding: EdgeInsets.zero,
-                          //   title: RichText(
-                          //     text: TextSpan(
-                          //       children: [
-                          //         TextSpan(
-                          //           text: 'Deliver order ',
-                          //           style: TextStyle(
-                          //             fontSize: 14 * sp,
-                          //             fontWeight: kfour,
-                          //             color: const Color(0xff000000),
-                          //             fontFamily: 'WorkSans',
-                          //           ),
-                          //         ),
-                          //         TextSpan(
-                          //           text: 'Sep 19, 1:43 PM',
-                          //           style: TextStyle(
-                          //             fontSize: 12 * sp,
-                          //             fontWeight: kfour,
-                          //             color: kgrey5,
-                          //             fontFamily: 'WorkSans',
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          //   leading: SvgPicture.asset(
-                          //     'assets/icons/deliverOrder.svg',
-                          //   ),
-                          //   children: [
-                          //     Align(
-                          //       alignment: Alignment.centerLeft,
-                          //       child: Container(
-                          //         margin: EdgeInsets.only(
-                          //             left: width / 5.5, right: width * 0.045),
-                          //         child: Column(
-                          //           crossAxisAlignment:
-                          //               CrossAxisAlignment.start,
-                          //           children: [
-                          //             MyText(
-                          //               text:
-                          //                   'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                          //               size: 14 * sp,
-                          //               color: kgrey8,
-                          //               weight: kfour,
-                          //             ),
-                          //             SizedBox(height: height * 0.025),
-                          //             Row(
-                          //               children: [
-                          //                 ...List.generate(
-                          //                     3,
-                          //                     (index) => Container(
-                          //                           margin: EdgeInsets.only(
-                          //                             right: width * 0.01,
-                          //                           ),
-                          //                           height: height * 0.09,
-                          //                           width: width / 6,
-                          //                           decoration:
-                          //                               const BoxDecoration(
-                          //                             image: DecorationImage(
-                          //                               image: AssetImage(
-                          //                                 'assets/icons/playVideo.png',
-                          //                               ),
-                          //                             ),
-                          //                           ),
-                          //                         ))
-                          //               ],
-                          //             ),
-                          //             // SizedBox(height: height * 0.025),
-                          //             // Row(
-                          //             //   children: [
-                          //             //     Expanded(
-                          //             //       child: SizedBox(
-                          //             //         height: height * 0.06,
-                          //             //         child: MyButton(
-                          //             //           borderColor: kgrey3,
-                          //             //           color: const Color(0xffF9F9FB),
-                          //             //           textColor: kgre7,
-                          //             //           text: 'Request revision',
-                          //             //           onPress: () {},
-                          //             //         ),
-                          //             //       ),
-                          //             //     ),
-                          //             //     SizedBox(
-                          //             //       width: width * 0.01,
-                          //             //     ),
-                          //             //     Expanded(
-                          //             //       child: SizedBox(
-                          //             //         height: height * 0.06,
-                          //             //         child: MyButton(
-                          //             //           text: 'Accept',
-                          //             //           onPress: () {},
-                          //             //         ),
-                          //             //       ),
-                          //             //     )
-                          //             //   ],
-                          //             // ),
-                          //           ],
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
                           Obx(
                             () => controller.deliverMessages.isNotEmpty
                                 ? ExpansionTile(
@@ -702,15 +542,6 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                               fontSize: 14 * sp,
                                               fontWeight: kfour,
                                               color: const Color(0xff000000),
-                                              fontFamily: 'WorkSans',
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: 'Sep 19, 1:43 PM',
-                                            style: TextStyle(
-                                              fontSize: 12 * sp,
-                                              fontWeight: kfour,
-                                              color: kgrey5,
                                               fontFamily: 'WorkSans',
                                             ),
                                           ),
@@ -779,164 +610,82 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                           ),
                           SizedBox(height: height * 0.013),
                           Obx(
-                                () => controller.revisionMessages.isNotEmpty
+                            () => controller.revisionMessages.isNotEmpty
                                 ? ExpansionTile(
-                              childrenPadding: EdgeInsets.zero,
-                              title: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Revisions Requested',
-                                      style: TextStyle(
-                                        fontSize: 14 * sp,
-                                        fontWeight: kfour,
-                                        color: const Color(0xff000000),
-                                        fontFamily: 'WorkSans',
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: 'Revisions Requested',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    TextSpan(
-                                      text: 'Sep 19, 1:43 PM',
-                                      style: TextStyle(
-                                        fontSize: 12 * sp,
-                                        fontWeight: kfour,
-                                        color: kgrey5,
-                                        fontFamily: 'WorkSans',
-                                      ),
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/revision.svg',
                                     ),
-                                  ],
-                                ),
-                              ),
-                              leading: SvgPicture.asset(
-                                'assets/icons/revision.svg',
-                              ),
-                              children: [
-                                // Align(
-                                //   alignment: Alignment.centerLeft,
-                                //   child: Container(
-                                //     margin: EdgeInsets.only(
-                                //         left: width / 5.5, right: width * 0.045),
-                                //     child: Column(
-                                //       crossAxisAlignment:
-                                //           CrossAxisAlignment.start,
-                                //       children: [
-                                //         MyText(
-                                //           text:
-                                //               'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                                //           size: 14 * sp,
-                                //           color: kgrey8,
-                                //           weight: kfour,
-                                //         ),
-                                //         SizedBox(height: height * 0.025),
-                                //         Row(
-                                //           children: [
-                                //             ...List.generate(
-                                //                 3,
-                                //                 (index) => Container(
-                                //                       margin: EdgeInsets.only(
-                                //                         right: width * 0.01,
-                                //                       ),
-                                //                       height: height * 0.09,
-                                //                       width: width / 6,
-                                //                       decoration:
-                                //                           const BoxDecoration(
-                                //                         image: DecorationImage(
-                                //                           image: AssetImage(
-                                //                               'assets/icons/playVideo.png'),
-                                //                         ),
-                                //                       ),
-                                //                     ))
-                                //           ],
-                                //         ),
-                                //         SizedBox(height: height * 0.025),
-                                //         Row(
-                                //           children: [
-                                //             Expanded(
-                                //               child: SizedBox(
-                                //                 height: height * 0.06,
-                                //                 child: MyButton(
-                                //                   borderColor: kgrey3,
-                                //                   color: const Color(0xffF9F9FB),
-                                //                   textColor: kgre7,
-                                //                   text: 'Request revision',
-                                //                   onPress: () {},
-                                //                 ),
-                                //               ),
-                                //             ),
-                                //             SizedBox(
-                                //               width: width * 0.01,
-                                //             ),
-                                //             Expanded(
-                                //               child: SizedBox(
-                                //                 height: height * 0.06,
-                                //                 child: MyButton(
-                                //                   text: 'Accept',
-                                //                   onPress: () {
-                                //                     Get.toNamed(Routes.COMPLETED);
-                                //                   },
-                                //                 ),
-                                //               ),
-                                //             )
-                                //           ],
-                                //         ),
-                                //       ],
-                                //     ),
-                                //   ),
-                                // ),
-                                Obx(
-                                      () => controller.showLoader.value ==
-                                      false
-                                      ? Container(
-                                    margin: EdgeInsets.only(
-                                        left: width / 5.5,
-                                        right: width * 0.045),
-                                    child: Column(
-                                      children: [
-                                        ListView.builder(
-                                            shrinkWrap: true,
-                                            itemCount: controller
-                                                .revisionMessages
-                                                .length,
-                                            itemBuilder:
-                                                (context, index) {
-                                              return Align(
-                                                alignment: Alignment
-                                                    .centerLeft,
+                                    children: [
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
                                                 child: Column(
-                                                  crossAxisAlignment:
-                                                  CrossAxisAlignment
-                                                      .start,
                                                   children: [
-                                                    Column(
-                                                      crossAxisAlignment:
-                                                      CrossAxisAlignment
-                                                          .start,
-                                                      children: [
-                                                        MyText(
-                                                          text: controller
-                                                              .revisionMessages[index]
-                                                              .message ??
-                                                              '',
-                                                          size: 14 *
-                                                              sp,
-                                                          color:
-                                                          kgrey8,
-                                                          weight:
-                                                          kfour,
-                                                        ),
-                                                      ],
-                                                    ),
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .revisionMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .revisionMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
                                                   ],
                                                 ),
-                                              );
-                                            }),
-
-                                      ],
-                                    ),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
+                                    ],
                                   )
-                                      : const CircularProgressIndicator(),
-                                ),
-                              ],
-                            )
                                 : const SizedBox(),
                           ),
                         ],
@@ -1038,6 +787,18 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
               )
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Direct Chat'),
+          icon: const Icon(Icons.message),
+          onPressed: () {
+            EditorBottomBarController editorBottomBarController= Get.find();
+            editorChatsController.createChatThread(
+                editorOrdersController.selectedOrder.value?.userModel?.email ??
+                    '');
+            editorBottomBarController.tabIndex.value=0;
+            Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
+          },
         ),
       ),
     );
@@ -1146,7 +907,10 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
   Container buildProjectTitleContainer(double height, double width, double sp,
       {required String title,
       required String status,
-      required String totalVideos}) {
+      required String totalVideos,
+      required String? startedDate,
+      required String? endDate,
+      required String? price}) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -1192,20 +956,20 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Assigned date',
-            rightText: '20 Sept 2022, 06:23 PM',
+            leftText: 'Started date',
+            rightText: startedDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Project timeline',
-            rightText: '10:23:54',
+            leftText: 'End Date',
+            rightText: endDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
             leftText: 'Project price',
-            rightText: r'$145.00',
+            rightText: price ?? '',
           ),
           SizedBox(height: height * 0.015),
           Row(

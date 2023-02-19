@@ -103,11 +103,11 @@ class OrderController extends GetxController {
   }
 
   getOrderModel(int quoteId) async {
-    // try {
+    try {
       selectedOrder.value = await getSpecificOrder(quoteId);
-    // } catch (e) {
-    //   log('Problem is: ${e.toString()}');
-    // }
+    } catch (e) {
+      log('Problem is: ${e.toString()}');
+    }
   }
 
   final count = 0.obs;

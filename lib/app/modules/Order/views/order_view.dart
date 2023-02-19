@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/Completed/controllers/completed_controller.dart';
 import 'package:video_editing_app/app/modules/InProgress/controllers/in_progress_controller.dart';
 
 import 'package:video_editing_app/app/modules/Order/views/progress_row.dart';
@@ -12,7 +13,7 @@ import '../controllers/order_controller.dart';
 
 OrderController orderController = Get.put(OrderController());
 InProgressController inProgressController = Get.find();
-// final pages = [ProjectDetailsView(), InProgressView(), CompletedView()];
+CompletedController completedController= Get.put(CompletedController());
 double width = Get.width;
 double height = Get.height;
 final sp = Get.textScaleFactor;
@@ -30,13 +31,16 @@ var sixStyle = TextStyle(
 );
 
 class OrderView extends GetView {
-  OrderView({super.key});
+  const OrderView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF9F9FB),
-      body: SingleChildScrollView(
+      body: RefreshIndicator(
+        onRefresh: ()async{
+          controller.fetchOrdersList();
+        },
         child: Column(
           children: [
             SizedBox(height: height * 0.02),
@@ -77,6 +81,11 @@ class OrderView extends GetView {
                           inProgressController.fetchQuoteCommunicationsList(
                               controller.orders[index].id ?? 0);
                         }
+                        if (controller.orders[index].getStatusDisplay ==
+                            'Completed') {
+                          completedController.fetchQuoteCommunicationsList(
+                              controller.orders[index].id ?? 0);
+                        }
                         controller.orders[index].getStatusDisplay ==
                                 'Quote Pending'
                             ? Get.toNamed(Routes.PROJECT_DETAILS)
@@ -89,13 +98,12 @@ class OrderView extends GetView {
                                     : Get.toNamed(Routes.COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText:  RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: controller
-                                                .orders[index].createdAt ??
+                                                .orders[index].createdAt?.substring(0,10) ??
                                             '',
                                         style: TextStyle(
                                           color: kgre7,
@@ -104,17 +112,6 @@ class OrderView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),
@@ -159,30 +156,36 @@ class OrderView extends GetView {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
-                        await controller.getOrderModel(
-                            controller.pendingOrders[index].id ?? 0);
-
+                        await controller
+                            .getOrderModel(controller.pendingOrders[index].id ?? 0);
+                        if (controller.pendingOrders[index].getStatusDisplay ==
+                            'In Progress') {
+                          inProgressController.fetchQuoteCommunicationsList(
+                              controller.pendingOrders[index].id ?? 0);
+                        }
+                        if (controller.pendingOrders[index].getStatusDisplay ==
+                            'Completed') {
+                          completedController.fetchQuoteCommunicationsList(
+                              controller.pendingOrders[index].id ?? 0);
+                        }
                         controller.pendingOrders[index].getStatusDisplay ==
-                                'Quote Pending'
+                            'Quote Pending'
                             ? Get.toNamed(Routes.PROJECT_DETAILS)
-                            : controller.pendingOrders[index]
-                                        .getStatusDisplay ==
-                                    'In Progress'
-                                ? Get.toNamed(Routes.IN_PROGRESS)
-                                : controller.pendingOrders[index]
-                                            .getStatusDisplay ==
-                                        'Quote Given'
-                                    ? Get.toNamed(Routes.COMPLETED)
-                                    : Get.toNamed(Routes.COMPLETED);
+                            : controller.pendingOrders[index].getStatusDisplay ==
+                            'In Progress'
+                            ? Get.toNamed(Routes.IN_PROGRESS)
+                            : controller.pendingOrders[index].getStatusDisplay ==
+                            'Quote Given'
+                            ? Get.toNamed(Routes.QUOTE_GIVEN)
+                            : Get.toNamed(Routes.COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText:RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: controller.pendingOrders[index]
-                                                .createdAt ??
+                                                .createdAt?.substring(0,10)  ??
                                             '',
                                         style: TextStyle(
                                           color: kgre7,
@@ -191,17 +194,6 @@ class OrderView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),
@@ -250,35 +242,36 @@ class OrderView extends GetView {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
-                        await controller.getOrderModel(
-                            controller.inProgressOrders[index].id ?? 0);
-                        if (controller
-                                .inProgressOrders[index].getStatusDisplay ==
+                        await controller
+                            .getOrderModel(controller.inProgressOrders[index].id ?? 0);
+                        if (controller.inProgressOrders[index].getStatusDisplay ==
                             'In Progress') {
                           inProgressController.fetchQuoteCommunicationsList(
                               controller.inProgressOrders[index].id ?? 0);
                         }
+                        if (controller.inProgressOrders[index].getStatusDisplay ==
+                            'Completed') {
+                          completedController.fetchQuoteCommunicationsList(
+                              controller.inProgressOrders[index].id ?? 0);
+                        }
                         controller.inProgressOrders[index].getStatusDisplay ==
-                                'Quote Pending'
+                            'Quote Pending'
                             ? Get.toNamed(Routes.PROJECT_DETAILS)
-                            : controller.inProgressOrders[index]
-                                        .getStatusDisplay ==
-                                    'In Progress'
-                                ? Get.toNamed(Routes.IN_PROGRESS)
-                                : controller.inProgressOrders[index]
-                                            .getStatusDisplay ==
-                                        'Quote Given'
-                                    ? Get.toNamed(Routes.COMPLETED)
-                                    : Get.toNamed(Routes.COMPLETED);
+                            : controller.inProgressOrders[index].getStatusDisplay ==
+                            'In Progress'
+                            ? Get.toNamed(Routes.IN_PROGRESS)
+                            : controller.inProgressOrders[index].getStatusDisplay ==
+                            'Quote Given'
+                            ? Get.toNamed(Routes.QUOTE_GIVEN)
+                            : Get.toNamed(Routes.COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText:RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: controller.inProgressOrders[index]
-                                                .createdAt ??
+                                                .createdAt?.substring(0,10)  ??
                                             '',
                                         style: TextStyle(
                                           color: kgre7,
@@ -287,17 +280,6 @@ class OrderView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),
@@ -347,29 +329,36 @@ class OrderView extends GetView {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
-                        await controller.getOrderModel(
-                            controller.completedOrders[index].id ?? 0);
+                        await controller
+                            .getOrderModel(controller.completedOrders[index].id ?? 0);
+                        if (controller.completedOrders[index].getStatusDisplay ==
+                            'In Progress') {
+                          inProgressController.fetchQuoteCommunicationsList(
+                              controller.completedOrders[index].id ?? 0);
+                        }
+                        if (controller.completedOrders[index].getStatusDisplay ==
+                            'Completed') {
+                          completedController.fetchQuoteCommunicationsList(
+                              controller.completedOrders[index].id ?? 0);
+                        }
                         controller.completedOrders[index].getStatusDisplay ==
-                                'Quote Pending'
+                            'Quote Pending'
                             ? Get.toNamed(Routes.PROJECT_DETAILS)
-                            : controller.completedOrders[index]
-                                        .getStatusDisplay ==
-                                    'In Progress'
-                                ? Get.toNamed(Routes.IN_PROGRESS)
-                                : controller.completedOrders[index]
-                                            .getStatusDisplay ==
-                                        'Quote Given'
-                                    ? Get.toNamed(Routes.COMPLETED)
-                                    : Get.toNamed(Routes.COMPLETED);
+                            : controller.completedOrders[index].getStatusDisplay ==
+                            'In Progress'
+                            ? Get.toNamed(Routes.IN_PROGRESS)
+                            : controller.completedOrders[index].getStatusDisplay ==
+                            'Quote Given'
+                            ? Get.toNamed(Routes.QUOTE_GIVEN)
+                            : Get.toNamed(Routes.COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText: RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: controller.completedOrders[index]
-                                                .createdAt ??
+                                                .createdAt?.substring(0,10)  ??
                                             '',
                                         style: TextStyle(
                                           color: kgre7,
@@ -378,17 +367,6 @@ class OrderView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),
@@ -438,30 +416,37 @@ class OrderView extends GetView {
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       onTap: () async {
-                        await controller.getOrderModel(
-                            controller.quotedGivenOrders[index].id ?? 0);
+                        await controller
+                            .getOrderModel(controller.quotedGivenOrders[index].id ?? 0);
+                        if (controller.quotedGivenOrders[index].getStatusDisplay ==
+                            'In Progress') {
+                          inProgressController.fetchQuoteCommunicationsList(
+                              controller.quotedGivenOrders[index].id ?? 0);
+                        }
+                        if (controller.quotedGivenOrders[index].getStatusDisplay ==
+                            'Completed') {
+                          completedController.fetchQuoteCommunicationsList(
+                              controller.quotedGivenOrders[index].id ?? 0);
+                        }
                         controller.quotedGivenOrders[index].getStatusDisplay ==
-                                'Quote Pending'
+                            'Quote Pending'
                             ? Get.toNamed(Routes.PROJECT_DETAILS)
-                            : controller.quotedGivenOrders[index]
-                                        .getStatusDisplay ==
-                                    'In Progress'
-                                ? Get.toNamed(Routes.IN_PROGRESS)
-                                : controller.quotedGivenOrders[index]
-                                            .getStatusDisplay ==
-                                        'Quote Given'
-                                    ? Get.toNamed(Routes.COMPLETED)
-                                    : Get.toNamed(Routes.COMPLETED);
+                            : controller.quotedGivenOrders[index].getStatusDisplay ==
+                            'In Progress'
+                            ? Get.toNamed(Routes.IN_PROGRESS)
+                            : controller.quotedGivenOrders[index].getStatusDisplay ==
+                            'Quote Given'
+                            ? Get.toNamed(Routes.QUOTE_GIVEN)
+                            : Get.toNamed(Routes.COMPLETED);
                       },
                       child: buildProjectTitle(width, height, sp,
-                          richText: index != 1
-                              ? RichText(
+                          richText:RichText(
                                   text: TextSpan(
                                     children: [
                                       TextSpan(
                                         text: controller
                                                 .quotedGivenOrders[index]
-                                                .createdAt ??
+                                                .createdAt?.substring(0,10)  ??
                                             '',
                                         style: TextStyle(
                                           color: kgre7,
@@ -470,17 +455,6 @@ class OrderView extends GetView {
                                           fontFamily: 'WorkSans',
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                )
-                              : RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: 'Project Timeline :   ',
-                                          style: fourStyle),
-                                      TextSpan(
-                                          text: '10:44:20', style: sixStyle),
                                     ],
                                   ),
                                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
-import 'package:video_editing_app/app/modules/EditorChats/views/editor_chats_view.dart';
+import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_web_socket_controller.dart';
 import 'package:video_editing_app/app/modules/EditorProfile/controllers/editor_profile_controller.dart';
 import '../controllers/editor_send_message_controller.dart';
 import 'package:flutter_svg/svg.dart';
@@ -18,6 +18,7 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
     final sp = MediaQuery.of(context).textScaleFactor;
     EditorChatsController editorChatsController = Get.find();
     EditorProfileController editorProfileController = Get.find();
+    EditorWebSocketController editorWebSocketController = Get.find();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -42,7 +43,7 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                       const CircleAvatar(
                         radius: 20,
                         backgroundImage:
-                        AssetImage('assets/icons/circleAppbar.png'),
+                            AssetImage('assets/icons/circleAppbar.png'),
                       ),
                       SizedBox(
                         width: width / 35,
@@ -50,11 +51,13 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          MyText(
-                            text: controller.name.value,
-                            size: 14 * sp,
-                            weight: ksix,
-                            color: kgrey8,
+                          Obx(
+                            () => MyText(
+                              text: controller.name.value,
+                              size: 14 * sp,
+                              weight: ksix,
+                              color: kgrey8,
+                            ),
                           ),
                           SizedBox(height: height * 0.006),
                           MyText(
@@ -84,21 +87,24 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
             ListView.separated(
                 itemBuilder: (context, index) {
                   return editorChatsController.messages[index].user?.id ==
-                      editorProfileController.userModelFromApi.value?.user?.id
+                          editorProfileController
+                              .userModelFromApi.value?.user?.id
                       ? messageTile(
-                    height,
-                    width,
-                    sp,
-                    receiveText:
-                    editorChatsController.messages[index].message ?? '',
-                  )
+                          height,
+                          width,
+                          sp,
+                          receiveText:
+                              editorChatsController.messages[index].message ??
+                                  '',
+                        )
                       : sendMsg(
-                    height,
-                    width,
-                    sp,
-                    message:
-                    editorChatsController.messages[index].message ?? '',
-                  );
+                          height,
+                          width,
+                          sp,
+                          message:
+                              editorChatsController.messages[index].message ??
+                                  '',
+                        );
                 },
                 separatorBuilder: (context, index) {
                   return SizedBox(
@@ -141,17 +147,17 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100.0),
                               borderSide:
-                              const BorderSide(color: kgrey3, width: 1.0),
+                                  const BorderSide(color: kgrey3, width: 1.0),
                             ),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100.0),
                               borderSide:
-                              const BorderSide(color: kgrey3, width: 1.0),
+                                  const BorderSide(color: kgrey3, width: 1.0),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(100.0),
                               borderSide:
-                              const BorderSide(color: kgrey3, width: 1.0),
+                                  const BorderSide(color: kgrey3, width: 1.0),
                             ),
                             suffixIcon: FittedBox(
                               child: Padding(
@@ -177,7 +183,19 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                         ),
                       ),
                       SizedBox(width: width * 0.022),
-                      SvgPicture.asset('assets/icons/frwrd.svg')
+                      GestureDetector(
+                          onTap: () {
+                            if(controller.msgController.text.isNotEmpty) {
+                              editorWebSocketController.sendThreadMessage(
+                                  message: controller.msgController.text,
+                                  currentUserId: editorProfileController
+                                      .userModelFromApi.value?.user?.id ??
+                                      0,
+                                  sentTo: controller.receiverId.value,
+                                  threadId: controller.threadId.value);
+                            }
+                          },
+                          child: SvgPicture.asset('assets/icons/frwrd.svg'))
                     ],
                   ),
                 )),
@@ -188,11 +206,11 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
   }
 
   messageTile(
-      double height,
-      double width,
-      double sp, {
-        required String receiveText,
-      }) {
+    double height,
+    double width,
+    double sp, {
+    required String receiveText,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
       child: Row(

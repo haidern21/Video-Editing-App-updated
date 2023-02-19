@@ -43,7 +43,7 @@ class SignInController extends GetxController {
         var responseJson = jsonDecode(response.body);
         await JwtUtils.setJwtToken(responseJson['access']);
         await JwtUtils.setRefreshToken(responseJson['refresh']);
-        await JwtUtils.verifyToken();
+        await JwtUtils.verifyToken(jwtToken: responseJson['access']);
         sharedPreferences.setString('email', emailController.text);
        Future.delayed(const Duration(seconds: 2),()=>  Get.offAllNamed(Routes.BOTTOM_BAR));
       } else {

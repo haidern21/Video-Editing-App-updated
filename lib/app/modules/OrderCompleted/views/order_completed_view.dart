@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
 import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
 import '../../../../Utils/utils.dart';
-import '../../Order/controllers/order_controller.dart';
+import '../../../routes/app_pages.dart';
+import '../../EditorBottomBar/controllers/editor_bottom_bar_controller.dart';
 import '../controllers/order_completed_controller.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
 import '../../../../widgets/back_button.dart';
 import '../../../../widgets/my_text.dart';
 
 class OrderCompletedView extends GetView<OrderCompletedController> {
+  EditorOrdersController editorOrderController = Get.find();
+
+  OrderCompletedView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    EditorOrdersController editorOrderController = Get.find();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
+    EditorChatsController editorChatsController= Get.find();
 
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Color(0xffF9F9FB),
+          backgroundColor: const Color(0xffF9F9FB),
           leading: Padding(
-            padding: EdgeInsets.all(5),
+            padding: const EdgeInsets.all(5),
             child: backButton(),
           ),
           title: MyText(
@@ -44,28 +49,36 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                        onTap: () {
-                          Get.toNamed(Routes.CHECK_OUT);
-                        },
-                        child: buildProjectTitleContainer(height, width, sp,
-                            // totalVideos: editorOrderController
-                            //         .selectedOrder.quoteVideos!.isNotEmpty
-                            //     ? editorOrderController
-                            //         .selectedOrder.quoteVideos!.length
-                            //         .toString()
-                            //     : 0.toString(),
-                            totalVideos: '0',
-                            title: editorOrderController.selectedOrder.value!.projectTitle ??
+                    buildProjectTitleContainer(height, width, sp,
+                        totalVideos: editorOrderController
+                                .selectedOrder.value!.quoteVideos!.isNotEmpty
+                            ? editorOrderController
+                                .selectedOrder.value!.quoteVideos!.length
+                                .toString()
+                            : 0.toString(),
+                        title: editorOrderController
+                                .selectedOrder.value!.projectTitle ??
+                            '',
+                        status:
+                            editorOrderController.selectedOrder.value!.status ??
                                 '',
-                            status:
-                                editorOrderController.selectedOrder.value!.status ?? '')),
+                        price:
+                            '\$ ${editorOrderController.selectedOrder.value?.quotePrice}' ??
+                                '',
+                        endDate: editorOrderController
+                                .selectedOrder.value?.completedAt
+                                ?.substring(0, 10) ??
+                            '',
+                        startDate: editorOrderController
+                                .selectedOrder.value?.startedAt
+                                ?.substring(0, 10) ??
+                            ''),
                     SizedBox(height: height * 0.001),
                     Theme(
                       data: Theme.of(context).copyWith(
                         unselectedWidgetColor:
                             Colors.transparent, // here for close state
-                        colorScheme: ColorScheme.light(
+                        colorScheme: const ColorScheme.light(
                           primary: Colors.transparent,
                         ),
                         dividerColor: Colors.transparent,
@@ -75,16 +88,19 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: 'Start project ',
+                                text: 'Start project  ',
                                 style: TextStyle(
                                   fontSize: 14 * sp,
                                   fontWeight: kfour,
-                                  color: Color(0xff000000),
+                                  color: const Color(0xff000000),
                                   fontFamily: 'WorkSans',
                                 ),
                               ),
                               TextSpan(
-                                text: 'Sep 19, 1:43 PM',
+                                text: editorOrderController
+                                        .selectedOrder.value?.startedAt
+                                        ?.substring(0, 10) ??
+                                    '',
                                 style: TextStyle(
                                   fontSize: 12 * sp,
                                   fontWeight: kfour,
@@ -116,16 +132,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                     style: TextStyle(
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
+                                      color: const Color(0xff000000),
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
@@ -138,10 +145,10 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                             ),
                             children: [
                               ...List.generate(
-                                  editorOrderController
-                                      .selectedOrder.value!.quoteVideos!.isNotEmpty
-                                      ? editorOrderController
-                                      .selectedOrder.value!.quoteVideos!.length
+                                  editorOrderController.selectedOrder.value!
+                                          .quoteVideos!.isNotEmpty
+                                      ? editorOrderController.selectedOrder
+                                          .value!.quoteVideos!.length
                                       : 0,
                                   (index) => Column(
                                         crossAxisAlignment:
@@ -151,18 +158,24 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                               height, width, sp,
                                               projectNumber: '${index + 1}',
                                               description: editorOrderController
-                                                      .selectedOrder.value!
+                                                      .selectedOrder
+                                                      .value!
                                                       .quoteVideos?[index]
                                                       .details ??
                                                   '',
-                                              duration:editorOrderController
-                                                  .selectedOrder.value!
-                                                  .quoteVideos?[index]
-                                                  .numberOfMinutes.toString() ?? '',
-                                              driveLink:editorOrderController
-                                                  .selectedOrder.value!
-                                                  .quoteVideos?[index]
-                                                  .googleDriveLink ?? ''),
+                                              duration: editorOrderController
+                                                      .selectedOrder
+                                                      .value!
+                                                      .quoteVideos?[index]
+                                                      .numberOfMinutes
+                                                      .toString() ??
+                                                  '',
+                                              driveLink: editorOrderController
+                                                      .selectedOrder
+                                                      .value!
+                                                      .quoteVideos?[index]
+                                                      .googleDriveLink ??
+                                                  ''),
                                           SizedBox(height: height * 0.013),
                                           Padding(
                                             padding: EdgeInsets.only(
@@ -171,7 +184,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                               text:
                                                   "What sizes would you like your videos",
                                               size: 16 * sp,
-                                              color: Color(0xff000000),
+                                              color: const Color(0xff000000),
                                               weight: ksix,
                                             ),
                                           ),
@@ -184,43 +197,50 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .verticalSize ==
-                                                    true
-                                                    ? buildCheck(sp, text: 'Vertical')
-                                                    : const SizedBox(
-                                                  height: 0,
-                                                ),
-                                                editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .horizontalSize ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .verticalSize ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Horizontal')
+                                                        text: 'Vertical')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .squareSize ==
-                                                    true
-                                                    ? buildCheck(sp, text: 'Square')
-                                                    : const SizedBox(
-                                                  height: 0,
-                                                ),
-                                                editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .allSizes ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .horizontalSize ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'All of the above')
+                                                        text: 'Horizontal')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
+                                                editorOrderController
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .squareSize ==
+                                                        true
+                                                    ? buildCheck(sp,
+                                                        text: 'Square')
+                                                    : const SizedBox(
+                                                        height: 0,
+                                                      ),
+                                                editorOrderController
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .allSizes ==
+                                                        true
+                                                    ? buildCheck(sp,
+                                                        text:
+                                                            'All of the above')
+                                                    : const SizedBox(
+                                                        height: 0,
+                                                      ),
                                               ],
                                             ),
                                           ),
@@ -245,75 +265,85 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .colorGrading ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .colorGrading ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Colour Grading')
+                                                        text: 'Colour Grading')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .animation ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .animation ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Animations')
+                                                        text: 'Animations')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .customSubtitle ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .customSubtitle ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Custom Subtitles')
+                                                        text:
+                                                            'Custom Subtitles')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .specialEffectOrVfx ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .specialEffectOrVfx ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Special effects/ VFX')
+                                                        text:
+                                                            'Special effects/ VFX')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .copyrightFreeMusic ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .copyrightFreeMusic ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Copyright Free Music')
+                                                        text:
+                                                            'Copyright Free Music')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .transitions ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .transitions ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Transitions')
+                                                        text: 'Transitions')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                                 editorOrderController
-                                                    .selectedOrder.value!
-                                                    .quoteVideos![index]
-                                                    .motionGraphics ==
-                                                    true
+                                                            .selectedOrder
+                                                            .value!
+                                                            .quoteVideos![index]
+                                                            .motionGraphics ==
+                                                        true
                                                     ? buildCheck(sp,
-                                                    text: 'Motion Graphics')
+                                                        text: 'Motion Graphics')
                                                     : const SizedBox(
-                                                  height: 0,
-                                                ),
+                                                        height: 0,
+                                                      ),
                                               ],
                                             ),
                                           ),
@@ -327,330 +357,292 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                               text: TextSpan(
                                 children: [
                                   TextSpan(
-                                    text: 'Raju Mullah ',
+                                    text: editorOrderController.selectedOrder
+                                            .value!.userModel?.name ??
+                                        '',
                                     style: TextStyle(
                                       fontSize: 14 * sp,
                                       fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
+                                      color: const Color(0xff000000),
                                       fontFamily: 'WorkSans',
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            leading: CircleAvatar(
+                            leading: const CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
                                     AssetImage('assets/icons/imagePerson.png')),
                             children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          MyText(
-                                            text: 'Hello, What’s up?',
-                                            size: 14 * sp,
-                                            color: kgrey8,
-                                            weight: kfour,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                              Obx(
+                                () => controller.showLoader.value == false
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            controller.buyerMessages.length,
+                                        itemBuilder: (context, index) {
+                                          return Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  left: width / 5.5),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      MyText(
+                                                        text: controller
+                                                                .buyerMessages[
+                                                                    index]
+                                                                .message ??
+                                                            '',
+                                                        size: 14 * sp,
+                                                        color: kgrey8,
+                                                        weight: kfour,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                    : const CircularProgressIndicator(),
                               ),
                             ],
                           ),
                           ExpansionTile(
                             childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Duseca Software ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
+                            title: Obx(
+                              () => RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: editorOrderController.selectedOrder
+                                              .value!.editorAssigned?.name ??
+                                          '',
+                                      style: TextStyle(
+                                        fontSize: 14 * sp,
+                                        fontWeight: kfour,
+                                        color: const Color(0xff000000),
+                                        fontFamily: 'WorkSans',
+                                      ),
                                     ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                            leading: CircleAvatar(
+                            leading: const CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
                                     AssetImage('assets/icons/duseca.png')),
                             children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                        text: 'Doing well.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.012),
-                                      MyText(
-                                        text: 'Do you complete your project?',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Deliver order ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              'assets/icons/deliverOrder.svg',
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(
-                                      left: width / 5.5, right: width * 0.045),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      MyText(
-                                        text:
-                                            'Thanks again for your order! Your delivery is enclosed. If there are any problems, please let me know. I\'ll get back to you as soon as I can.',
-                                        size: 14 * sp,
-                                        color: kgrey8,
-                                        weight: kfour,
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      Row(
-                                        children: [
-                                          ...List.generate(
-                                              3,
-                                              (index) => Container(
-                                                    margin: EdgeInsets.only(
-                                                      right: width * 0.01,
-                                                    ),
-                                                    height: height * 0.09,
-                                                    width: width / 6,
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                        image: AssetImage(
-                                                            'assets/icons/playVideo.png'),
+                              Obx(
+                                () => controller.showLoader.value == false
+                                    ? ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            controller.editorMessages.length,
+                                        itemBuilder: (context, index) {
+                                          return Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Container(
+                                              margin: EdgeInsets.only(
+                                                  left: width / 5.5),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      MyText(
+                                                        text: controller
+                                                                .editorMessages[
+                                                                    index]
+                                                                .message ??
+                                                            '',
+                                                        size: 14 * sp,
+                                                        color: kgrey8,
+                                                        weight: kfour,
                                                       ),
-                                                    ),
-                                                  ))
-                                        ],
-                                      ),
-                                      SizedBox(height: height * 0.025),
-                                      // Row(
-                                      //   children: [
-                                      //     Expanded(
-                                      //       child: SizedBox(
-                                      //         height: height * 0.06,
-                                      //         child: MyButton(
-                                      //           borderColor: kgrey3,
-                                      //           color: Color(0xffF9F9FB),
-                                      //           textColor: kgre7,
-                                      //           text: 'Request revision',
-                                      //           onPress: () {},
-                                      //         ),
-                                      //       ),
-                                      //     ),
-                                      //     SizedBox(
-                                      //       width: width * 0.01,
-                                      //     ),
-                                      //     Expanded(
-                                      //       child: SizedBox(
-                                      //         height: height * 0.06,
-                                      //         child: MyButton(
-                                      //           text: 'Accept',
-                                      //           onPress: () {},
-                                      //         ),
-                                      //       ),
-                                      //     )
-                                      //   ],
-                                      // ),
-                                    ],
-                                  ),
-                                ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                    : const CircularProgressIndicator(),
                               ),
                             ],
                           ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Revision accepted ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              "assets/icons/revision.svg",
-                              height: height * 0.06,
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                          Obx(
+                            () => controller.deliverMessages.isNotEmpty
+                                ? ExpansionTile(
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
                                         children: [
-                                          // MyText(
-                                          //   text: 'Hello, What’s up?',
-                                          //   size: 14 * sp,
-                                          //   color: kgrey8,
-                                          //   weight: kfour,
-                                          // ),
+                                          TextSpan(
+                                            text: 'Deliver order ',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
                                         ],
                                       ),
+                                    ),
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/deliverOrder.svg',
+                                    ),
+                                    children: [
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .deliverMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .deliverMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ],
+                                                ),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
                                     ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                                  )
+                                : const SizedBox(),
                           ),
-                          ExpansionTile(
-                            childrenPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Order accepted ',
-                                    style: TextStyle(
-                                      fontSize: 14 * sp,
-                                      fontWeight: kfour,
-                                      color: Color(0xff000000),
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                  TextSpan(
-                                    text: 'Sep 19, 1:43 PM',
-                                    style: TextStyle(
-                                      fontSize: 12 * sp,
-                                      fontWeight: kfour,
-                                      color: kgrey5,
-                                      fontFamily: 'WorkSans',
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            leading: SvgPicture.asset(
-                              "assets/icons/orderAccepted.svg",
-                              height: height * 0.06,
-                            ),
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Container(
-                                  margin: EdgeInsets.only(left: width / 5.5),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                          SizedBox(height: height * 0.013),
+                          Obx(
+                            () => controller.revisionMessages.isNotEmpty
+                                ? ExpansionTile(
+                                    childrenPadding: EdgeInsets.zero,
+                                    title: RichText(
+                                      text: TextSpan(
                                         children: [
-                                          // MyText(
-                                          //   text: 'Hello, What’s up?',
-                                          //   size: 14 * sp,
-                                          //   color: kgrey8,
-                                          //   weight: kfour,
-                                          // ),
+                                          TextSpan(
+                                            text: 'Revisions Requested',
+                                            style: TextStyle(
+                                              fontSize: 14 * sp,
+                                              fontWeight: kfour,
+                                              color: const Color(0xff000000),
+                                              fontFamily: 'WorkSans',
+                                            ),
+                                          ),
                                         ],
                                       ),
+                                    ),
+                                    leading: SvgPicture.asset(
+                                      'assets/icons/revision.svg',
+                                    ),
+                                    children: [
+                                      Obx(
+                                        () => controller.showLoader.value ==
+                                                false
+                                            ? Container(
+                                                margin: EdgeInsets.only(
+                                                    left: width / 5.5,
+                                                    right: width * 0.045),
+                                                child: Column(
+                                                  children: [
+                                                    ListView.builder(
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .revisionMessages
+                                                            .length,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return Align(
+                                                            alignment: Alignment
+                                                                .centerLeft,
+                                                            child: Column(
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .start,
+                                                              children: [
+                                                                Column(
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .start,
+                                                                  children: [
+                                                                    MyText(
+                                                                      text: controller
+                                                                              .revisionMessages[index]
+                                                                              .message ??
+                                                                          '',
+                                                                      size: 14 *
+                                                                          sp,
+                                                                      color:
+                                                                          kgrey8,
+                                                                      weight:
+                                                                          kfour,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ],
+                                                ),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
                                     ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                                  )
+                                : const SizedBox(),
                           ),
                         ],
                       ),
@@ -658,82 +650,22 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                   ],
                 ),
               ),
-              Container(
-                margin: EdgeInsets.only(top: height * 0.025),
-                height: height * 0.1,
-                width: width,
-                color: kwhite,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: height * 0.06,
-                      width: width * 0.78,
-                      child: TextFormField(
-                        style: TextStyle(
-                          fontSize: 14 * sp,
-                          fontWeight: kfour,
-                          fontFamily: 'Poppins',
-                          color: kblack,
-                        ),
-                        decoration: InputDecoration(
-                          contentPadding: EdgeInsets.zero,
-                          hintStyle: TextStyle(
-                            fontSize: 14 * sp,
-                            fontWeight: kfour,
-                            fontFamily: 'Poppins',
-                            color: kblack,
-                          ),
-                          hintText: 'Type your message',
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide: BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide: BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(100.0),
-                            borderSide: BorderSide(color: kgrey3, width: 1.0),
-                          ),
-                          suffixIcon: FittedBox(
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/icons/upload.svg',
-                                  ),
-                                  SizedBox(width: 3),
-                                  SvgPicture.asset(
-                                    'assets/icons/camera.svg',
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          prefixIcon: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: SvgPicture.asset(
-                              'assets/icons/smile.svg',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.019,
-                    ),
-                    SvgPicture.asset('assets/icons/frwrd.svg')
-                  ],
-                ),
-              )
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Direct Chat'),
+          icon: const Icon(Icons.message),
+          onPressed: () {
+            EditorBottomBarController editorBottomBarController= Get.find();
+            editorChatsController.createChatThread(
+                editorOrderController.selectedOrder.value?.userModel?.email ??
+                    '');
+            editorBottomBarController.tabIndex.value=0;
+            Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
+          },
+        ),
+
       ),
     );
   }
@@ -743,12 +675,12 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         GlobalListTileItem(),
-        SizedBox(width: Checkbox.width * 0.3),
+        const SizedBox(width: Checkbox.width * 0.3),
         MyText(
-          text: '$text',
+          text: text,
           size: 14 * sp,
           weight: kfour,
-          color: Color(0xff000000),
+          color: const Color(0xff000000),
         )
       ],
     );
@@ -773,7 +705,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
         boxShadow: [
           BoxShadow(
               offset: Offset(0, 4),
-              color: Color(0xff0000000A).withOpacity(0.04),
+              color: const Color(0xff000000).withOpacity(0.04),
               blurRadius: 15.0,
               spreadRadius: 0.0),
         ],
@@ -816,7 +748,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MyText(
-          text: '$title',
+          text: title,
           size: 14 * sp,
           weight: ksix,
           color: kgrey8,
@@ -824,7 +756,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
         SizedBox(height: height * 0.01),
         MyText(
           align: TextAlign.left,
-          text: '$descrip',
+          text: descrip,
           size: 14 * sp,
           weight: kfour,
           color: kgrey8,
@@ -833,10 +765,17 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
     );
   }
 
-  Container buildProjectTitleContainer(double height, double width, double sp,
-      {required String title,
-      required String status,
-      required String totalVideos}) {
+  Container buildProjectTitleContainer(
+    double height,
+    double width,
+    double sp, {
+    required String title,
+    required String status,
+    required String totalVideos,
+    required String? startDate,
+    required String? endDate,
+    required String? price,
+  }) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -850,8 +789,8 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-              offset: Offset(0, 4),
-              color: Color(0xff0000000A).withOpacity(0.04),
+              offset: const Offset(0, 4),
+              color: const Color(0xff000000).withOpacity(0.04),
               blurRadius: 15.0,
               spreadRadius: 0.0),
         ],
@@ -882,20 +821,20 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Assigned date',
-            rightText: '20 Sept 2022, 06:23 PM',
+            leftText: 'Start date',
+            rightText: startDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
-            leftText: 'Project timeline',
-            rightText: '10:23:54',
+            leftText: 'End Date',
+            rightText: endDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(
             sp,
             leftText: 'Project price',
-            rightText: r'$145.00',
+            rightText: price ?? '',
           ),
           SizedBox(height: height * 0.015),
           Row(
@@ -944,19 +883,19 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
       children: [
         Expanded(
           child: MyText(
-            text: '$leftText',
+            text: leftText,
             size: 14 * sp,
             weight: kfour,
             color: kblack,
           ),
         ),
-        SizedBox(),
+        const SizedBox(),
         Expanded(
           child: Align(
             alignment: Alignment.centerRight,
             child: MyText(
               align: TextAlign.right,
-              text: '$rightText',
+              text: rightText,
               size: 14 * sp,
               weight: ksix,
               color: kblack,

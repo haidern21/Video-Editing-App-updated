@@ -175,7 +175,7 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
                     //         // print(carImages.length);
                     //       }
                     //     : null,
-                    onPressed: () {
+                    onPressed: () async{
                       if (deliveryMessageController.text.isNotEmpty) {
                         editorWebSocketController.sendDeliveryMessage(
                             deliveryMessageController.text,
@@ -184,8 +184,9 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
                       }
                       deliveryMessageController.clear();
                       deliveryFocusNode.unfocus();
-                      editorInProgressController.fetchQuoteCommunicationsList(
+                      await editorInProgressController.fetchQuoteCommunicationsList(
                           orderController.selectedOrder.value?.id ?? 0);
+                      Get.back();
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),

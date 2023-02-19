@@ -81,135 +81,6 @@ class SendMessageView extends GetView<SendMessageController> {
             )
           ],
         ),
-        // body: SingleChildScrollView(
-        //   child: Column(
-        //     children: [
-        //       Padding(
-        //         padding: EdgeInsets.symmetric(horizontal: width / 20),
-        //         child: Align(
-        //           alignment: Alignment.bottomCenter,
-        //           child: Column(
-        //             children: [
-        //               SizedBox(height: height * 0.35),
-        //               MyText(
-        //                 text: '09:41 AM',
-        //                 size: 14 * sp,
-        //                 weight: kfour,
-        //                 color: const Color(0xff979C9E),
-        //               ),
-        //               // SizedBox(height: height * 0.25),
-        //               messageTile(height, width, sp, receiveText: 'Hi, Mandy'),
-        //               SizedBox(height: height * 0.019),
-        //               messageTile(
-        //                 height,
-        //                 width,
-        //                 sp,
-        //                 receiveText: 'I’ve tried the app',
-        //               ),
-        //               SizedBox(height: height * 0.019),
-        //               SendMsg(height, width, sp),
-        //               SizedBox(height: height * 0.019),
-        //               messageTile(
-        //                 height,
-        //                 width,
-        //                 sp,
-        //                 receiveText: 'Yeah, It’s really good!',
-        //               ),
-        //               SizedBox(height: height * 0.019),
-        //               Row(
-        //                 children: [
-        //                   const CircleAvatar(
-        //                     radius: 15,
-        //                     backgroundImage:
-        //                         AssetImage('assets/icons/circleAppbar.png'),
-        //                   ),
-        //                   SizedBox(width: width * 0.02),
-        //                   MyText(
-        //                     text: 'Typing...',
-        //                     size: 14 * sp,
-        //                     weight: kfour,
-        //                     color: const Color(0xff979C9E),
-        //                   )
-        //                 ],
-        //               )
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-        //       SizedBox(height: height * 0.025),
-        //       Container(
-        //         padding: EdgeInsets.symmetric(
-        //             vertical: height * 0.0095, horizontal: width / 20),
-        //         height: height * 0.098,
-        //         width: width,
-        //         color: kwhite,
-        //         child: Row(
-        //           crossAxisAlignment: CrossAxisAlignment.center,
-        //           mainAxisAlignment: MainAxisAlignment.center,
-        //           children: [
-        //             SizedBox(
-        //               height: height * 0.06,
-        //               width: width * 0.78,
-        //               child: TextFormField(
-        //                 controller: controller.msgController,
-        //                 style: TextStyle(
-        //                   fontSize: 14 * sp,
-        //                   fontWeight: kfour,
-        //                   fontFamily: 'Poppins',
-        //                   color: kblack,
-        //                 ),
-        //                 decoration: InputDecoration(
-        //                   contentPadding: EdgeInsets.zero,
-        //                   hintStyle: TextStyle(
-        //                     fontSize: 14 * sp,
-        //                     fontWeight: kfour,
-        //                     fontFamily: 'Poppins',
-        //                     color: const Color(0xff9EA3AE),
-        //                   ),
-        //                   hintText: 'Type your message',
-        //                   enabledBorder: OutlineInputBorder(
-        //                     borderRadius: BorderRadius.circular(100.0),
-        //                     borderSide: const BorderSide(color: kgrey3, width: 1.0),
-        //                   ),
-        //                   border: OutlineInputBorder(
-        //                     borderRadius: BorderRadius.circular(100.0),
-        //                     borderSide: const BorderSide(color: kgrey3, width: 1.0),
-        //                   ),
-        //                   focusedBorder: OutlineInputBorder(
-        //                     borderRadius: BorderRadius.circular(100.0),
-        //                     borderSide: const BorderSide(color: kgrey3, width: 1.0),
-        //                   ),
-        //                   suffixIcon: FittedBox(
-        //                     child: Padding(
-        //                       padding: const EdgeInsets.all(10),
-        //                       child: Row(
-        //                         crossAxisAlignment: CrossAxisAlignment.center,
-        //                         mainAxisAlignment: MainAxisAlignment.end,
-        //                         children: [
-        //                           SvgPicture.asset(
-        //                             'assets/icons/upload.svg',
-        //                           ),
-        //                         ],
-        //                       ),
-        //                     ),
-        //                   ),
-        //                   prefixIcon: Padding(
-        //                     padding: const EdgeInsets.all(10),
-        //                     child: SvgPicture.asset(
-        //                       'assets/icons/smile.svg',
-        //                     ),
-        //                   ),
-        //                 ),
-        //               ),
-        //             ),
-        //             SizedBox(width: width * 0.022),
-        //             SvgPicture.asset('assets/icons/frwrd.svg')
-        //           ],
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // ),
         body: Stack(
           children: [
             ListView.separated(
@@ -310,10 +181,16 @@ class SendMessageView extends GetView<SendMessageController> {
                       SizedBox(width: width * 0.022),
                       InkWell(
                           onTap: () {
-                            // if (controller.msgController.text.isNotEmpty) {
-                            //   webSocketController.sendMessageInThread(
-                            //       controller.msgController.text);
-                            // }
+                            if (controller.msgController.text.isNotEmpty) {
+                              webSocketController.sendThreadMessage(
+                                  message: controller.msgController.text,
+                                  currentUserId: bottomProfileController
+                                          .userModelFromApi.value?.id ??
+                                      0,
+                                  sentTo: controller.receiverId.value,
+                                  threadId: controller.threadId.value);
+                              controller.msgController.clear();
+                            }
                           },
                           child: SvgPicture.asset('assets/icons/frwrd.svg'))
                     ],
