@@ -14,6 +14,7 @@ class EditorChatsController extends GetxController {
   final count = 0.obs;
   RxList<ChatThreadModel> chatThreads = <ChatThreadModel>[].obs;
   RxList<ChatThreadModel> adminChatThreads = <ChatThreadModel>[].obs;
+  RxList<ChatThreadModel> clientsChatThreads = <ChatThreadModel>[].obs;
   RxList<MessageModel> messages = <MessageModel>[].obs;
   RxBool showLoader = false.obs;
 
@@ -39,6 +40,7 @@ class EditorChatsController extends GetxController {
     try {
       showLoader.value = true;
       chatThreads.value = await fetchAllChatThreads();
+      sortChatThreads();
       showLoader.value = false;
 
       log('The length of chat thread  is ; ${chatThreads.length}');
@@ -68,16 +70,29 @@ class EditorChatsController extends GetxController {
   }
 
   getMessagesList(int threadId) async {
-    // try {
+    try {
     showLoader.value = true;
     messages.value = await getTwoUsersChat(threadId);
     showLoader.value = false;
 
-    // } catch (e) {
-    //   Get.snackbar('Error Occurred',
-    //       'Something went wrong while getting messages. Please try again.');
-    //   showLoader.value = false;
-    // }
+    } catch (e) {
+      Get.snackbar('Error Occurred',
+          'Something went wrong while getting messages. Please try again.');
+      showLoader.value = false;
+    }
+  }
+
+  sortChatThreads(){
+    adminChatThreads.clear();
+    clientsChatThreads.clear();
+    for(var element in chatThreads){
+      if(element.isWithAdmin==true){
+        adminChatThreads.add(element);
+      }
+      else{
+        clientsChatThreads.add(element);
+      }
+    }
   }
 
   createChatThread(String email) async {

@@ -8,11 +8,8 @@ import 'package:video_editing_app/app/routes/app_pages.dart';
 import 'package:http/http.dart' as http;
 import '../../../../Utils/network_utils.dart';
 import '../../../../constants/api_endpoints_constants.dart';
-import '../../BottomProfile/controllers/bottom_profile_controller.dart';
-import '../../EditorProfile/controllers/editor_profile_controller.dart';
 
 class SplashController extends GetxController {
-  //TODO: Implement SplashController
 
   final count = 0.obs;
   @override

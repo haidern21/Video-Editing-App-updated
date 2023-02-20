@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/ChatView/controllers/chat_view_controller.dart';
 import 'admin_tab_bar.dart';
 import 'chat_view_app_bar.dart';
 import 'editor_tab_bar.dart';
@@ -13,6 +15,7 @@ class ChatViewView extends StatefulWidget {
 
 class _ChatViewViewState extends State<ChatViewView>
     with TickerProviderStateMixin {
+  ChatViewController chatViewController= Get.find();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -37,6 +40,13 @@ class _ChatViewViewState extends State<ChatViewView>
               avatars: avatars,
             ),
           ],
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          label: const Text('Admin'),
+          icon: const Icon(Icons.message),
+          onPressed: () async {
+            chatViewController.createChatThread('admin@vea.com');
+          },
         ),
       ),
     );
