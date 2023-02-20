@@ -12,10 +12,14 @@ import 'package:video_editing_app/Utils/network_utils.dart';
 import 'package:video_editing_app/constants/app_constants.dart';
 
 class JwtUtils {
+
+  static String? jwtToken;
+
+
   static Future<String?> getJwtToken() async {
     // SharedPreferences prefs = sharedPreferences;
     return await SharedPreferences.getInstance()
-        .then((value) => value.getString('jwtToken'));
+        .then((value) => value.getString('jwtToken')??jwtToken);
   }
 
   static Future<void> setJwtToken(String jwtToken) async {
@@ -30,11 +34,15 @@ class JwtUtils {
 
   static Future<void> verifyJwtTokenApi() async {
     try {
+
+      String? token = await getJwtToken()??jwtToken;
       https.Response response = await buildHttpResponse(
           '${BASE_URL}token/verify/',
           method: HttpMethod.POST,
+          biuldAuthHeader: true,
           request: {
-            'token': await getJwtToken(),
+            'token': token,
+            // 'token': await getJwtToken()??jwtToken,
           });
 
       debug('Response Status code is ${response.statusCode}');
@@ -112,7 +120,7 @@ class JwtUtils {
   ///
   /// This function will verify the jwt token
   static Future<bool> verifyToken({bool isDebug = false, String? jwtToken}) async {
-    String? jwtCode = await getJwtToken()??jwtToken;
+    String? jwtCode = await getJwtToken()??jwtToken??jwtToken;
     // if (isDebug) {
     debug('Jwt Code $jwtCode');
 

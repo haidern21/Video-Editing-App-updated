@@ -6,6 +6,7 @@ import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/back_button.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
+import '../../../../constants/app_constants.dart';
 import '../../../../widgets/borders.dart';
 import '../../../../widgets/login_field.dart';
 import '../controllers/editor_profile_edit_controller.dart';
@@ -288,14 +289,48 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text('TextField in Dialog'),
+            title: const Text('Add skill'),
             content: TextField(
               controller: controller,
-              decoration: const InputDecoration(hintText: "Enter skill"),
+              decoration:  InputDecoration(hintText: "Enter skill",
+                enabledBorder: enabledborder,
+                errorBorder: errorborder,
+                focusedBorder: focusedborder,),
             ),
             actions: <Widget>[
-              ElevatedButton(
-                  onPressed: onOkButtonPressed, child: const Text('Add')),
+              GestureDetector(
+                onTap: onOkButtonPressed,
+                child: Container(
+                  margin: EdgeInsets.only(right: width * 0.01),
+                  padding:
+                  EdgeInsets.symmetric(horizontal: width * 0.05),
+                  height: height * 0.05,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: const Color(0xff773CFF),
+                    borderRadius: BorderRadius.circular(38),
+                  ),
+                  child: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.add,
+                          size: 16,
+                          color: kwhite,
+                        ),
+                        SizedBox(width: width * 0.01),
+                        MyText(
+                          text: 'Add',
+                          size: 10 * sp,
+                          weight: kfour,
+                          color: kwhite,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
             ],
           );
         });

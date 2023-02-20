@@ -11,7 +11,6 @@ import '../../BottomProfile/controllers/bottom_profile_controller.dart';
 import '../../EditorInProgress/controllers/editor_web_socket_controller.dart';
 import 'editor_tab_bar.dart';
 
-
 class AdminTabBarView extends StatelessWidget {
   const AdminTabBarView({
     Key? key,
@@ -29,7 +28,7 @@ class AdminTabBarView extends StatelessWidget {
     ChatViewController chatViewController = Get.find();
     BottomProfileController bottomProfileController = Get.find();
     return RefreshIndicator(
-      onRefresh: ()async{
+      onRefresh: () async {
         chatViewController.fetchThreadsList();
       },
       child: Padding(
@@ -80,119 +79,140 @@ class AdminTabBarView extends StatelessWidget {
             ),
             SizedBox(height: height * 0.025),
             Obx(
-                  () => ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: chatViewController.chatThreads.length,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                      onTap: () async {
-                        await chatViewController.getMessagesList(
-                            chatViewController.chatThreads[index].id ?? 0);
-                        String? name = chatViewController
-                            .chatThreads[index].firstPerson?.id ==
-                            bottomProfileController.userModelFromApi.value?.id
-                            ? chatViewController
-                            .chatThreads[index].secondPerson?.name ??
-                            ''
-                            : chatViewController
-                            .chatThreads[index].firstPerson?.name;
-                        String? profileImage = chatViewController
-                            .chatThreads[index].firstPerson?.id ==
-                            bottomProfileController.userModelFromApi.value?.id
-                            ? chatViewController.chatThreads[index].secondPerson
-                            ?.profilePicture ??
-                            ''
-                            : chatViewController
-                            .chatThreads[index].firstPerson?.profilePicture;
-                        int receiverId=chatViewController
-                            .chatThreads[index].firstPerson?.id ==
-                            bottomProfileController
-                                .userModelFromApi.value?.id
-                            ? chatViewController.chatThreads[index].secondPerson
-                            ?.id ??
-                            0
-                            : chatViewController
-                            .chatThreads[index].firstPerson?.id??0;
-                        int threadId= chatViewController.chatThreads[index].id ?? 0;
-                        Get.toNamed(Routes.SEND_MESSAGE,arguments: {
-                          'name': name,
-                          'profile_image': profileImage,
-                          'receiverId':receiverId,
-                          'threadId': threadId
-                        });
-                      },
-                      child: Container(
-                        margin: EdgeInsets.only(bottom: height * 0.036),
-                        height: height * 0.07,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FittedBox(
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 20,
-                                    backgroundImage: AssetImage(avatars[index]),
-                                  ),
-                                  SizedBox(
-                                    width: width / 40,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+              () => chatViewController.adminChatThreads.isNotEmpty
+                  ? ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: chatViewController.adminChatThreads.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () async {
+                            await chatViewController.getMessagesList(
+                                chatViewController.adminChatThreads[index].id ??
+                                    0);
+                            String? name = chatViewController
+                                        .adminChatThreads[index]
+                                        .firstPerson
+                                        ?.id ==
+                                    bottomProfileController
+                                        .userModelFromApi.value?.id
+                                ? chatViewController.adminChatThreads[index]
+                                        .secondPerson?.name ??
+                                    ''
+                                : chatViewController
+                                    .adminChatThreads[index].firstPerson?.name;
+                            String? profileImage = chatViewController
+                                        .adminChatThreads[index]
+                                        .firstPerson
+                                        ?.id ==
+                                    bottomProfileController
+                                        .userModelFromApi.value?.id
+                                ? chatViewController.adminChatThreads[index]
+                                        .secondPerson?.profilePicture ??
+                                    ''
+                                : chatViewController.adminChatThreads[index]
+                                    .firstPerson?.profilePicture;
+                            int receiverId = chatViewController
+                                        .adminChatThreads[index]
+                                        .firstPerson
+                                        ?.id ==
+                                    bottomProfileController
+                                        .userModelFromApi.value?.id
+                                ? chatViewController.adminChatThreads[index]
+                                        .secondPerson?.id ??
+                                    0
+                                : chatViewController.adminChatThreads[index]
+                                        .firstPerson?.id ??
+                                    0;
+                            int threadId =
+                                chatViewController.adminChatThreads[index].id ??
+                                    0;
+                            Get.toNamed(Routes.SEND_MESSAGE, arguments: {
+                              'name': name,
+                              'profile_image': profileImage,
+                              'receiverId': receiverId,
+                              'threadId': threadId
+                            });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: height * 0.036),
+                            height: height * 0.07,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                  child: Row(
                                     children: [
-                                      MyText(
-                                        text: chatViewController
-                                            .chatThreads[index]
-                                            .firstPerson
-                                            ?.id ==
-                                            bottomProfileController
-                                                .userModelFromApi.value?.id
-                                            ? chatViewController
-                                            .chatThreads[index]
-                                            .secondPerson
-                                            ?.name ??
-                                            ''
-                                            : chatViewController
-                                            .chatThreads[index]
-                                            .firstPerson
-                                            ?.name,
-                                        size: 14 * sp,
-                                        weight: kfour,
-                                        color: const Color(0xff31383C),
+                                      CircleAvatar(
+                                        radius: 20,
+                                        backgroundImage:
+                                            AssetImage(avatars[index]),
                                       ),
                                       SizedBox(
-                                        height: height * 0.003,
+                                        width: width / 40,
                                       ),
-                                      MyText(
-                                        text: chatViewController
-                                            .chatThreads[index].lastMessage ??
-                                            '',
-                                        size: 14 * sp,
-                                        weight: kfour,
-                                        // weight: index == 0 ? ksix : kfour,
-                                        color: const Color(0xff31383C),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          MyText(
+                                            text: chatViewController
+                                                        .adminChatThreads[index]
+                                                        .firstPerson
+                                                        ?.id ==
+                                                    bottomProfileController
+                                                        .userModelFromApi
+                                                        .value
+                                                        ?.id
+                                                ? chatViewController
+                                                        .adminChatThreads[index]
+                                                        .secondPerson
+                                                        ?.name ??
+                                                    ''
+                                                : chatViewController
+                                                    .adminChatThreads[index]
+                                                    .firstPerson
+                                                    ?.name,
+                                            size: 14 * sp,
+                                            weight: kfour,
+                                            color: const Color(0xff31383C),
+                                          ),
+                                          SizedBox(
+                                            height: height * 0.003,
+                                          ),
+                                          MyText(
+                                            text: chatViewController
+                                                    .adminChatThreads[index]
+                                                    .lastMessage ??
+                                                '',
+                                            size: 14 * sp,
+                                            weight: kfour,
+                                            // weight: index == 0 ? ksix : kfour,
+                                            color: const Color(0xff31383C),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                                FittedBox(
+                                  child: MyText(
+                                    text: chatViewController
+                                        .chatThreads[index].lastMessageTimestamp
+                                        ?.substring(0, 10),
+                                    size: 12 * sp,
+                                    weight: kfour,
+                                    color: const Color(0xffA2A2A2),
+                                  ),
+                                ),
+                              ],
                             ),
-                            FittedBox(
-                              child: MyText(
-                                text: chatViewController
-                                    .chatThreads[index].lastMessageTimestamp
-                                    ?.substring(0, 10),
-                                size: 12 * sp,
-                                weight: kfour,
-                                color: const Color(0xffA2A2A2),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  }),
+                          ),
+                        );
+                      })
+                  : const Center(
+                      child: Text('No chats available'),
+                    ),
             ),
           ],
         ),

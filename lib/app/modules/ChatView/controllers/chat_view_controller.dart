@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:nb_utils/nb_utils.dart';
 import 'package:video_editing_app/app/data/models/chat_thread_model.dart';
 import 'package:video_editing_app/app/data/models/messages_model.dart';
 
@@ -13,6 +14,8 @@ import '../../../routes/app_pages.dart';
 class ChatViewController extends GetxController {
   TextEditingController searchController = TextEditingController();
   RxList<ChatThreadModel> chatThreads = <ChatThreadModel>[].obs;
+  RxList<ChatThreadModel> editorsChatThreads = <ChatThreadModel>[].obs;
+  RxList<ChatThreadModel> adminChatThreads = <ChatThreadModel>[].obs;
   RxList<MessageModel> messages = <MessageModel>[].obs;
   RxBool showLoader = false.obs;
 
@@ -57,6 +60,7 @@ class ChatViewController extends GetxController {
     try {
       showLoader.value = true;
       chatThreads.value = await fetchAllThreads();
+      sortChatThreads();
       showLoader.value = false;
     } catch (e) {
       Get.snackbar('Error Occurred',
@@ -94,6 +98,34 @@ class ChatViewController extends GetxController {
           'Something went wrong while getting messages. Please try again.');
       showLoader.value = false;
     }
+  }
+
+  sortChatThreads(){
+    adminChatThreads.clear();
+    editorsChatThreads.clear();
+    for(var element in chatThreads){
+      if(element.isWithAdmin==true){
+        adminChatThreads.add(element);
+      }
+      else{
+        editorsChatThreads.add(element);
+      }
+    }
+  }
+
+  createChatThread(String email) async {
+    http.Response response = await buildHttpResponse(
+      'https://video-editing-app.herokuapp.com/api/chat/get-thread/$email/',
+      method: HttpMethod.GET,
+      biuldAuthHeader: true,
+    );
+    if (response.statusCode == 200) {
+      Fluttertoast.showToast(msg: 'Thread created');
+    } else {
+      // var body = jsonDecode(response.body);
+      // Fluttertoast.showToast(msg: body['details']);
+    }
+    fetchThreadsList();
   }
 
   @override

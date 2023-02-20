@@ -41,6 +41,7 @@ class SignInController extends GetxController {
         debug('Success');
         debug('Response Body For Sign in is ${response.body}');
         var responseJson = jsonDecode(response.body);
+        JwtUtils.jwtToken=responseJson['access'];
         await JwtUtils.setJwtToken(responseJson['access']);
         await JwtUtils.setRefreshToken(responseJson['refresh']);
         await JwtUtils.verifyToken(jwtToken: responseJson['access']);
