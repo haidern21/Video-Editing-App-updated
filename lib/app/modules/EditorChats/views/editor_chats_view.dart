@@ -8,6 +8,8 @@ import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
 
+import '../../../../main.dart';
+
 class EditorChatsView extends StatefulWidget {
   const EditorChatsView({Key? key}) : super(key: key);
 
@@ -214,7 +216,7 @@ class _EditorChatsViewState extends State<EditorChatsView>
                                       CircleAvatar(
                                         radius: 20,
                                         backgroundImage:
-                                            AssetImage(avatars[index]),
+                                        NetworkImage(emptyUserImage),
                                       ),
                                       SizedBox(
                                         width: width / 40,
@@ -399,7 +401,7 @@ class _EditorChatsViewState extends State<EditorChatsView>
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundImage: AssetImage(avatars[index]),
+                                    backgroundImage:NetworkImage(emptyUserImage),
                                   ),
                                   SizedBox(
                                     width: width / 40,

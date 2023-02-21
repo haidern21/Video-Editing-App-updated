@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:video_editing_app/app/modules/BottomProfile/controllers/bottom_profile_controller.dart';
+import 'package:video_editing_app/constants/colors.dart';
 import '../../AddNewCard/views/add_new_card_view.dart';
 import '../controllers/account_setting_controller.dart';
 import 'package:video_editing_app/constants/weight.dart';
@@ -12,14 +12,13 @@ import 'drop_down.dart';
 class AccountSettingView extends GetView<AccountSettingController> {
   @override
   Widget build(BuildContext context) {
-
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Color(0xffF9F9FB),
+        backgroundColor: const Color(0xffF9F9FB),
         appBar: AccountSettingAppbar(sp),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / 20),
@@ -43,8 +42,9 @@ class AccountSettingView extends GetView<AccountSettingController> {
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Enter user name';
-                          } else
+                          } else {
                             DoNothingAction();
+                          }
                         },
                       ),
                       SizedBox(height: height * 0.025),
@@ -66,45 +66,23 @@ class AccountSettingView extends GetView<AccountSettingController> {
                         },
                       ),
                       SizedBox(height: height * 0.025),
-                      buildTitle(sp, title: 'New password'),
-                      SizedBox(height: height * 0.012),
-                      buildLoginFields(
-                        sp,
-                        hinttext: '*********',
-                        controller: controller.newPasswordController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Enter password';
-                          } else
-                            DoNothingAction();
-                        },
-                      ),
-                      SizedBox(height: height * 0.025),
-                      buildTitle(sp, title: 'Confirm Password'),
-                      SizedBox(height: height * 0.012),
-                      buildLoginFields(
-                        sp,
-                        hinttext: '*********',
-                        controller: controller.confirmController,
-                        validator: (value) {
-                          if (value!.isEmpty) {
-                            return 'Enter password';
-                          } else
-                            DoNothingAction();
-                        },
-                      ),
-                      SizedBox(height: height / 10),
                       Container(
                         height: height / 14,
                         width: Get.width,
-                        decoration: BoxDecoration(boxShadow: [kshadow]),
-                        child: MyButton(
-                          text: 'Save changes',
-                          size: 14 * sp,
-                          weight: kfive,
-                          onPress: () {
-                           controller.updateUserProfile();
-                          },
+                        decoration: BoxDecoration(boxShadow: [kshadow],color: kprimaryColor, borderRadius: BorderRadius.circular(55),),
+                        child: Obx(
+                          () => controller.showLoader.value == false
+                              ? MyButton(
+                                  text: 'Save changes',
+                                  size: 14 * sp,
+                                  weight: kfive,
+                                  onPress: () {
+                                    controller.updateUserProfile();
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(color: Colors.white,),
+                                ),
                         ),
                       ),
                       SizedBox(height: height / 28),

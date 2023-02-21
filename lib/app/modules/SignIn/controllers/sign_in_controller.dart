@@ -13,6 +13,8 @@ import 'package:video_editing_app/Utils/network_utils.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import 'package:video_editing_app/constants/api_endpoints_constants.dart';
 
+import '../../../data/models/user_model.dart';
+
 class SignInController extends GetxController {
   //TODO: Implement SignInController
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
@@ -44,9 +46,31 @@ class SignInController extends GetxController {
         JwtUtils.jwtToken=responseJson['access'];
         await JwtUtils.setJwtToken(responseJson['access']);
         await JwtUtils.setRefreshToken(responseJson['refresh']);
-        await JwtUtils.verifyToken(jwtToken: responseJson['access']);
+        bool loggedIn=await JwtUtils.verifyToken(jwtToken: responseJson['access']);
+        debug('Is UserLogged In: $loggedIn');
+        http.Response response1 = await buildHttpResponse(
+          getUserProfileEndpoint,
+          method: HttpMethod.GET,
+          biuldAuthHeader: true,
+        );
+        UserModel userModel= UserModel.fromMap(jsonDecode(response.body));
+        // UserModel userModel= UserModel();
+        await Future.delayed(const Duration(seconds: 2));
+
+        if (loggedIn) {
+          if(userModel.role=='buyer'){
+            Get.offAndToNamed(Routes.BOTTOM_BAR);
+          }
+          else{
+            Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
+          }
+          // return;
+        } else {
+          Get.offAndToNamed(Routes.SIGN_SELECTECTION);
+          // Get.offAndToNamed(Routes.SIGN_IN);
+        }
         sharedPreferences.setString('email', emailController.text);
-       Future.delayed(const Duration(seconds: 2),()=>  Get.offAllNamed(Routes.BOTTOM_BAR));
+       // Future.delayed(const Duration(seconds: 2),()=>  Get.offAllNamed(Routes.BOTTOM_BAR));
       } else {
         inspect(response);
         inspect(response.request);
@@ -55,6 +79,7 @@ class SignInController extends GetxController {
         toast('${jsonDecode(response.body)['detail']}');
       }
     } on Exception catch (e, stackTrace) {
+      Get.snackbar('Error','Error in authentication');
       e.debugException(stackTrace);
     }
   }

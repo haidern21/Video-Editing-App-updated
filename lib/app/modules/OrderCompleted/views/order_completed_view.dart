@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
 import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
 import '../../../../Utils/utils.dart';
+import '../../../../main.dart';
 import '../../../routes/app_pages.dart';
 import '../../EditorBottomBar/controllers/editor_bottom_bar_controller.dart';
 import '../controllers/order_completed_controller.dart';
@@ -370,10 +371,10 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/imagePerson.png')),
+                                NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -438,10 +439,10 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                 ),
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/duseca.png')),
+                                NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false

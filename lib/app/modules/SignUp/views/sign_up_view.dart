@@ -71,9 +71,10 @@ class SignUpView extends GetView<SignUpController> {
                   SizedBox(height: height * 0.012),
                   buildLoginFields(
                     sp,
-                    hinttext: 'phone number',
+                    hinttext: '+92##########',
                     controller: controller.phoneController,
                     validator: isMobileNumberValid,
+                    textInputType: TextInputType.number,
                   ),
                   SizedBox(height: height * 0.025),
                   buildTitle(sp, title: 'Account type'),
@@ -126,7 +127,8 @@ class SignUpView extends GetView<SignUpController> {
                                 'phone_number': controller.phoneController.text,
                                 'password': controller.passwordController.text,
                                 "role": selectectionController.userRole.value,
-                                "account_type":controller.accountTypeController.text
+                                "account_type":
+                                    controller.accountTypeController.text
                               };
 
                               print('sign up data map is : $signupData');

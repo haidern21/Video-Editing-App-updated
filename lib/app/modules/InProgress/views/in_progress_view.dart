@@ -8,6 +8,7 @@ import 'package:video_editing_app/widgets/elevated_button_widget.dart';
 import '../../../../Utils/utils.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
+import '../../../../main.dart';
 import '../../../../widgets/back_button.dart';
 import '../../../../widgets/my_text.dart';
 import '../controllers/in_progress_controller.dart';
@@ -22,7 +23,6 @@ class InProgressView extends GetView<InProgressController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-
 
     return SafeArea(
       child: Scaffold(
@@ -379,10 +379,9 @@ class InProgressView extends GetView<InProgressController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                    AssetImage('assets/icons/imagePerson.png')),
+                                backgroundImage: NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -446,10 +445,9 @@ class InProgressView extends GetView<InProgressController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                    AssetImage('assets/icons/duseca.png')),
+                                backgroundImage: NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false

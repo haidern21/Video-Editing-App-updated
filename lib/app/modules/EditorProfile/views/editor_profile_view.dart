@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
+import '../../../../main.dart';
 import '../controllers/editor_profile_controller.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
@@ -178,10 +179,10 @@ class EditorProfileView extends GetView<EditorProfileController> {
         children: [
           Row(
             children: [
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 15,
-                backgroundImage: AssetImage(
-                  'assets/icons/circle2.png',
+                backgroundImage: NetworkImage(
+                  emptyUserImage,
                 ),
               ),
               SizedBox(width: width / 60),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:video_editing_app/app/data/models/user_model.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
+import '../../../../main.dart';
 import '../../../../widgets/my_text.dart';
 
 Widget buildProfileContainer(
@@ -20,9 +21,9 @@ Widget buildProfileContainer(
     ),
     child: Column(
       children: [
-        const CircleAvatar(
+         CircleAvatar(
           radius: 50,
-          backgroundImage: AssetImage('assets/icons/avatar.png'),
+          backgroundImage: NetworkImage(emptyUserImage),
         ),
         SizedBox(height: height * 0.016),
         MyText(

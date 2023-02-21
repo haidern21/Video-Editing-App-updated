@@ -7,6 +7,7 @@ import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
 
+import '../../../../main.dart';
 import '../../BottomProfile/controllers/bottom_profile_controller.dart';
 import '../../EditorInProgress/controllers/editor_web_socket_controller.dart';
 import 'editor_tab_bar.dart';
@@ -146,7 +147,7 @@ class AdminTabBarView extends StatelessWidget {
                                       CircleAvatar(
                                         radius: 20,
                                         backgroundImage:
-                                            AssetImage(avatars[index]),
+                                        NetworkImage(emptyUserImage),
                                       ),
                                       SizedBox(
                                         width: width / 40,

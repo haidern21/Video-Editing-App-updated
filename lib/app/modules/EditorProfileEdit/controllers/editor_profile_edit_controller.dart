@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +17,8 @@ class EditorProfileEditController extends GetxController {
   TextEditingController skillController = TextEditingController();
   RxList<String> skills = <String>[].obs;
   EditorProfileController editorProfileController = Get.find();
+  RxString userProfileImage = ''.obs;
+  RxList<File> newProfileImage=<File>[].obs;
 
   void changeSwitch(var value) {
     state = value;
@@ -30,10 +35,13 @@ class EditorProfileEditController extends GetxController {
     editorTitle.text =
         editorProfileController.userModelFromApi.value?.editorTitle ?? '';
     skills.value = editorProfileController.userModelFromApi.value?.skills ?? [];
+    userProfileImage.value =
+        editorProfileController.userModelFromApi.value?.user?.profilePicture ??
+            '';
 
     print(nameController.text);
     print(editorTitle.text);
-    print(skills.value);
+    print(userProfileImage.value);
     super.onInit();
   }
 
@@ -75,6 +83,32 @@ class EditorProfileEditController extends GetxController {
         },
         biuldAuthHeader: true);
     await editorProfileController.initUserModelFromApi();
+  }
+  updateUserProfile() async {
+    try {
+
+      http.Response response =
+      await buildHttpResponse(
+          getUserProfileEndpoint,
+          method: HttpMethod.PATCH,
+          request: {
+            "name": nameController.text,
+            'profile_picture': userProfileImage.value
+          },
+          biuldAuthHeader: true);
+      await editorProfileController.initUserModelFromApi();
+      Get.back();
+    } catch(e){
+
+      Get.snackbar('Error', 'Error in updating profile');
+    }
+  }
+  Future<String> uploadImageAndGetDownloadUrl(File image) async {
+    var reference = FirebaseStorage.instance.ref(
+        'users/profile-images/');
+    await reference.putFile(image);
+    String download = await reference.getDownloadURL();
+    return download;
   }
 
   @override

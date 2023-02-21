@@ -21,8 +21,8 @@ class CheckOutView extends GetView<CheckOutController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-    OrderController orderController= Get.find();
-    QuoteGivenController quoteGivenController= Get.find();
+    OrderController orderController = Get.find();
+    QuoteGivenController quoteGivenController = Get.find();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -121,50 +121,67 @@ class CheckOutView extends GetView<CheckOutController> {
               // ),
               SizedBox(height: height * 0.036),
               GestureDetector(
-                onTap: () async{
-                  _controller.onChange('standard shipping');
-                  await quoteGivenController.quoteAccepted(
-                      orderController.selectedOrder.value!.id ?? 0);
-                  await orderController.getOrderModel(
-                      orderController.selectedOrder.value?.id ?? 0);
-                  await orderController.fetchOrdersList();
-                  Get.toNamed(Routes.FIND_AN_EDITOR);
+                onTap: () async {
+                  try {
+                    controller.showLoader.value = true;
+                    _controller.onChange('standard shipping');
+                    await quoteGivenController.quoteAccepted(
+                        orderController.selectedOrder.value!.id ?? 0);
+                    await orderController.getOrderModel(
+                        orderController.selectedOrder.value?.id ?? 0);
+                    await orderController.fetchOrdersList();
+                    Get.toNamed(Routes.FIND_AN_EDITOR);
+                    controller.showLoader.value = false;
+                  } catch (e) {
+                    controller.showLoader.value = false;
+                    Get.snackbar('Error', 'Error in making payment. try later');
+                  }
                 },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: width / 20),
-                  height: height / 13,
-                  width: width,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: kgrey3),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Obx(
-                        () => SizedBox(
-                          width: width / 20,
-                          child: Radio(
-                              activeColor: kprimaryColor,
-                              focusColor: kprimaryColor,
-                              hoverColor: kprimaryColor,
-                              value: 'standard shipping',
-                              groupValue: _controller.selectedShipment.value,
-                              onChanged: (value) {
-                                _controller.onChange(value);
-                              }),
+                child: Obx(
+                  () => controller.showLoader.value == false
+                      ? Container(
+                          padding: EdgeInsets.symmetric(horizontal: width / 20),
+                          height: height / 13,
+                          width: width,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: kgrey3),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Obx(
+                                () => SizedBox(
+                                  width: width / 20,
+                                  child: Radio(
+                                      activeColor: kprimaryColor,
+                                      focusColor: kprimaryColor,
+                                      hoverColor: kprimaryColor,
+                                      value: 'standard shipping',
+                                      groupValue:
+                                          _controller.selectedShipment.value,
+                                      onChanged: (value) {
+                                        _controller.onChange(value);
+                                      }),
+                                ),
+                              ),
+                              SizedBox(width: width * 0.02),
+                              SvgPicture.asset('assets/icons/paypal.svg'),
+                            ],
+                          ),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(
+                            color: kprimaryColor,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: width * 0.02),
-                      SvgPicture.asset('assets/icons/paypal.svg'),
-                    ],
-                  ),
                 ),
               ),
               SizedBox(height: height * 0.044),
               Center(
                 child: MyText(
-                  text:'Total :\$ ${orderController.selectedOrder.value?.quotePrice??''}',
+                  text:
+                      'Total :\$ ${orderController.selectedOrder.value?.quotePrice ?? ''}',
                   size: 20 * sp,
                   weight: kfive,
                   color: const Color(0xff000000),

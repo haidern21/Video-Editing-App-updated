@@ -8,6 +8,8 @@ import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
 
+import '../../../../main.dart';
+
 List<String> avatars = [
   'assets/icons/josh.png',
   'assets/icons/circle2.png',
@@ -157,7 +159,7 @@ class EditorTabBarView extends StatelessWidget {
                                       CircleAvatar(
                                         radius: 20,
                                         backgroundImage:
-                                            AssetImage(avatars[index]),
+                                        NetworkImage(emptyUserImage),
                                       ),
                                       SizedBox(
                                         width: width / 40,

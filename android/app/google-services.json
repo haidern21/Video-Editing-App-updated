@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "233310270617",
+    "project_id": "video-editing-app-21266",
+    "storage_bucket": "video-editing-app-21266.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233310270617:android:7a15c3263ec5754a14b408",
+        "android_client_info": {
+          "package_name": "com.example.video_editing_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233310270617-9h8gaiv9ehm6k8ufljeksbh4o0ol03q5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBv27bkx9gDXoucpAldkbbOFg3MYbvj2OM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233310270617-9h8gaiv9ehm6k8ufljeksbh4o0ol03q5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,7 @@ class AddNewCardController extends GetxController {
   TextEditingController expirydateController = TextEditingController();
   TextEditingController cvvnumberController = TextEditingController();
   TextEditingController expiry = TextEditingController();
+  RxBool showLoader=false.obs;
 
   var checkbool = false.obs;
 
