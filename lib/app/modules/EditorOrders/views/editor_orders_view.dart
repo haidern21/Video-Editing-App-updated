@@ -42,85 +42,91 @@ class EditorOrdersView extends GetView {
         onRefresh: ()async{
           controller.fetchOrdersList();
         },
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(height: height * 0.02),
-            Container(
-              height: height / 14,
-              width: width,
-              padding: EdgeInsets.symmetric(horizontal: width * 0.053),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            SingleChildScrollView(
+              child: Column(
                 children: [
-                  Image.asset(
-                    'assets/icons/smallLogo.png',
-                    height: height * 0.060,
+                  SizedBox(height: height * 0.02),
+                  Container(
+                    height: height / 14,
+                    width: width,
+                    padding: EdgeInsets.symmetric(horizontal: width * 0.053),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          'assets/icons/smallLogo.png',
+                          height: height * 0.060,
+                        ),
+                        GestureDetector(
+                          onTap: () => Get.toNamed(Routes.EDITOR_NOTIFICATION),
+                          child: SvgPicture.asset('assets/icons/notification.svg'),
+                        ),
+                      ],
+                    ),
                   ),
-                  GestureDetector(
-                    onTap: () => Get.toNamed(Routes.EDITOR_NOTIFICATION),
-                    child: SvgPicture.asset('assets/icons/notification.svg'),
+                  SizedBox(height: height * 0.034),
+                  GetBuilder<EditorOrdersController>(
+                    init: controller,
+                    // You can initialize your controller here the first time. Don't use init in your other GetBuilders of same controller
+                    builder: (controller) => Padding(
+                      padding: EdgeInsets.only(left: width * 0.055),
+                      child: SizedBox(
+                        height: height * 0.05,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                            ...List.generate(
+                              _status.length,
+                              (index) => GestureDetector(
+                                onTap: () {
+                                  controller.changeColor(index);
+                                },
+                                child: Container(
+                                  margin: EdgeInsets.only(right: width * 0.01),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: width * 0.04),
+                                  height: height * 0.05,
+                                  decoration: BoxDecoration(
+                                    color: controller.selectedIndex.value == index
+                                        ? kprimaryColor
+                                        : Color(0xffF9F9FB),
+                                    border: Border.all(
+                                      color: controller.selectedIndex.value == index
+                                          ? kprimaryColor
+                                          : kgrey2,
+                                    ),
+                                    borderRadius: BorderRadius.circular(38),
+                                  ),
+                                  child: Center(
+                                    child: MyText(
+                                      text: _status[index],
+                                      size: 12 * sp,
+                                      weight: kfour,
+                                      color: controller.selectedIndex.value == index
+                                          ? kwhite
+                                          : kgrey8,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
+
+                  SizedBox(height: height * 0.025),
+                  Obx(() => controller.selectedIndex.value == 0
+                      ? allOrders()
+                      : controller.selectedIndex.value == 1
+                          ? inProgressOrders()
+                          : completedOrders()),
                 ],
               ),
             ),
-            SizedBox(height: height * 0.034),
-            GetBuilder<EditorOrdersController>(
-              init: controller,
-              // You can initialize your controller here the first time. Don't use init in your other GetBuilders of same controller
-              builder: (controller) => Padding(
-                padding: EdgeInsets.only(left: width * 0.055),
-                child: SizedBox(
-                  height: height * 0.05,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      ...List.generate(
-                        _status.length,
-                        (index) => GestureDetector(
-                          onTap: () {
-                            controller.changeColor(index);
-                          },
-                          child: Container(
-                            margin: EdgeInsets.only(right: width * 0.01),
-                            padding:
-                                EdgeInsets.symmetric(horizontal: width * 0.04),
-                            height: height * 0.05,
-                            decoration: BoxDecoration(
-                              color: controller.selectedIndex.value == index
-                                  ? kprimaryColor
-                                  : Color(0xffF9F9FB),
-                              border: Border.all(
-                                color: controller.selectedIndex.value == index
-                                    ? kprimaryColor
-                                    : kgrey2,
-                              ),
-                              borderRadius: BorderRadius.circular(38),
-                            ),
-                            child: Center(
-                              child: MyText(
-                                text: _status[index],
-                                size: 12 * sp,
-                                weight: kfour,
-                                color: controller.selectedIndex.value == index
-                                    ? kwhite
-                                    : kgrey8,
-                              ),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-            SizedBox(height: height * 0.025),
-            Obx(() => controller.selectedIndex.value == 0
-                ? allOrders()
-                : controller.selectedIndex.value == 1
-                    ? inProgressOrders()
-                    : completedOrders()),
           ],
         ),
       ),

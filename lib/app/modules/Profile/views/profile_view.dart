@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:video_editing_app/app/data/models/user_model.dart';
-import 'package:video_editing_app/app/modules/BottomProfile/controllers/bottom_profile_controller.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import 'package:video_editing_app/widgets/elevated_button_widget.dart';
 import '../../../../constants/colors.dart';

@@ -80,10 +80,10 @@ class EditorWebSocketController extends GetxController {
   initWebSocket() async {
     String token = await JwtUtils.getJwtToken() ?? '';
     EditorOrdersController editorOrdersController = Get.find();
-    String baseurl =
-        "ws://video-editing-app.herokuapp.com/quote-communication/";
+    // String baseurl =
+    //     "ws://video-editing-app.herokuapp.com/chat/";
     Uri webSocketUrl =
-        Uri.parse('wss://video-editing-app.herokuapp.com/quote-communication/')
+        Uri.parse('wss://video-editing-app.herokuapp.com/chat/')
             .replace(
       queryParameters: {"token": token},
     );

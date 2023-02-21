@@ -5,6 +5,7 @@ import 'package:video_editing_app/app/modules/Order/controllers/order_controller
 import '../../../../Utils/utils.dart';
 import '../../../../constants/colors.dart';
 import '../../../../constants/weight.dart';
+import '../../../../main.dart';
 import '../../../../widgets/my_text.dart';
 import '../controllers/completed_controller.dart';
 
@@ -373,10 +374,10 @@ class CompletedView extends GetView<CompletedController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/imagePerson.png')),
+                                NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                     () => controller.showLoader.value == false
@@ -437,10 +438,10 @@ class CompletedView extends GetView<CompletedController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/duseca.png')),
+                                NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                     () => controller.showLoader.value == false

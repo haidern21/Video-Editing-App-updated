@@ -6,6 +6,7 @@ import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_or
 import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../Utils/utils.dart';
+import '../../../../main.dart';
 import '../controllers/editor_in_progress_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import '../../../../constants/colors.dart';
@@ -414,10 +415,10 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                 ],
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/imagePerson.png')),
+                                    NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -482,10 +483,10 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                 ),
                               ),
                             ),
-                            leading: const CircleAvatar(
+                            leading:  CircleAvatar(
                                 radius: 20,
                                 backgroundImage:
-                                    AssetImage('assets/icons/duseca.png')),
+                                NetworkImage(emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false

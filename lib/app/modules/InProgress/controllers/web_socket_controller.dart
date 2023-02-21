@@ -143,7 +143,6 @@ import 'package:video_editing_app/app/modules/InProgress/controllers/in_progress
 import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import '../../../data/models/quote_communication_model.dart';
 
 class WebSocketController extends GetxController {
   late WebSocketChannel channel;
@@ -215,7 +214,7 @@ class WebSocketController extends GetxController {
       String token = await JwtUtils.getJwtToken() ?? '';
 
       var webSocketUrl = Uri.parse(
-              'wss://video-editing-app.herokuapp.com/quote-communication/')
+              'wss://video-editing-app.herokuapp.com/chat/')
           .replace(queryParameters: {"token": token});
       log('The url is : $webSocketUrl');
       channel = IOWebSocketChannel.connect(webSocketUrl);

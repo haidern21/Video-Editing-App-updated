@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 class CheckOutController extends GetxController {
   var selectedShipment = ''.obs;
   var selectedShipmenttwo = ''.obs;
+  RxBool showLoader=false.obs;
 
   String _orderType = 'home delivery';
   String get orderType => _orderType;

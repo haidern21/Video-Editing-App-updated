@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
+import 'package:video_editing_app/main.dart';
 import 'package:video_editing_app/widgets/back_button.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
 import '../../../../constants/app_constants.dart';
@@ -59,24 +61,42 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                 SizedBox(height: height * 0.036),
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/icons/avatar.png'),
+                    Obx(
+                      () => controller.newProfileImage.isEmpty
+                          ? CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  controller.userProfileImage.value.isEmpty
+                                      ? emptyUserImage
+                                      : controller.userProfileImage.value),
+                            )
+                          : CircleAvatar(
+                              radius: 30,
+                              backgroundImage:
+                                  FileImage(controller.newProfileImage[0]),
+                            ),
                     ),
                     SizedBox(width: width * 0.04),
-                    Container(
-                      height: height * 0.05,
-                      padding: EdgeInsets.symmetric(horizontal: width / 20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff773CFF).withOpacity(0.09),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: MyText(
-                          text: 'Replace',
-                          size: 14 * sp,
-                          weight: kfive,
-                          color: kprimaryColor,
+                    GestureDetector(
+                      onTap: () async {
+                        var picker = await ImagePicker().pickImage(
+                            source: ImageSource.gallery, imageQuality: 20);
+                        controller.newProfileImage.insert(0, File(picker!.path));
+                      },
+                      child: Container(
+                        height: height * 0.05,
+                        padding: EdgeInsets.symmetric(horizontal: width / 20),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff773CFF).withOpacity(0.09),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Center(
+                          child: MyText(
+                            text: 'Replace',
+                            size: 14 * sp,
+                            weight: kfive,
+                            color: kprimaryColor,
+                          ),
                         ),
                       ),
                     ),
@@ -161,91 +181,94 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                 ),
                 SizedBox(height: height * 0.015),
                 Obx(
-                  () => Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ...List.generate(
-                        controller.skills.isEmpty
-                            ? 0
-                            : controller.skills.length,
-                        (index) => Container(
-                          margin: EdgeInsets.only(right: width * 0.01),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * 0.05),
-                          height: height * 0.05,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff773CFF).withOpacity(0.05),
-                            borderRadius: BorderRadius.circular(38),
-                          ),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                MyText(
-                                  text: controller.skills[index],
-                                  size: 10 * sp,
-                                  weight: kfour,
-                                  color: kprimaryColor,
-                                ),
-                                SizedBox(width: width * 0.01),
-                                GestureDetector(
-                                  onTap: (){
-                                    controller.skills.removeAt(index);
-                                  },
-                                  child: const Icon(
-                                    Icons.cancel_outlined,
-                                    size: 13,
+                  () => SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ...List.generate(
+                          controller.skills.isEmpty
+                              ? 0
+                              : controller.skills.length,
+                          (index) => Container(
+                            margin: EdgeInsets.only(right: width * 0.01),
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * 0.05),
+                            height: height * 0.05,
+                            decoration: BoxDecoration(
+                              color: const Color(0xff773CFF).withOpacity(0.05),
+                              borderRadius: BorderRadius.circular(38),
+                            ),
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  MyText(
+                                    text: controller.skills[index],
+                                    size: 10 * sp,
+                                    weight: kfour,
                                     color: kprimaryColor,
                                   ),
-                                )
-                              ],
+                                  SizedBox(width: width * 0.01),
+                                  GestureDetector(
+                                    onTap: () {
+                                      controller.skills.removeAt(index);
+                                    },
+                                    child: const Icon(
+                                      Icons.cancel_outlined,
+                                      size: 13,
+                                      color: kprimaryColor,
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          _displayTextInputDialog(
-                              context: context,
-                              controller: controller.skillController,
-                              onOkButtonPressed: () {
-                                if (controller
-                                    .skillController.text.isNotEmpty) {
-                                  controller.skills
-                                      .add(controller.skillController.text);
-                                  Get.back();
-                                }
-                              });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(right: width * 0.01),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: width * 0.05),
-                          height: height * 0.05,
-                          decoration: BoxDecoration(
-                            color: const Color(0xff773CFF),
-                            borderRadius: BorderRadius.circular(38),
-                          ),
-                          child: Center(
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.add,
-                                  size: 16,
-                                  color: kwhite,
-                                ),
-                                SizedBox(width: width * 0.01),
-                                MyText(
-                                  text: 'Add',
-                                  size: 10 * sp,
-                                  weight: kfour,
-                                  color: kwhite,
-                                ),
-                              ],
+                        GestureDetector(
+                          onTap: () {
+                            _displayTextInputDialog(
+                                context: context,
+                                controller: controller.skillController,
+                                onOkButtonPressed: () {
+                                  if (controller
+                                      .skillController.text.isNotEmpty) {
+                                    controller.skills
+                                        .add(controller.skillController.text);
+                                    Get.back();
+                                  }
+                                });
+                          },
+                          child: Container(
+                            margin: EdgeInsets.only(right: width * 0.01),
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * 0.05),
+                            height: height * 0.05,
+                            decoration: BoxDecoration(
+                              color: const Color(0xff773CFF),
+                              borderRadius: BorderRadius.circular(38),
+                            ),
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.add,
+                                    size: 16,
+                                    color: kwhite,
+                                  ),
+                                  SizedBox(width: width * 0.01),
+                                  MyText(
+                                    text: 'Add',
+                                    size: 10 * sp,
+                                    weight: kfour,
+                                    color: kwhite,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: height * 0.024),
@@ -267,6 +290,9 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                     text: 'Save changes',
                     textColor: kwhite,
                     onPress: () async {
+                      if(controller.newProfileImage.isNotEmpty ){
+                        // controller.uploadImageAndGetDownloadUrl();
+                      }
                       await controller.updateEditorProfile();
                       Get.back();
                     },
@@ -292,18 +318,19 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
             title: const Text('Add skill'),
             content: TextField(
               controller: controller,
-              decoration:  InputDecoration(hintText: "Enter skill",
+              decoration: InputDecoration(
+                hintText: "Enter skill",
                 enabledBorder: enabledborder,
                 errorBorder: errorborder,
-                focusedBorder: focusedborder,),
+                focusedBorder: focusedborder,
+              ),
             ),
             actions: <Widget>[
               GestureDetector(
                 onTap: onOkButtonPressed,
                 child: Container(
                   margin: EdgeInsets.only(right: width * 0.01),
-                  padding:
-                  EdgeInsets.symmetric(horizontal: width * 0.05),
+                  padding: EdgeInsets.symmetric(horizontal: width * 0.05),
                   height: height * 0.05,
                   width: 100,
                   decoration: BoxDecoration(

@@ -21,8 +21,8 @@ class AddNewCardView extends GetView<AddNewCardController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-    OrderController orderController= Get.find();
-    QuoteGivenController quoteGivenController= Get.find();
+    OrderController orderController = Get.find();
+    QuoteGivenController quoteGivenController = Get.find();
 
     return SafeArea(
       child: Scaffold(
@@ -196,26 +196,51 @@ class AddNewCardView extends GetView<AddNewCardController> {
                     SizedBox(height: height * 0.044),
                     Center(
                       child: MyText(
-                        text: 'Total :\$ ${orderController.selectedOrder.value?.quotePrice??''}',
+                        text:
+                            'Total :\$ ${orderController.selectedOrder.value?.quotePrice ?? ''}',
                         size: 20 * sp,
                         weight: kfive,
                         color: const Color(0xff000000),
                       ),
                     ),
                     SizedBox(height: height * 0.036),
-                    SizedBox(
+                    Container(
                       height: height * 0.072,
                       width: width,
-                      child: MyButton(
-                        text: 'Payment',
-                        onPress: () async{
-                          await quoteGivenController.quoteAccepted(
-                              orderController.selectedOrder.value!.id ?? 0);
-                          await orderController.getOrderModel(
-                              orderController.selectedOrder.value?.id ?? 0);
-                          await orderController.fetchOrdersList();
-                          Get.toNamed(Routes.FIND_AN_EDITOR);
-                        },
+                      decoration: BoxDecoration(
+                        color: kprimaryColor,
+                        borderRadius: BorderRadius.circular(55),
+                      ),
+                      child: Obx(
+                        () => controller.showLoader.value == false
+                            ? MyButton(
+                                text: 'Payment',
+                                onPress: () async {
+                                  try {
+                                    controller.showLoader.value = true;
+                                    await quoteGivenController.quoteAccepted(
+                                        orderController
+                                                .selectedOrder.value!.id ??
+                                            0);
+                                    await orderController.getOrderModel(
+                                        orderController
+                                                .selectedOrder.value?.id ??
+                                            0);
+                                    await orderController.fetchOrdersList();
+                                    Get.toNamed(Routes.FIND_AN_EDITOR);
+                                    controller.showLoader.value = false;
+                                  } catch (e) {
+                                    controller.showLoader.value = false;
+                                    Get.snackbar('Payment issue',
+                                        'Error in payment. try later');
+                                  }
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
                       ),
                     ),
                   ],
@@ -242,7 +267,7 @@ LoginFields buildLoginFields(
   required String hinttext,
   TextEditingController? controller,
   required var validator,
-  bool obSecure = false,
+  bool obSecure = false, TextInputType? textInputType
 }) {
   return LoginFields(
     suffixicon: suffixIcon,
@@ -250,6 +275,7 @@ LoginFields buildLoginFields(
     fieldValidator: validator,
     obSecure: obSecure,
     formcontroller: controller,
+    keyboardType: textInputType,
     style: TextStyle(
       fontSize: 12 * sp,
       fontWeight: kfour,

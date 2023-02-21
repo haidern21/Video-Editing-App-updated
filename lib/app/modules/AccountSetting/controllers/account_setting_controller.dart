@@ -20,7 +20,8 @@ class AccountSettingController extends GetxController {
 
   @override
   void onInit() {
-    userNameController.text = profileController.userModelFromApi.value!.name ?? '';
+    userNameController.text =
+        profileController.userModelFromApi.value!.name ?? '';
     accountTypeController.text =
         profileController.userModelFromApi.value!.accountType ?? '';
     phoneNumberController.text =
@@ -44,18 +45,26 @@ class AccountSettingController extends GetxController {
   }
 
   updateUserProfile() async {
-    http.Response response =
-    await buildHttpResponse(
-        getUserProfileEndpoint,
-        method: HttpMethod.PATCH,
-        request: {
-          "name":userNameController.text,
-          "account_type":accountTypeController.text,
-          "phone_number":phoneNumberController.text,
-          "password":newPasswordController.text,
-        },
-        biuldAuthHeader: true);
-    await profileController.initUserModelFromApi();
+    try {
+      showLoader.value=true;
+      http.Response response =
+      await buildHttpResponse(
+          getUserProfileEndpoint,
+          method: HttpMethod.PATCH,
+          request: {
+            "name": userNameController.text,
+            "account_type": accountTypeController.text,
+            "phone_number": phoneNumberController.text,
+            "password": newPasswordController.text,
+          },
+          biuldAuthHeader: true);
+      await profileController.initUserModelFromApi();
+      Get.back();
+      showLoader.value=false;
+    } catch(e){
+      showLoader.value=false;
+      Get.snackbar('Error', 'Error in updating profile');
+    }
   }
 
   @override
