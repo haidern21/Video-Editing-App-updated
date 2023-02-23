@@ -1,3 +1,4 @@
+import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/Utils/debug_utils.dart';
@@ -69,12 +70,46 @@ class SignUpView extends GetView<SignUpController> {
                   SizedBox(height: height * 0.025),
                   buildTitle(sp, title: 'Phone'),
                   SizedBox(height: height * 0.012),
-                  buildLoginFields(
-                    sp,
-                    hinttext: '+92##########',
-                    controller: controller.phoneController,
-                    validator: isMobileNumberValid,
-                    textInputType: TextInputType.number,
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: GestureDetector(
+                          onTap: () {
+                            showCountryPicker(
+                              context: context,
+                              showPhoneCode: true,
+                              // optional. Shows phone code before the country name.
+                              onSelect: (Country country) {
+                                controller.countryCode.value =
+                                    '+${country.phoneCode.trim()}';
+                                controller.countryCodeController.text =
+                                    country.phoneCode.trim();
+                              },
+                            );
+                          },
+                          child: buildLoginFields(sp,
+                              hinttext: '+92',
+                              controller: controller.countryCodeController,
+                              validator: isMobileNumberValid,
+                              textInputType: TextInputType.number,
+                              enabled: false),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 5,
+                        child: buildLoginFields(
+                          sp,
+                          hinttext: '##########',
+                          controller: controller.phoneController,
+                          validator: isMobileNumberValid,
+                          textInputType: TextInputType.number,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: height * 0.025),
                   buildTitle(sp, title: 'Account type'),
@@ -115,6 +150,11 @@ class SignUpView extends GetView<SignUpController> {
                               'Email Value ${controller.emailController.text}');
 
                           try {
+                            if (controller.countryCode.value.isEmpty) {
+                              Get.snackbar('Select Country code',
+                                  'Enter country code to proceed');
+                              return;
+                            }
                             if (controller.formKey.currentState?.validate() ??
                                 false) {
                               /// Create a map and Save these value in Hive BOx
@@ -124,7 +164,8 @@ class SignUpView extends GetView<SignUpController> {
                               Map<String, dynamic> signupData = {
                                 'name': controller.nameController.text,
                                 'email': controller.emailController.text,
-                                'phone_number': controller.phoneController.text,
+                                'phone_number':
+                                    '${controller.countryCode.value}${controller.phoneController.text}',
                                 'password': controller.passwordController.text,
                                 "role": selectectionController.userRole.value,
                                 "account_type":

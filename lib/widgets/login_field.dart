@@ -32,6 +32,7 @@ class LoginFields extends StatefulWidget {
     this.onSavedState,
     this.inputFormatters,
     this.keyboardType,
+    this.enabled
   }) : super(key: key);
 
   Widget? suffixicon, prefixicon;
@@ -49,6 +50,7 @@ class LoginFields extends StatefulWidget {
   TextEditingController? formcontroller;
   List<TextInputFormatter>? inputFormatters;
   TextInputType? keyboardType;
+  bool? enabled;
 
   // create override for state
   @override
@@ -64,6 +66,7 @@ class _LoginFieldsState extends State<LoginFields> {
     return TextFormField(
       textInputAction: TextInputAction.next,
       style: widget.style,
+      enabled: widget.enabled,
       obscureText: widget.obSecure,
       controller: widget.formcontroller,
       obscuringCharacter: "*",

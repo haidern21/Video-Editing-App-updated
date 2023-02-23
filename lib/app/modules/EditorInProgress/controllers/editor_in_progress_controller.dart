@@ -71,7 +71,6 @@ class EditorInProgressController extends GetxController {
         if(com.communicationType=="MESSAGE") {
           buyerMessages.add(com);
         }
-
       }
     }
     for (var element in quoteCommunications) {

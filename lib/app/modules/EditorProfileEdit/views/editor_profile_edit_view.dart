@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/main.dart';
@@ -11,6 +12,7 @@ import 'package:video_editing_app/widgets/my_text.dart';
 import '../../../../constants/app_constants.dart';
 import '../../../../widgets/borders.dart';
 import '../../../../widgets/login_field.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/editor_profile_edit_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:video_editing_app/widgets/elevated_button_widget.dart';
@@ -51,6 +53,23 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
             weight: ksix,
           ),
           centerTitle: true,
+          actions: [
+            GestureDetector(
+              onTap: () async {
+                SharedPreferences sharedPrefs =
+                    await SharedPreferences.getInstance();
+                await sharedPrefs.remove('jwtToken');
+                Get.offAllNamed(Routes.SIGN_IN);
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.0),
+                child: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.black,
+                ),
+              ),
+            )
+          ],
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / 20),
@@ -81,7 +100,13 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                       onTap: () async {
                         var picker = await ImagePicker().pickImage(
                             source: ImageSource.gallery, imageQuality: 20);
-                        controller.newProfileImage.insert(0, File(picker!.path));
+                        controller.newProfileImage
+                            .insert(0, File(picker!.path));
+                        if (controller.newProfileImage.isNotEmpty) {
+                          controller.userProfileImage.value =
+                              await controller.uploadImageAndGetDownloadUrl(
+                                  controller.newProfileImage[0]);
+                        }
                       },
                       child: Container(
                         height: height * 0.05,
@@ -284,18 +309,30 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                     (index) => buildPlayVideo(sp, height, width,
                         images: images[index])),
                 SizedBox(height: height * 0.01),
-                SizedBox(
+                Container(
                   height: height * 0.07,
-                  child: MyButton(
-                    text: 'Save changes',
-                    textColor: kwhite,
-                    onPress: () async {
-                      if(controller.newProfileImage.isNotEmpty ){
-                        // controller.uploadImageAndGetDownloadUrl();
-                      }
-                      await controller.updateEditorProfile();
-                      Get.back();
-                    },
+                  decoration: BoxDecoration(
+                      color: kprimaryColor,
+                      borderRadius: BorderRadius.circular(55)),
+                  child: Obx(
+                    () => controller.showLoader.value == false
+                        ? MyButton(
+                            text: 'Save changes',
+                            textColor: kwhite,
+                            onPress: () async {
+                              if (controller.newProfileImage.isNotEmpty ||
+                                  controller.nameController.text !=
+                                      controller.editorProfileController
+                                          .userModelFromApi.value?.user?.name) {
+                                controller.updateUserProfile();
+                              }
+                              await controller.updateEditorProfile();
+                            },
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(
+                            color: Colors.white,
+                          )),
                   ),
                 ),
                 SizedBox(height: height * 0.044),

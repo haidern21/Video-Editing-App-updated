@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
 import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_web_socket_controller.dart';
 import 'package:video_editing_app/app/modules/EditorProfile/controllers/editor_profile_controller.dart';
+import 'package:video_editing_app/main.dart';
 import '../controllers/editor_send_message_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:video_editing_app/constants/colors.dart';
@@ -10,7 +11,8 @@ import '../../../../constants/weight.dart';
 import '../../../../widgets/my_text.dart';
 
 class EditorSendMessageView extends GetView<EditorSendMessageController> {
-  @override
+  const EditorSendMessageView({super.key});
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -40,10 +42,12 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                 FittedBox(
                   child: Row(
                     children: [
-                      const CircleAvatar(
-                        radius: 20,
-                        backgroundImage:
-                            AssetImage('assets/icons/circleAppbar.png'),
+                      Obx(
+                        () => CircleAvatar(
+                          radius: 20,
+                          backgroundImage: NetworkImage(
+                              controller.profileImage?.value ?? emptyUserImage),
+                        ),
                       ),
                       SizedBox(
                         width: width / 35,
@@ -84,34 +88,47 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
         ),
         body: Stack(
           children: [
-            ListView.separated(
-                itemBuilder: (context, index) {
-                  return editorChatsController.messages[index].user?.id ==
-                          editorProfileController
-                              .userModelFromApi.value?.user?.id
-                      ? messageTile(
-                          height,
-                          width,
-                          sp,
-                          receiveText:
-                              editorChatsController.messages[index].message ??
+            Obx(
+              () => SizedBox(
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    bottom: height * 0.098,
+                  ),
+                  child: ListView.separated(
+                      itemBuilder: (context, index) {
+                        return Obx(() {
+                          return editorChatsController.messages[index].user?.id ==
+                              editorProfileController
+                                  .userModelFromApi.value?.user?.id
+                              ? messageTile(height, width, sp,
+                              receiveText: editorChatsController
+                                  .messages[index].message ??
                                   '',
-                        )
-                      : sendMsg(
-                          height,
-                          width,
-                          sp,
-                          message:
-                              editorChatsController.messages[index].message ??
-                                  '',
+                              profile: editorProfileController
+                                  .userModelFromApi
+                                  .value
+                                  ?.user
+                                  ?.profilePicture ??
+                                  emptyUserImage)
+                              : sendMsg(
+                            height,
+                            width,
+                            sp,
+                            message: editorChatsController
+                                .messages[index].message ??
+                                '',
+                          );
+                        });
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: height * 0.019,
                         );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: height * 0.019,
-                  );
-                },
-                itemCount: editorChatsController.messages.length),
+                      },
+                      itemCount: editorChatsController.messages.length),
+                ),
+              ),
+            ),
             Positioned(
                 bottom: 0,
                 child: Container(
@@ -185,15 +202,16 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
                       SizedBox(width: width * 0.022),
                       GestureDetector(
                           onTap: () {
-                            if(controller.msgController.text.isNotEmpty) {
+                            if (controller.msgController.text.isNotEmpty) {
                               editorWebSocketController.sendThreadMessage(
                                   message: controller.msgController.text,
                                   currentUserId: editorProfileController
-                                      .userModelFromApi.value?.user?.id ??
+                                          .userModelFromApi.value?.user?.id ??
                                       0,
                                   sentTo: controller.receiverId.value,
                                   threadId: controller.threadId.value);
                             }
+                            controller.msgController.clear();
                           },
                           child: SvgPicture.asset('assets/icons/frwrd.svg'))
                     ],
@@ -210,6 +228,7 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
     double width,
     double sp, {
     required String receiveText,
+    required String? profile,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -235,9 +254,9 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
           SizedBox(
             width: width * 0.02,
           ),
-          const CircleAvatar(
+          CircleAvatar(
             radius: 15,
-            backgroundImage: AssetImage('assets/icons/chatPerson.png'),
+            backgroundImage: NetworkImage(profile ?? emptyUserImage),
           )
         ],
       ),
@@ -250,9 +269,10 @@ class EditorSendMessageView extends GetView<EditorSendMessageController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 15,
-            backgroundImage: AssetImage('assets/icons/circleAppbar.png'),
+            backgroundImage:
+                NetworkImage(controller.profileImage?.value ?? emptyUserImage),
           ),
           SizedBox(
             width: width * 0.02,

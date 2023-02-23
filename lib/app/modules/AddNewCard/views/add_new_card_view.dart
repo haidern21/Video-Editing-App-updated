@@ -267,10 +267,11 @@ LoginFields buildLoginFields(
   required String hinttext,
   TextEditingController? controller,
   required var validator,
-  bool obSecure = false, TextInputType? textInputType
+  bool obSecure = false, TextInputType? textInputType,bool? enabled=true
 }) {
   return LoginFields(
     suffixicon: suffixIcon,
+    enabled: enabled,
     contentPadding: const EdgeInsets.fromLTRB(12, 16, 12, 16),
     fieldValidator: validator,
     obSecure: obSecure,

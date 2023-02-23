@@ -182,7 +182,8 @@ class EditorProfileView extends GetView<EditorProfileController> {
               CircleAvatar(
                 radius: 15,
                 backgroundImage: NetworkImage(
-                  emptyUserImage,
+                  controller.userModelFromApi.value?.user?.profilePicture ??
+                      emptyUserImage,
                 ),
               ),
               SizedBox(width: width / 60),
@@ -208,7 +209,9 @@ class EditorProfileView extends GetView<EditorProfileController> {
                       ),
                       Obx(
                         () => MyText(
-                          text: controller.userModelFromApi.value?.user?.points??'',
+                          text:
+                              controller.userModelFromApi.value?.user?.points ??
+                                  '',
                           size: 14 * sp,
                           weight: ksix,
                           color: kgrey6,

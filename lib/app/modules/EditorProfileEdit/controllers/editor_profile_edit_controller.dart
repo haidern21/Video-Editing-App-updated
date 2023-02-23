@@ -19,6 +19,7 @@ class EditorProfileEditController extends GetxController {
   EditorProfileController editorProfileController = Get.find();
   RxString userProfileImage = ''.obs;
   RxList<File> newProfileImage=<File>[].obs;
+  RxBool showLoader=false.obs;
 
   void changeSwitch(var value) {
     state = value;
@@ -38,10 +39,6 @@ class EditorProfileEditController extends GetxController {
     userProfileImage.value =
         editorProfileController.userModelFromApi.value?.user?.profilePicture ??
             '';
-
-    print(nameController.text);
-    print(editorTitle.text);
-    print(userProfileImage.value);
     super.onInit();
   }
 
@@ -86,7 +83,7 @@ class EditorProfileEditController extends GetxController {
   }
   updateUserProfile() async {
     try {
-
+      showLoader.value=true;
       http.Response response =
       await buildHttpResponse(
           getUserProfileEndpoint,
@@ -98,8 +95,9 @@ class EditorProfileEditController extends GetxController {
           biuldAuthHeader: true);
       await editorProfileController.initUserModelFromApi();
       Get.back();
+      showLoader.value=false;
     } catch(e){
-
+      showLoader.value=false;
       Get.snackbar('Error', 'Error in updating profile');
     }
   }

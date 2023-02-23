@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_in_progress_controller.dart';
 import 'package:video_editing_app/app/modules/EditorInProgress/controllers/editor_web_socket_controller.dart';
 import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
-import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/widgets/back_button.dart';
@@ -184,8 +183,8 @@ class _EditorDeliverViewState extends State<EditorDeliverView> {
                       }
                       deliveryMessageController.clear();
                       deliveryFocusNode.unfocus();
-                      await editorInProgressController.fetchQuoteCommunicationsList(
-                          orderController.selectedOrder.value?.id ?? 0);
+                      // await editorInProgressController.fetchQuoteCommunicationsList(
+                      //     orderController.selectedOrder.value?.id ?? 0);
                       Get.back();
                     },
                     style: ElevatedButton.styleFrom(

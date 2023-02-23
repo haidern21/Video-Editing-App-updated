@@ -156,10 +156,32 @@ class EditorTabBarView extends StatelessWidget {
                                 FittedBox(
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 20,
-                                        backgroundImage:
-                                        NetworkImage(emptyUserImage),
+                                      Obx(
+                                        () => CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(
+                                              chatViewController
+                                                          .editorsChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.id ==
+                                                      bottomProfileController
+                                                          .userModelFromApi
+                                                          .value
+                                                          ?.id
+                                                  ? chatViewController
+                                                          .editorsChatThreads[
+                                                              index]
+                                                          .secondPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage
+                                                  : chatViewController
+                                                          .editorsChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: width / 40,

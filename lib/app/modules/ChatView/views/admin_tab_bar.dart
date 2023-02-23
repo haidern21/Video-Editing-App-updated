@@ -85,7 +85,7 @@ class AdminTabBarView extends StatelessWidget {
                       shrinkWrap: true,
                       itemCount: chatViewController.adminChatThreads.length,
                       itemBuilder: (context, index) {
-                        return GestureDetector(
+                        return InkWell(
                           onTap: () async {
                             await chatViewController.getMessagesList(
                                 chatViewController.adminChatThreads[index].id ??
@@ -109,9 +109,10 @@ class AdminTabBarView extends StatelessWidget {
                                         .userModelFromApi.value?.id
                                 ? chatViewController.adminChatThreads[index]
                                         .secondPerson?.profilePicture ??
-                                    ''
+                                    emptyUserImage
                                 : chatViewController.adminChatThreads[index]
-                                    .firstPerson?.profilePicture;
+                                        .firstPerson?.profilePicture ??
+                                    emptyUserImage;
                             int receiverId = chatViewController
                                         .adminChatThreads[index]
                                         .firstPerson
@@ -137,6 +138,7 @@ class AdminTabBarView extends StatelessWidget {
                           child: Container(
                             margin: EdgeInsets.only(bottom: height * 0.036),
                             height: height * 0.07,
+                            width: Get.width,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,10 +146,32 @@ class AdminTabBarView extends StatelessWidget {
                                 FittedBox(
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 20,
-                                        backgroundImage:
-                                        NetworkImage(emptyUserImage),
+                                      Obx(
+                                        () => CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(
+                                              chatViewController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.id ==
+                                                      bottomProfileController
+                                                          .userModelFromApi
+                                                          .value
+                                                          ?.id
+                                                  ? chatViewController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .secondPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage
+                                                  : chatViewController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: width / 40,

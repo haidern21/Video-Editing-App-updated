@@ -23,7 +23,7 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
-    EditorChatsController editorChatsController= Get.find();
+    EditorChatsController editorChatsController = Get.find();
 
     return SafeArea(
       child: Scaffold(
@@ -371,10 +371,12 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                 ],
                               ),
                             ),
-                            leading:  CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(
+                                    editorOrderController.selectedOrder.value!
+                                            .userModel?.profilePicture ??
+                                        emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -439,10 +441,12 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
                                 ),
                               ),
                             ),
-                            leading:  CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(
+                                    editorOrderController.selectedOrder.value!
+                                            .editorAssigned?.profilePicture ??
+                                        emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -658,15 +662,14 @@ class OrderCompletedView extends GetView<OrderCompletedController> {
           label: const Text('Direct Chat'),
           icon: const Icon(Icons.message),
           onPressed: () {
-            EditorBottomBarController editorBottomBarController= Get.find();
+            EditorBottomBarController editorBottomBarController = Get.find();
             editorChatsController.createChatThread(
                 editorOrderController.selectedOrder.value?.userModel?.email ??
                     '');
-            editorBottomBarController.tabIndex.value=0;
+            editorBottomBarController.tabIndex.value = 0;
             Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
           },
         ),
-
       ),
     );
   }

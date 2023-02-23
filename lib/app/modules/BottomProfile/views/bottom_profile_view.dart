@@ -4,6 +4,7 @@ import 'package:video_editing_app/app/modules/BottomProfile/views/points_contain
 import 'package:video_editing_app/app/modules/BottomProfile/views/profile_app_bar.dart';
 import 'package:video_editing_app/app/modules/BottomProfile/views/profile_container.dart';
 import 'package:video_editing_app/app/modules/BottomProfile/views/route_containers.dart';
+import 'package:video_editing_app/main.dart';
 import '../controllers/bottom_profile_controller.dart';
 
 class BottomProfileView extends GetView<BottomProfileController> {
@@ -45,16 +46,26 @@ class BottomProfileView extends GetView<BottomProfileController> {
                 child: Column(
                   children: [
                     Obx(
-                      () => buildProfileContainer(
-                        height,
-                        width,
-                        sp,
-                        user: controller.userModelFromApi.value,
-                        // user: snapshot.data,
-                      ),
+                      () => buildProfileContainer(height, width, sp,
+                          user: controller.userModelFromApi,
+                          accType:
+                              controller.userModelFromApi.value?.accountType ??
+                                  '',
+                          userName:
+                              controller.userModelFromApi.value?.name ?? '',
+                          userProfile: controller
+                                  .userModelFromApi.value?.profilePicture ??
+                              emptyUserImage
+                          // user: snapshot.data,
+                          ),
                     ),
                     SizedBox(height: height * 0.02),
-                    PointsContainer(height, width, sp,user: controller.userModelFromApi.value,),
+                    PointsContainer(
+                      height,
+                      width,
+                      sp,
+                      user: controller.userModelFromApi.value,
+                    ),
                     SizedBox(height: height * 0.015),
                     ...RouteContainers(height, width, sp),
                     SizedBox(height: height * 0.015),

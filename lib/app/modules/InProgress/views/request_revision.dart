@@ -113,8 +113,9 @@ class _RequestRevisionState extends State<RequestRevision> {
                       }
                       requestRevisionController.clear();
                       requestRevision.unfocus();
-                      inProgressController.fetchQuoteCommunicationsList(
-                          orderController.selectedOrder.value?.id ?? 0);
+                      // inProgressController.fetchQuoteCommunicationsList(
+                      //     orderController.selectedOrder.value?.id ?? 0);
+                      Get.back();
                     },
                     style: ElevatedButton.styleFrom(
                       shape: const StadiumBorder(),

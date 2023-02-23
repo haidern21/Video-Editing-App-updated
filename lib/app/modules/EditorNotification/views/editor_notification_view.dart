@@ -141,9 +141,7 @@ class EditorNotificationView extends GetView<EditorNotificationController> {
                               weight: kfour,
                               color: const Color(0xffB8B9B9),
                             ),
-                            leading: Image.asset(
-                              'assets/icons/rounded.png',
-                            ),
+                            leading: Image.asset("assets/icons/introLogo.png"),
                           );
                         })
                     : const Center(

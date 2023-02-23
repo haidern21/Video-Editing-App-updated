@@ -6,6 +6,7 @@ import 'package:video_editing_app/app/modules/ChatView/controllers/chat_view_con
 import 'package:video_editing_app/app/modules/InProgress/controllers/web_socket_controller.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import '../../../../constants/weight.dart';
+import '../../../../main.dart';
 import '../../../../widgets/my_text.dart';
 import '../controllers/send_message_controller.dart';
 
@@ -41,10 +42,10 @@ class SendMessageView extends GetView<SendMessageController> {
                 FittedBox(
                   child: Row(
                     children: [
-                      const CircleAvatar(
+                      CircleAvatar(
                         radius: 20,
-                        backgroundImage:
-                            AssetImage('assets/icons/circleAppbar.png'),
+                        backgroundImage: NetworkImage(
+                            controller.profileImage?.value ?? emptyUserImage),
                       ),
                       SizedBox(
                         width: width / 35,
@@ -83,31 +84,39 @@ class SendMessageView extends GetView<SendMessageController> {
         ),
         body: Stack(
           children: [
-            ListView.separated(
-                itemBuilder: (context, index) {
-                  return chatViewController.messages[index].user?.id ==
-                          bottomProfileController.userModelFromApi.value?.id
-                      ? messageTile(
-                          height,
-                          width,
-                          sp,
-                          receiveText:
-                              chatViewController.messages[index].message ?? '',
-                        )
-                      : sendMsg(
+            Obx(
+              () => Padding(
+                padding:  EdgeInsets.only(bottom: height * 0.098),
+                child: ListView.separated(
+                    itemBuilder: (context, index) {
+                      return Obx((){
+                       return  chatViewController.messages[index].user?.id ==
+                            bottomProfileController.userModelFromApi.value?.id
+                            ? messageTile(height, width, sp,
+                            receiveText:
+                            chatViewController.messages[index].message ??
+                                '',
+                            profileImage: bottomProfileController
+                                .userModelFromApi.value?.profilePicture ??
+                                emptyUserImage)
+                            : sendMsg(
                           height,
                           width,
                           sp,
                           message:
-                              chatViewController.messages[index].message ?? '',
+                          chatViewController.messages[index].message ??
+                              '',
                         );
-                },
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: height * 0.019,
-                  );
-                },
-                itemCount: chatViewController.messages.length),
+                      });
+                    },
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        height: height * 0.019,
+                      );
+                    },
+                    itemCount: chatViewController.messages.length),
+              ),
+            ),
             Positioned(
                 bottom: 0,
                 child: Container(
@@ -207,6 +216,7 @@ class SendMessageView extends GetView<SendMessageController> {
     double width,
     double sp, {
     required String receiveText,
+    required String? profileImage,
   }) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15.0),
@@ -232,9 +242,9 @@ class SendMessageView extends GetView<SendMessageController> {
           SizedBox(
             width: width * 0.02,
           ),
-          const CircleAvatar(
+          CircleAvatar(
             radius: 15,
-            backgroundImage: AssetImage('assets/icons/chatPerson.png'),
+            backgroundImage: NetworkImage(profileImage ?? emptyUserImage),
           )
         ],
       ),
@@ -247,9 +257,10 @@ class SendMessageView extends GetView<SendMessageController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             radius: 15,
-            backgroundImage: AssetImage('assets/icons/circleAppbar.png'),
+            backgroundImage:
+                NetworkImage(controller.profileImage?.value ?? emptyUserImage),
           ),
           SizedBox(
             width: width * 0.02,

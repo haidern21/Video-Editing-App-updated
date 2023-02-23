@@ -213,10 +213,33 @@ class _EditorChatsViewState extends State<EditorChatsView>
                                 FittedBox(
                                   child: Row(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 20,
-                                        backgroundImage:
-                                        NetworkImage(emptyUserImage),
+                                      Obx(
+                                        () => CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage: NetworkImage(
+                                              editorChatsController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.id ==
+                                                      editorProfileController
+                                                          .userModelFromApi
+                                                          .value
+                                                          ?.user
+                                                          ?.id
+                                                  ? editorChatsController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .secondPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage
+                                                  : editorChatsController
+                                                          .adminChatThreads[
+                                                              index]
+                                                          .firstPerson
+                                                          ?.profilePicture ??
+                                                      emptyUserImage),
+                                        ),
                                       ),
                                       SizedBox(
                                         width: width / 40,
@@ -351,37 +374,46 @@ class _EditorChatsViewState extends State<EditorChatsView>
                     return GestureDetector(
                       onTap: () async {
                         await editorChatsController.getMessagesList(
-                            editorChatsController.clientsChatThreads[index].id ?? 0);
+                            editorChatsController
+                                    .clientsChatThreads[index].id ??
+                                0);
                         String? name = editorChatsController
-                                    .clientsChatThreads[index].firstPerson?.id ==
+                                    .clientsChatThreads[index]
+                                    .firstPerson
+                                    ?.id ==
                                 editorProfileController
                                     .userModelFromApi.value?.user?.id
-                            ? editorChatsController
-                                    .clientsChatThreads[index].secondPerson?.name ??
+                            ? editorChatsController.clientsChatThreads[index]
+                                    .secondPerson?.name ??
                                 ''
                             : editorChatsController
                                 .clientsChatThreads[index].firstPerson?.name;
                         String? profileImage = editorChatsController
-                                    .clientsChatThreads[index].firstPerson?.id ==
+                                    .clientsChatThreads[index]
+                                    .firstPerson
+                                    ?.id ==
                                 editorProfileController
                                     .userModelFromApi.value?.user?.id
                             ? editorChatsController.clientsChatThreads[index]
                                     .secondPerson?.profilePicture ??
                                 ''
-                            : editorChatsController
-                                .clientsChatThreads[index].firstPerson?.profilePicture;
+                            : editorChatsController.clientsChatThreads[index]
+                                .firstPerson?.profilePicture;
                         int receiverId = editorChatsController
-                                    .clientsChatThreads[index].firstPerson?.id ==
+                                    .clientsChatThreads[index]
+                                    .firstPerson
+                                    ?.id ==
                                 editorProfileController
                                     .userModelFromApi.value?.user?.id
-                            ? editorChatsController
-                                    .clientsChatThreads[index].secondPerson?.id ??
+                            ? editorChatsController.clientsChatThreads[index]
+                                    .secondPerson?.id ??
                                 0
-                            : editorChatsController
-                                    .clientsChatThreads[index].firstPerson?.id ??
+                            : editorChatsController.clientsChatThreads[index]
+                                    .firstPerson?.id ??
                                 0;
-                        int threadId =
-                            editorChatsController.clientsChatThreads[index].id ?? 0;
+                        int threadId = editorChatsController
+                                .clientsChatThreads[index].id ??
+                            0;
                         Get.toNamed(Routes.EDITOR_SEND_MESSAGE, arguments: {
                           'name': name,
                           'profile_image': profileImage,
@@ -401,7 +433,26 @@ class _EditorChatsViewState extends State<EditorChatsView>
                                 children: [
                                   CircleAvatar(
                                     radius: 20,
-                                    backgroundImage:NetworkImage(emptyUserImage),
+                                    backgroundImage: NetworkImage(
+                                        editorChatsController
+                                                    .clientsChatThreads[index]
+                                                    .firstPerson
+                                                    ?.id ==
+                                                editorProfileController
+                                                    .userModelFromApi
+                                                    .value
+                                                    ?.user
+                                                    ?.id
+                                            ? editorChatsController
+                                                    .clientsChatThreads[index]
+                                                    .secondPerson
+                                                    ?.profilePicture ??
+                                                emptyUserImage
+                                            : editorChatsController
+                                                    .clientsChatThreads[index]
+                                                    .firstPerson
+                                                    ?.profilePicture ??
+                                                emptyUserImage),
                                   ),
                                   SizedBox(
                                     width: width / 40,

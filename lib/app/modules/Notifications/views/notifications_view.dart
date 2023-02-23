@@ -142,7 +142,7 @@ class NotificationsView extends GetView<NotificationsController> {
                       color: const Color(0xffB8B9B9),
                     ),
                     leading: Image.asset(
-                      'assets/icons/rounded.png',
+                      "assets/icons/introLogo.png",
                     ),
                   );
                 })

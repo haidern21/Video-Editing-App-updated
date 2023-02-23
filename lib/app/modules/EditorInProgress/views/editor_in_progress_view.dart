@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:video_editing_app/app/modules/EditorBottomBar/controllers/editor_bottom_bar_controller.dart';
 import 'package:video_editing_app/app/modules/EditorChats/controllers/editor_chats_controller.dart';
 import 'package:video_editing_app/app/modules/EditorOrders/controllers/editor_orders_controller.dart';
-import 'package:video_editing_app/app/modules/Order/views/order_view.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
 import '../../../../Utils/utils.dart';
 import '../../../../main.dart';
@@ -132,7 +131,7 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                           .selectedOrder.value?.completedAt
                                           ?.substring(0, 10) ??
                                       '',
-                                  price: '\$ ${editorOrdersController.selectedOrder.value?.quotePrice}' ?? ''),
+                                  price: '\$ ${editorOrdersController.selectedOrder.value?.quotePrice}'),
                             ],
                           ),
                           Theme(
@@ -163,6 +162,48 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                               leading: SvgPicture.asset(
                                 "assets/icons/list.svg",
                                 height: height * 0.06,
+                              ),
+                            ),
+                          ),
+                          Theme(
+                            data: Theme.of(context).copyWith(
+                              unselectedWidgetColor:
+                              Colors.transparent, // here for close state
+                              colorScheme: const ColorScheme.light(
+                                primary: Colors.transparent,
+                              ),
+                              dividerColor: Colors.transparent,
+                            ),
+                            child: InkWell(
+                              onTap: (){
+                                EditorBottomBarController editorBottomBarController = Get.find();
+                                editorChatsController.createChatThread(
+                                    editorOrdersController.selectedOrder.value?.userModel?.email ??
+                                        '');
+                                editorBottomBarController.tabIndex.value = 0;
+                                Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
+                              },
+                              child: ListTile(
+                                title: RichText(
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Start chat  ',
+                                        style: TextStyle(
+                                          fontSize: 14 * sp,
+                                          fontWeight: kfour,
+                                          color: const Color(0xff000000),
+                                          fontFamily: 'WorkSans',
+                                        ),
+                                      ),
+
+                                    ],
+                                  ),
+                                ),
+                                leading: SvgPicture.asset(
+                                  "assets/icons/list.svg",
+                                  height: height * 0.06,
+                                ),
                               ),
                             ),
                           ),
@@ -415,10 +456,12 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                 ],
                               ),
                             ),
-                            leading:  CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                    NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(
+                                    editorOrdersController.selectedOrder.value!
+                                            .userModel?.profilePicture ??
+                                        emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -483,10 +526,12 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
                                 ),
                               ),
                             ),
-                            leading:  CircleAvatar(
+                            leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage:
-                                NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(
+                                    editorOrdersController.selectedOrder.value!
+                                            .editorAssigned?.profilePicture ??
+                                        emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -789,18 +834,18 @@ class EditorInProgressView extends GetView<EditorInProgressController> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          label: const Text('Direct Chat'),
-          icon: const Icon(Icons.message),
-          onPressed: () {
-            EditorBottomBarController editorBottomBarController= Get.find();
-            editorChatsController.createChatThread(
-                editorOrdersController.selectedOrder.value?.userModel?.email ??
-                    '');
-            editorBottomBarController.tabIndex.value=0;
-            Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
-          },
-        ),
+        // floatingActionButton: FloatingActionButton.extended(
+        //   label: const Text('Direct Chat'),
+        //   icon: const Icon(Icons.message),
+        //   onPressed: () {
+        //     EditorBottomBarController editorBottomBarController = Get.find();
+        //     editorChatsController.createChatThread(
+        //         editorOrdersController.selectedOrder.value?.userModel?.email ??
+        //             '');
+        //     editorBottomBarController.tabIndex.value = 0;
+        //     Get.offAndToNamed(Routes.EDITOR_BOTTOM_BAR);
+        //   },
+        // ),
       ),
     );
   }

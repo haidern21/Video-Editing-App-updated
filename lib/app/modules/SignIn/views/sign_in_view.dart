@@ -119,18 +119,30 @@ class SignInView extends GetView<SignInController> {
                   Container(
                       height: height / 14,
                       width: Get.width,
-                      decoration: BoxDecoration(boxShadow: [kshadow]),
-                      child: MyButton(
-                        text: 'Sign in',
-                        size: 14 * sp,
-                        weight: kfive,
-                        onPress: () {
-                          hideKeyboard(context);
-                          if (controller.formkey.currentState?.validate() ??
-                              false) {
-                            controller.signIn();
-                          }
-                        },
+                      decoration: BoxDecoration(
+                          boxShadow: [kshadow],
+                          color: kprimaryColor,
+                          borderRadius: BorderRadius.circular(55)),
+                      child: Obx(
+                        () => controller.showLoader.value == false
+                            ? MyButton(
+                                text: 'Sign in',
+                                size: 14 * sp,
+                                weight: kfive,
+                                onPress: () {
+                                  hideKeyboard(context);
+                                  if (controller.formkey.currentState
+                                          ?.validate() ??
+                                      false) {
+                                    controller.signIn();
+                                  }
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                ),
+                              ),
                       )),
                   SizedBox(height: height * 0.02),
                   SizedBox(

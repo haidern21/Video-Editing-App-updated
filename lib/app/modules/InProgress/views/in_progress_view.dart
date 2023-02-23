@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:video_editing_app/app/modules/BottomBar/controllers/bottom_bar_controller.dart';
+import 'package:video_editing_app/app/modules/ChatView/controllers/chat_view_controller.dart';
 import 'package:video_editing_app/app/modules/InProgress/controllers/web_socket_controller.dart';
 import 'package:video_editing_app/app/modules/InProgress/views/request_revision.dart';
 import 'package:video_editing_app/app/modules/Order/controllers/order_controller.dart';
@@ -11,6 +13,7 @@ import '../../../../constants/weight.dart';
 import '../../../../main.dart';
 import '../../../../widgets/back_button.dart';
 import '../../../../widgets/my_text.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/in_progress_controller.dart';
 
 class InProgressView extends GetView<InProgressController> {
@@ -20,6 +23,7 @@ class InProgressView extends GetView<InProgressController> {
   Widget build(BuildContext context) {
     OrderController orderController = Get.find();
     WebSocketController webSocketController = Get.find();
+    ChatViewController chatViewController= Get.find();
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
@@ -120,6 +124,48 @@ class InProgressView extends GetView<InProgressController> {
                         leading: SvgPicture.asset(
                           "assets/icons/list.svg",
                           height: height * 0.06,
+                        ),
+                      ),
+                    ),
+                    Theme(
+                      data: Theme.of(context).copyWith(
+                        unselectedWidgetColor:
+                        Colors.transparent, // here for close state
+                        colorScheme: const ColorScheme.light(
+                          primary: Colors.transparent,
+                        ),
+                        dividerColor: Colors.transparent,
+                      ),
+                      child: InkWell(
+                        onTap: (){
+                           BottomBarController bottomBarController = Get.find();
+                          chatViewController.createChatThread(
+                              orderController.selectedOrder.value?.userModel?.email ??
+                                  '');
+                           bottomBarController.tabIndex.value = 1;
+                          Get.offAndToNamed(Routes.BOTTOM_BAR);
+                        },
+                        child: ListTile(
+                          title: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'Start chat  ',
+                                  style: TextStyle(
+                                    fontSize: 14 * sp,
+                                    fontWeight: kfour,
+                                    color: const Color(0xff000000),
+                                    fontFamily: 'WorkSans',
+                                  ),
+                                ),
+
+                              ],
+                            ),
+                          ),
+                          leading: SvgPicture.asset(
+                            "assets/icons/list.svg",
+                            height: height * 0.06,
+                          ),
                         ),
                       ),
                     ),
@@ -381,7 +427,12 @@ class InProgressView extends GetView<InProgressController> {
                             ),
                             leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage: NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(orderController
+                                        .selectedOrder
+                                        .value!
+                                        .userModel
+                                        ?.profilePicture ??
+                                    emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false
@@ -447,7 +498,12 @@ class InProgressView extends GetView<InProgressController> {
                             ),
                             leading: CircleAvatar(
                                 radius: 20,
-                                backgroundImage: NetworkImage(emptyUserImage)),
+                                backgroundImage: NetworkImage(orderController
+                                        .selectedOrder
+                                        .value!
+                                        .editorAssigned
+                                        ?.profilePicture ??
+                                    emptyUserImage)),
                             children: [
                               Obx(
                                 () => controller.showLoader.value == false

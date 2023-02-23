@@ -20,7 +20,7 @@ class SignInController extends GetxController {
   GlobalKey<FormState> formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passworController = TextEditingController();
-
+  RxBool showLoader= false.obs;
   final count = 0.obs;
 
   @override
@@ -31,6 +31,7 @@ class SignInController extends GetxController {
 
   Future<void> signIn() async {
     try {
+      showLoader.value=true;
       http.Response response = await buildHttpResponse(
         loginUserEndpoint,
         method: HttpMethod.POST,
@@ -53,7 +54,7 @@ class SignInController extends GetxController {
           method: HttpMethod.GET,
           biuldAuthHeader: true,
         );
-        UserModel userModel= UserModel.fromMap(jsonDecode(response.body));
+        UserModel userModel= UserModel.fromMap(jsonDecode(response1.body));
         // UserModel userModel= UserModel();
         await Future.delayed(const Duration(seconds: 2));
 
@@ -72,13 +73,17 @@ class SignInController extends GetxController {
         sharedPreferences.setString('email', emailController.text);
        // Future.delayed(const Duration(seconds: 2),()=>  Get.offAllNamed(Routes.BOTTOM_BAR));
       } else {
+        showLoader.value=false;
         inspect(response);
         inspect(response.request);
 
         inspect(jsonDecode(response.body));
         toast('${jsonDecode(response.body)['detail']}');
       }
+      showLoader.value=false;
+
     } on Exception catch (e, stackTrace) {
+      showLoader.value=false;
       Get.snackbar('Error','Error in authentication');
       e.debugException(stackTrace);
     }

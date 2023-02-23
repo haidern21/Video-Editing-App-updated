@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import '../../AddNewCard/views/add_new_card_view.dart';
 import '../controllers/account_setting_controller.dart';
@@ -30,6 +33,29 @@ class AccountSettingView extends GetView<AccountSettingController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height * 0.025),
+                  Center(
+                    child: GestureDetector(
+                      onTap: () async {
+                        var picker = await ImagePicker().pickImage(
+                            source: ImageSource.gallery, imageQuality: 20);
+                        controller.newProfileImage
+                            .insert(0, File(picker!.path));
+                        if (controller.newProfileImage.isNotEmpty) {
+                          controller.userProfileImage.value =
+                              await controller.uploadImageAndGetDownloadUrl(
+                                  controller.newProfileImage[0]);
+                        }
+                      },
+                      child: Obx(
+                        () => CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              NetworkImage(controller.userProfileImage.value),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: height * 0.012),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -69,7 +95,11 @@ class AccountSettingView extends GetView<AccountSettingController> {
                       Container(
                         height: height / 14,
                         width: Get.width,
-                        decoration: BoxDecoration(boxShadow: [kshadow],color: kprimaryColor, borderRadius: BorderRadius.circular(55),),
+                        decoration: BoxDecoration(
+                          boxShadow: [kshadow],
+                          color: kprimaryColor,
+                          borderRadius: BorderRadius.circular(55),
+                        ),
                         child: Obx(
                           () => controller.showLoader.value == false
                               ? MyButton(
@@ -81,7 +111,9 @@ class AccountSettingView extends GetView<AccountSettingController> {
                                   },
                                 )
                               : const Center(
-                                  child: CircularProgressIndicator(color: Colors.white,),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
                                 ),
                         ),
                       ),

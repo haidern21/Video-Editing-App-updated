@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../../../main.dart';
+
 class EditorSendMessageController extends GetxController {
   TextEditingController msgController = TextEditingController();
-  RxString profileImage=''.obs;
+  RxString? profileImage=''.obs;
   RxString name=''.obs;
   RxInt receiverId=0.obs;
   RxInt threadId=0.obs;
@@ -30,7 +32,7 @@ class EditorSendMessageController extends GetxController {
 
   getArguments(){
     var args= Get.arguments;
-    profileImage.value= args['profile_image']??'';
+    profileImage?.value= args['profile_image']??emptyUserImage;
     name.value=args['name']??'';
     receiverId.value=args['receiverId'];
     threadId.value=args['threadId'];

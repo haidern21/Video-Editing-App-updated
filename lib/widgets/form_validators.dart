@@ -21,7 +21,7 @@ String? emailValidator(String? value) {
 
 String? isMobileNumberValid(String? value) {
   String regexPattern = r'^(?:[+0][1-9])?[0-9]{10,12}$';
-  var regExp = new RegExp(regexPattern);
+  var regExp = RegExp(regexPattern);
 
   if (value!.isEmpty) {
     return "Please enter your number";

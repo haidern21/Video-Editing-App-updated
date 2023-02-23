@@ -19,10 +19,9 @@ import '../../../routes/app_pages.dart';
 import '../controllers/get_quote_four_controller.dart';
 
 class GetQuoteFourView extends GetView<GetQuoteFourController> {
-   GetQuoteFourView({super.key});
+  GetQuoteFourView({super.key});
 
-
-   var formKey= GlobalKey<FormState>();
+  var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,8 @@ class GetQuoteFourView extends GetView<GetQuoteFourController> {
                     sp,
                     hinttext: 'Project tittle',
                     controller: controller.projectTitleController,
-                    validator: projectTitleValidator,
+                    validator: (val) {},
+                    // validator: projectTitleValidator,
                   ),
                   SizedBox(height: height * 0.030),
                   buildTitle(
@@ -88,27 +88,28 @@ class GetQuoteFourView extends GetView<GetQuoteFourController> {
                     child: MyButton(
                       text: 'Next',
                       onPress: () {
-                      if(formKey.currentState!.validate()){
-                        controller.projectTitle.value =
-                            controller.projectTitleController.text;
-                        controller.videosCount.value =
-                            controller.totalVideosController.text;
-                        log('the project title is  : ${controller.projectTitle.value} from get quote  four view');
-                        log('the video count  is : ${controller.videosCount.value} from get quote four view ');
-                        controller.getQuoteFourData.addAll(
-                          {
-                            'project_title':
-                            controller.projectTitleController.text,
-                            'video_count': controller.totalVideosController.text,
-                          },
-                        );
+                        if (formKey.currentState!.validate()) {
+                          controller.projectTitle.value =
+                              controller.projectTitleController.text;
+                          controller.videosCount.value =
+                              controller.totalVideosController.text;
+                          log('the project title is  : ${controller.projectTitle.value} from get quote  four view');
+                          log('the video count  is : ${controller.videosCount.value} from get quote four view ');
+                          controller.getQuoteFourData.addAll(
+                            {
+                              'project_title':
+                                  controller.projectTitleController.text,
+                              'video_count':
+                                  controller.totalVideosController.text,
+                            },
+                          );
 
-                        debug('debugMessage ${controller.getQuoteFourData}');
-                        Get.toNamed(
-                          Routes.GET_QUOTE_FIVE,
-                          arguments: controller.getQuoteFourData,
-                        );
-                      }
+                          debug('debugMessage ${controller.getQuoteFourData}');
+                          Get.toNamed(
+                            Routes.GET_QUOTE_FIVE,
+                            arguments: controller.getQuoteFourData,
+                          );
+                        }
                       },
                     ),
                   ),

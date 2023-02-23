@@ -6,8 +6,6 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:video_editing_app/Utils/debug_utils.dart';
 import 'package:video_editing_app/Utils/network_utils.dart';
 import 'package:video_editing_app/app/data/models/user_model.dart';
-import 'package:video_editing_app/app/routes/app_pages.dart';
-
 import '../../../../Utils/jwt_utils.dart';
 import '../../../../constants/api_endpoints_constants.dart';
 

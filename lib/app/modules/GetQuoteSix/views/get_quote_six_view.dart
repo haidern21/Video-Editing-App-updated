@@ -28,6 +28,7 @@ class GetQuoteSixView extends StatefulWidget {
 
 class _GetQuoteSixViewState extends State<GetQuoteSixView> {
   String buttonText = '';
+  String dropdownValue = 'Minutes';
 
   @override
   void initState() {
@@ -117,27 +118,81 @@ class _GetQuoteSixViewState extends State<GetQuoteSixView> {
                   SizedBox(height: height * 0.036),
                   buildTitle(sp, title: 'How Long Should The Final Video Be?'),
                   SizedBox(height: height * 0.008),
-                  TextFormField(
-                    validator: durationValidator,
-                    controller: controller.videoDurationController,
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(
-                      fontSize: 14 * sp,
-                      fontWeight: kfour,
-                      color: const Color(0xff25313A),
-                    ),
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.only(left: width * 0.02),
-                      hintText: '1-30 minutes',
-                      hintStyle: TextStyle(
-                        fontSize: 14 * sp,
-                        fontWeight: kfour,
-                        color: kgrey3,
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 5,
+                        child: SizedBox(
+                          child: TextFormField(
+                            validator: durationValidator,
+                            controller: controller.videoDurationController,
+                            keyboardType: TextInputType.number,
+                            style: TextStyle(
+                              fontSize: 14 * sp,
+                              fontWeight: kfour,
+                              color: const Color(0xff25313A),
+                            ),
+                            decoration: InputDecoration(
+                              contentPadding:
+                                  EdgeInsets.only(left: width * 0.02),
+                              hintText: '1-30 minutes',
+                              hintStyle: TextStyle(
+                                fontSize: 14 * sp,
+                                fontWeight: kfour,
+                                color: kgrey3,
+                              ),
+                              enabledBorder: enabledborder,
+                              errorBorder: errorborder,
+                              focusedBorder: focusedborder,
+                            ),
+                          ),
+                        ),
                       ),
-                      enabledBorder: enabledborder,
-                      errorBorder: errorborder,
-                      focusedBorder: focusedborder,
-                    ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Container(
+                          decoration: BoxDecoration(color: kwhite, boxShadow: [
+                            BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                blurRadius: 4,
+                                spreadRadius: 2)
+                          ]),
+                          child: Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 5.0),
+                            child: DropdownButton<String>(
+                              // Step 3.
+                              value: dropdownValue,
+                              underline: const SizedBox(
+                                height: 0,
+                              ),
+                              // Step 4.
+                              items: <String>[
+                                'Minutes',
+                                'Seconds'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(fontSize: 15),
+                                  ),
+                                );
+                              }).toList(),
+                              // Step 5.
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropdownValue = newValue!;
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   // buildLoginFields(
                   //   sp,
