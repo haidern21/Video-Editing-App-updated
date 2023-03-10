@@ -29,6 +29,10 @@ dependencies:
   firebase_storage: ^11.0.13
   image_picker: ^0.8.6+2
   country_picker: ^2.0.19
+  cached_video_player: ^2.0.4
+  video_thumbnail: ^0.5.3
+  video_thumbnail_imageview: ^0.0.5
+  path_provider:
 
 dev_dependencies: 
   flutter_lints: ^2.0.0

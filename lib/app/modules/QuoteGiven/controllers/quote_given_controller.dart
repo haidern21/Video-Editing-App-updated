@@ -7,7 +7,7 @@ import '../../../../constants/api_endpoints_constants.dart';
 import '../../../routes/app_pages.dart';
 
 class QuoteGivenController extends GetxController {
-  RxBool visibleContainer = false.obs;
+  RxBool visibleContainer = true.obs;
 
   final count = 0.obs;
 

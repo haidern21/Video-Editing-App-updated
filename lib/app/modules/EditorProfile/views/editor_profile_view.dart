@@ -1,8 +1,13 @@
+import 'dart:typed_data';
+import 'package:cached_video_player/cached_video_player.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:video_editing_app/app/routes/app_pages.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:video_thumbnail_imageview/video_thumbnail_imageview.dart';
 import '../../../../main.dart';
 import '../controllers/editor_profile_controller.dart';
 import '../../../../constants/colors.dart';
@@ -61,6 +66,7 @@ class EditorProfileView extends GetView<EditorProfileController> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / 20),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,38 +127,26 @@ class EditorProfileView extends GetView<EditorProfileController> {
                   color: kgrey8,
                 ),
                 SizedBox(height: height * 0.024),
-                ...List.generate(
-                    images.length,
-                    (index) => buildPlayVideo(sp, height, width,
-                        images: images[index])),
+                // ...List.generate(
+                //     controller.videos.length,
+                //     (index) => buildPlayVideo(sp, height, width,
+                //         images: images[index])),
+                Obx(
+                  () => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: controller.videos.length,
+                      itemBuilder: (context, index) {
+                        return BuildPlayVideo(
+                          videoUrl: controller.videos[index].url ?? '',
+                          title: controller.videos[index].title ?? '',
+                          height: height,
+                          width: width,
+                          sp: sp,
+                        );
+                      }),
+                ),
                 SizedBox(height: height * 0.03),
-                // Row(
-                //   children: [
-                //     Expanded(
-                //       child: SizedBox(
-                //         height: height * 0.07,
-                //         child: MyButton(
-                //           color: kwhite,
-                //           text: 'Deny',
-                //           textColor: kprimaryColor,
-                //           onPress: () {},
-                //         ),
-                //       ),
-                //     ),
-                //     SizedBox(
-                //       width: width / 65,
-                //     ),
-                //     Expanded(
-                //       child: SizedBox(
-                //         height: height * 0.07,
-                //         child: MyButton(
-                //           text: 'Get started',
-                //           onPress: () {},
-                //         ),
-                //       ),
-                //     ),
-                //   ],
-                // ),
                 SizedBox(height: height * 0.044),
               ],
             ),
@@ -160,6 +154,18 @@ class EditorProfileView extends GetView<EditorProfileController> {
         ),
       ),
     );
+  }
+
+  Future<Uint8List?> getThumbnail(String videoLink) async {
+    print('The url of videos is : ${videoLink}');
+    var temp;
+    temp = await VideoThumbnail.thumbnailData(
+      video: videoLink,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 128,
+      quality: 100,
+    );
+    return temp;
   }
 
   Container buildUserContainer(double height, double width, double sp) {
@@ -326,36 +332,37 @@ class EditorProfileView extends GetView<EditorProfileController> {
     );
   }
 
-  Column buildPlayVideo(double sp, double height, double width,
-      {required String images}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        MyText(
-          text: 'Title for this video',
-          size: 14 * sp,
-          weight: kfour,
-          color: kgrey8,
-        ),
-        SizedBox(height: height * 0.014),
-        Container(
-          margin: EdgeInsets.only(bottom: height * 0.01),
-          height: height / 3.1,
-          width: width,
-          decoration: BoxDecoration(
-            image:
-                DecorationImage(fit: BoxFit.cover, image: AssetImage(images)),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(
-            Icons.play_circle_outline,
-            size: 60,
-            color: kwhite,
-          ),
-        )
-      ],
-    );
-  }
+  // Column buildPlayVideo(double sp, double height, double width,
+  //     {required String images}) {
+  //   Future<Uint8List?> image = getThumbnail(images);
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       MyText(
+  //         text: 'Title for this video',
+  //         size: 14 * sp,
+  //         weight: kfour,
+  //         color: kgrey8,
+  //       ),
+  //       SizedBox(height: height * 0.014),
+  //       Container(
+  //         margin: EdgeInsets.only(bottom: height * 0.01),
+  //         height: height / 3.1,
+  //         width: width,
+  //         decoration: BoxDecoration(
+  //           image:
+  //               DecorationImage(fit: BoxFit.cover, image: MemoryImage(image)),
+  //           borderRadius: BorderRadius.circular(8),
+  //         ),
+  //         child: const Icon(
+  //           Icons.play_circle_outline,
+  //           size: 60,
+  //           color: kwhite,
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
 
   Container buildProjectTitleContainer(double height, double width, double sp) {
     return Container(
@@ -442,6 +449,128 @@ class EditorProfileView extends GetView<EditorProfileController> {
           weight: ksix,
           color: kblack,
         ),
+      ],
+    );
+  }
+}
+
+class BuildPlayVideo extends StatefulWidget {
+  final double sp;
+  final double height;
+  final double width;
+  final String videoUrl;
+  final String title;
+
+  const BuildPlayVideo(
+      {Key? key,
+      required this.videoUrl,
+      required this.width,
+      required this.height,
+      required this.title,
+      required this.sp})
+      : super(key: key);
+
+  @override
+  State<BuildPlayVideo> createState() => _BuildPlayVideoState();
+}
+
+class _BuildPlayVideoState extends State<BuildPlayVideo> {
+  Future<Uint8List?> getThumbnail(String videoLink) async {
+    print('The url of videos is : ${videoLink}');
+    var temp;
+    temp = await VideoThumbnail.thumbnailData(
+      video: videoLink,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 128,
+      quality: 100,
+    );
+    setState(() {
+      thumbnail = temp;
+    });
+    return thumbnail;
+  }
+
+  var thumbnail;
+  late CachedVideoPlayerController controller;
+  bool isPlayingVideo = false;
+
+  @override
+  void initState() {
+    print('The url of videos is : ${widget.videoUrl}');
+    getThumbnail(widget.videoUrl);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        MyText(
+          text: widget.title,
+          size: 14 * (widget.sp),
+          weight: kfour,
+          color: kgrey8,
+        ),
+        SizedBox(height: widget.height * 0.014),
+        isPlayingVideo == false
+            ? Container(
+                margin: EdgeInsets.only(bottom: widget.height * 0.01),
+                height: widget.height / 3.1,
+                width: widget.width,
+                decoration: BoxDecoration(
+                  image: thumbnail != null
+                      ? DecorationImage(
+                          fit: BoxFit.cover, image: MemoryImage(thumbnail))
+                      : null,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      isPlayingVideo = true;
+                      controller =
+                          CachedVideoPlayerController.network(widget.videoUrl);
+                      controller
+                          .initialize()
+                          .then((value) => controller.play());
+                    });
+                  },
+                  child: const Icon(
+                    Icons.play_circle_outline,
+                    size: 60,
+                    color: kwhite,
+                  ),
+                ),
+              )
+            : Container(
+                constraints:
+                    BoxConstraints(maxWidth: Get.width, maxHeight: Get.height),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Stack(
+                  children: [
+                    CachedVideoPlayer(controller),
+                    Align(
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await controller.pause();
+                          setState(() {
+                            isPlayingVideo = false;
+                          });
+                        },
+                        child: const Icon(
+                          Icons.pause,
+                          color: kwhite,
+                          size: 20,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
       ],
     );
   }

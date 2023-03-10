@@ -26,6 +26,11 @@ class SplashController extends GetxController {
     );
     UserModel userModel= UserModel.fromMap(jsonDecode(response.body));
     // UserModel userModel= UserModel();
+    // search //some lyrics show in english but not in farsi
+    // optimize search
+    // sort in alphabetic order
+    // bar bar
+    // dimensions
     await Future.delayed(const Duration(seconds: 2));
 
     if (loggedIn) {

@@ -55,8 +55,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                   children: [
                     Obx(
                       () => buildProjectTitleContainer(height, width, sp,
-                          totalVideos: orderController.selectedOrder.value!
-                                  .quoteVideos!.isNotEmpty
+                          totalVideos: orderController
+                                  .selectedOrder.value!.quoteVideos!.isNotEmpty
                               ? orderController
                                   .selectedOrder.value!.quoteVideos!.length
                                   .toString()
@@ -65,12 +65,13 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                   .selectedOrder.value?.projectTitle ??
                               '',
                           status:
-                              orderController.selectedOrder.value?.status ??
-                                  '',
-                          createdDate: orderController.selectedOrder.value?.createdAt?.substring(0,10),
-                          price: orderController
-                                  .selectedOrder.value?.quotePrice ??
-                              ''),
+                              orderController.selectedOrder.value?.status ?? '',
+                          createdDate: orderController
+                              .selectedOrder.value?.createdAt
+                              ?.substring(0, 10),
+                          price:
+                              orderController.selectedOrder.value?.quotePrice ??
+                                  ''),
                     ),
                     SizedBox(height: height * 0.001),
                     GetBuilder<QuoteGivenController>(builder: (controller) {
@@ -109,11 +110,74 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                                 color: kgrey8,
                               ),
                               SizedBox(height: height * 0.01),
-                              MyText(
-                                text: r"$145.00",
-                                size: 20 * sp,
-                                weight: ksix,
-                                color: kprimaryColor,
+                              Obx(
+                                () => MyText(
+                                  text:
+                                      '\$ ${orderController.selectedOrder.value?.quotePrice}' ??
+                                          '',
+                                  size: 20 * sp,
+                                  weight: ksix,
+                                  color: kprimaryColor,
+                                ),
+                              ),
+                              Container(
+                                padding:
+                                    const EdgeInsets.only(top: 20, bottom: 0),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      height: height * 0.06,
+                                      width: width * .3,
+                                      child: ElevatedButton(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: kwhite,
+                                          shape: RoundedRectangleBorder(
+                                            side: const BorderSide(
+                                                color: kcancel),
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          await controller.quoteRejected(
+                                              orderController.selectedOrder
+                                                      .value!.id ??
+                                                  0);
+                                          await orderController.getOrderModel(
+                                              orderController.selectedOrder
+                                                      .value?.id ??
+                                                  0);
+                                          await orderController
+                                              .fetchOrdersList();
+                                        },
+                                        child: MyText(
+                                          text: 'Reject',
+                                          color: kcancel,
+                                          size: 14 * sp,
+                                          weight: kfive,
+                                        ),
+                                      ),
+                                    ),
+                                    // SizedBox(width: width * 0.02),
+                                    SizedBox(
+                                      height: height * 0.06,
+                                      width: width * .3,
+                                      child: MyButton(
+                                        text: 'Accept',
+                                        onPress: () async {
+                                          Get.toNamed(Routes.CHECK_OUT);
+                                          // await controller.quoteAccepted(
+                                          //     orderController.selectedOrder.value!.id ?? 0);
+                                          // await orderController.getOrderModel(
+                                          //     orderController.selectedOrder.value?.id ?? 0);
+                                          // await orderController.fetchOrdersList();
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             ],
                           ),
@@ -335,59 +399,6 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
                   ],
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                color: const Color(0xffF9F9FB),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SizedBox(
-                        height: height * 0.06,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: kwhite,
-                            shape: RoundedRectangleBorder(
-                              side: const BorderSide(color: kcancel),
-                              borderRadius: BorderRadius.circular(30.0),
-                            ),
-                          ),
-                          onPressed: () async {
-                            await controller.quoteRejected(
-                                orderController.selectedOrder.value!.id ?? 0);
-                            await orderController.getOrderModel(
-                                orderController.selectedOrder.value?.id ?? 0);
-                            await orderController.fetchOrdersList();
-                          },
-                          child: MyText(
-                            text: 'Reject',
-                            color: kcancel,
-                            size: 14 * sp,
-                            weight: kfive,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: width * 0.02),
-                    Expanded(
-                      child: SizedBox(
-                        height: height * 0.06,
-                        child: MyButton(
-                          text: 'Accept',
-                          onPress: () async {
-                            Get.toNamed(Routes.CHECK_OUT);
-                            // await controller.quoteAccepted(
-                            //     orderController.selectedOrder.value!.id ?? 0);
-                            // await orderController.getOrderModel(
-                            //     orderController.selectedOrder.value?.id ?? 0);
-                            // await orderController.fetchOrdersList();
-                          },
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
             ],
           ),
         ),
@@ -494,7 +505,8 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
       {required String title,
       required String status,
       required String totalVideos,
-      required String price, required String? createdDate}) {
+      required String price,
+      required String? createdDate}) {
     return Container(
       padding: EdgeInsets.only(
         top: height * 0.024,
@@ -541,7 +553,7 @@ class QuoteGivenView extends GetView<QuoteGivenController> {
           buildRow(
             sp,
             leftText: 'Created date',
-            rightText: createdDate??'',
+            rightText: createdDate ?? '',
           ),
           SizedBox(height: height * 0.015),
           buildRow(

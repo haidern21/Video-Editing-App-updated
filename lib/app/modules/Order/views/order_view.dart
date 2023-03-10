@@ -41,22 +41,28 @@ class OrderView extends GetView {
         onRefresh: () async {
           controller.fetchOrdersList();
         },
-        child: Column(
+        child: Stack(
           children: [
-            SizedBox(height: height * 0.02),
-            OrderAppBar(height: height, width: width, sp: sp),
-            SizedBox(height: height * 0.034),
-            ProgressRow(width, height, sp),
-            SizedBox(height: height * 0.024),
-            Obx(() => controller.selectedIndex.value == 0
-                ? allOrders()
-                : controller.selectedIndex.value == 1
-                    ? pendingOrders()
-                    : controller.selectedIndex.value == 2
-                        ? quotedGivenOrders()
-                        : controller.selectedIndex.value == 3
-                            ? inProgressOrders()
-                            : completedOrders()),
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: height * 0.02),
+                  OrderAppBar(height: height, width: width, sp: sp),
+                  SizedBox(height: height * 0.034),
+                  ProgressRow(width, height, sp),
+                  SizedBox(height: height * 0.024),
+                  Obx(() => controller.selectedIndex.value == 0
+                      ? allOrders()
+                      : controller.selectedIndex.value == 1
+                          ? pendingOrders()
+                          : controller.selectedIndex.value == 2
+                              ? quotedGivenOrders()
+                              : controller.selectedIndex.value == 3
+                                  ? inProgressOrders()
+                                  : completedOrders()),
+                ],
+              ),
+            ),
           ],
         ),
       ),

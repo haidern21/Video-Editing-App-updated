@@ -7,20 +7,20 @@ Future<bool> onBackButtonPressed(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text("Really?"),
-        content: Text('Do you wnat to close app'),
+        title: const Text("Really?"),
+        content: const Text('Do you want to close app'),
         actions: [
           TextButton(
             onPressed: () {
               (Navigator.of(context).pop(false));
             },
-            child: Text('No'),
+            child: const Text('No'),
           ),
           TextButton(
             onPressed: () {
               SystemNavigator.pop();
             },
-            child: Text('yes'),
+            child: const Text('yes'),
           ),
         ],
       );

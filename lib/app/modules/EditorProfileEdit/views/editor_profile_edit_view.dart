@@ -1,18 +1,23 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:video_editing_app/app/modules/EditorProfile/controllers/editor_profile_controller.dart';
 import 'package:video_editing_app/constants/colors.dart';
 import 'package:video_editing_app/constants/weight.dart';
 import 'package:video_editing_app/main.dart';
 import 'package:video_editing_app/widgets/back_button.dart';
 import 'package:video_editing_app/widgets/my_text.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import '../../../../constants/app_constants.dart';
 import '../../../../widgets/borders.dart';
 import '../../../../widgets/login_field.dart';
 import '../../../routes/app_pages.dart';
+import '../../EditorProfile/views/edit_previous_work.dart';
+import '../../EditorProfile/views/editor_profile_view.dart';
 import '../controllers/editor_profile_edit_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:video_editing_app/widgets/elevated_button_widget.dart';
@@ -36,6 +41,7 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     final sp = MediaQuery.of(context).textScaleFactor;
+    EditorProfileController editorProfileController = Get.find();
     return SafeArea(
       child: Scaffold(
         backgroundColor: kwhite,
@@ -74,6 +80,7 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: width / 20),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -297,17 +304,46 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
                   ),
                 ),
                 SizedBox(height: height * 0.024),
-                MyText(
-                  text: 'Editor previous work',
-                  size: 14 * sp,
-                  weight: ksix,
-                  color: kgrey8,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    MyText(
+                      text: 'Editor previous work',
+                      size: 14 * sp,
+                      weight: ksix,
+                      color: kgrey8,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => const EditPreviousWork());
+                      },
+                      child: Icon(
+                        Icons.edit,
+                        color: kgrey8,
+                        size: 20 * sp,
+                      ),
+                    )
+                  ],
                 ),
                 SizedBox(height: height * 0.024),
-                ...List.generate(
-                    images.length,
-                    (index) => buildPlayVideo(sp, height, width,
-                        images: images[index])),
+                Obx(
+                  () => ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: editorProfileController.videos.length,
+                      itemBuilder: (context, index) {
+
+                        return BuildPlayVideo(
+                          videoUrl:
+                              editorProfileController.videos[index].url ?? '',
+                          height: height,
+                          width: width,
+                          sp: sp,
+                          title:
+                              editorProfileController.videos[index].title ?? '',
+                        );
+                      }),
+                ),
                 SizedBox(height: height * 0.01),
                 Container(
                   height: height * 0.07,
@@ -342,6 +378,18 @@ class EditorProfileEditView extends GetView<EditorProfileEditView> {
         ),
       ),
     );
+  }
+
+  Future<Uint8List?> getThumbnail(String videoLink) async {
+    print('The url of videos is : ${videoLink}');
+    var temp;
+    temp = await VideoThumbnail.thumbnailData(
+      video: videoLink,
+      imageFormat: ImageFormat.JPEG,
+      maxWidth: 128,
+      quality: 100,
+    );
+    return temp;
   }
 
   _displayTextInputDialog(

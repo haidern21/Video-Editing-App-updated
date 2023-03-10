@@ -53,11 +53,11 @@ class GetQuoteFourView extends GetView<GetQuoteFourController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: height * 0.025),
-                  buildTitle(sp, title: 'Project tittle'),
+                  buildTitle(sp, title: 'Project title'),
                   SizedBox(height: height * 0.008),
                   buildLoginFields(
                     sp,
-                    hinttext: 'Project tittle',
+                    hinttext: 'Project title',
                     controller: controller.projectTitleController,
                     validator: (val) {},
                     // validator: projectTitleValidator,
